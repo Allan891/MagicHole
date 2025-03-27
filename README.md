@@ -1,2 +1,2 @@
 # MagicHole
-An app for keeping track of your golf skill progression.
+An app for keeping track of your golf skillz progression.
