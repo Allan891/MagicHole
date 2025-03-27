@@ -22,6 +22,10 @@ export default function HomeScreen() {
       {
         holeCoords: {latitude: 59.58045, longitude: 18.286678},
         teeCoords: {latitude: 59.582865, longitude: 18.290975},
+      },
+      {
+        holeCoords: {latitude: 59.582523, longitude: 18.292028},
+        teeCoords: {latitude: 59.580322, longitude: 18.287774},
       }
     ]
   }
@@ -108,31 +112,46 @@ export default function HomeScreen() {
   }, [courseObject, currentHole]);
 
   useEffect(() => {
-    const getLocation = async () => {
+    let locationSubscription: Location.LocationSubscription | null = null;
+  
+    const startWatchingLocation = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
         return;
       }
-
-      let location = await Location.getCurrentPositionAsync({});
-      
-      setLocation(location);
-
-      if (location) {
-        const distance = calculateDistance(
-          location.coords.latitude,
-          location.coords.longitude,
-          holeCoords.latitude,
-          holeCoords.longitude
-        );
-        setDistanceLeft(Math.round(distance));
-      }
-
+  
+      locationSubscription = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 5000, // Minimum time between updates (ms)
+          distanceInterval: 1, // Minimum distance change (meters)
+        },
+        (location) => {
+          setLocation(location);
+  
+          if (location) {
+            const distance = calculateDistance(
+              location.coords.latitude,
+              location.coords.longitude,
+              holeCoords.latitude,
+              holeCoords.longitude
+            );
+            setDistanceLeft(Math.round(distance));
+          }
+        }
+      );
     };
-
-    getLocation();
+  
+    startWatchingLocation();
+  
+    return () => {
+      if (locationSubscription) {
+        locationSubscription.remove(); // Stop watching when component unmounts
+      }
+    };
   }, []);
+  
 
 
   return (
