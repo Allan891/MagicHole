@@ -37,7 +37,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="scoreboard"
         options={{
           title: 'Scoreboard',
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="sports-score" color={color} />, // Change from "paperplane.fill"
