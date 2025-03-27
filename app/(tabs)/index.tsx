@@ -7,16 +7,25 @@ import { ThemedView } from '@/components/ThemedView';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
+import * as Location from 'expo-location';
+
 
 export default function HomeScreen() {
 
   const mapRef = useRef<MapView | null>(null);
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [bearing, setBearing] = useState(0);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [distanceLeft, setDistanceLeft] = useState<number | null>(null);
 
-  const marker1 = { latitude: 59.534253, longitude: 17.957261 };
-  const marker2 = { latitude: 59.534939, longitude: 17.962801 };
 
-  const latitude = (marker1.latitude + marker2.latitude) / 2;
-  const longitude = (marker1.longitude + marker2.longitude) / 2;
+
+
+  const teeCoords = { latitude: 59.534253, longitude: 17.957261 };
+  const holeCoords = { latitude: 59.534939, longitude: 17.962801 };
+
+  const latitude = (teeCoords.latitude + holeCoords.latitude) / 2;
+  const longitude = (teeCoords.longitude + holeCoords.longitude) / 2;
 
   const initialRegion = {
     latitude,
@@ -47,15 +56,58 @@ export default function HomeScreen() {
     return bearing;
   };
 
-  const [bearing, setBearing] = useState(0);
+  const calculateDistance = (
+    lat1: number, lon1: number, lat2: number, lon2: number
+  ): number => {
+    const R = 6371e3; // Earth's radius in meters
+    const radian = Math.PI / 180;
+    
+    const dLat = (lat2 - lat1) * radian;
+    const dLon = (lon2 - lon1) * radian;
+    
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * radian) * Math.cos(lat2 * radian) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in meters
+  };
+
   useEffect(() => {
     const bearing = calculateBearing(
-      marker1.latitude,
-      marker1.longitude,
-      marker2.latitude,
-      marker2.longitude
+      teeCoords.latitude,
+      teeCoords.longitude,
+      holeCoords.latitude,
+      holeCoords.longitude
     );
     setBearing(bearing); 
+  }, []);
+
+  useEffect(() => {
+    const getLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      
+      setLocation(location);
+
+      if (location) {
+        const distance = calculateDistance(
+          location.coords.latitude,
+          location.coords.longitude,
+          holeCoords.latitude,
+          holeCoords.longitude
+        );
+        setDistanceLeft(Math.round(distance));
+      }
+
+    };
+
+    getLocation();
   }, []);
 
 
@@ -77,12 +129,17 @@ export default function HomeScreen() {
         altitude: 0.01
       }}
       >
-        <Marker coordinate={{latitude: 59.534253, longitude: 17.957261}}>
+        <Marker coordinate={{latitude: teeCoords.latitude, longitude: teeCoords.longitude}}>
           <MaterialIcons size={28} name="golf-course" color={'red'} />
         </Marker>
-        <Marker coordinate={{latitude: 59.534939, longitude: 17.962801}}>
+        <Marker coordinate={{latitude: holeCoords.latitude, longitude: holeCoords.longitude}}>
           <MaterialIcons size={28} name="sports-golf" color={'white'} />
         </Marker>
+        <Marker coordinate={{latitude: location?.coords.latitude || 0, longitude: location?.coords.longitude || 0}}>
+          <ThemedText>{distanceLeft}m</ThemedText>
+          <MaterialIcons size={28} name="person-pin" color={'white'} />
+        </Marker>
+        
       </MapView>
     </View>
 
