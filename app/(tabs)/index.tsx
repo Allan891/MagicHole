@@ -124,8 +124,8 @@ export default function HomeScreen() {
       camera={{
         center: { latitude, longitude },
         heading: -bearing,
-        pitch: 100, // Optional: Set the pitch if you want a tilted view
-        zoom: -10, // Adjust zoom level as needed
+        pitch: 90, // Optional: Set the pitch if you want a tilted view
+        zoom: 17, // Adjust zoom level as needed
         altitude: 0.01
       }}
       >
