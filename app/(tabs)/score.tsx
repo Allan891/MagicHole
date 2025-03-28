@@ -2,27 +2,23 @@ import { StyleSheet, View, ScrollView } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { globalStateVar } from './globalStateVar';
+import { useRound } from './RoundContext';
 
-const courseObject = {
-  name: 'Brollsta',
-  holes: [
-    { par: 4 },
-    { par: 5 },
-    { par: 3 },
-    { par: 4 }, { par: 4 }, { par: 5 }, { par: 3 }, { par: 4 }, { par: 4 }, // front 9
-    { par: 5 }, { par: 4 }, { par: 3 }, { par: 4 }, { par: 4 }, { par: 5 }, { par: 3 }, { par: 4 }, { par: 4 }  // back 9
-  ],
-};
+
+
 
 export default function ScoreOverview() {
   const strokes = globalStateVar((state) => state.strokes);
+  const { courseObject } = useRound();
 
   const totalStrokes = strokes.reduce((sum, val) => sum + (val ?? 0), 0);
-  const parTotal = courseObject.holes.reduce((sum, h) => sum + (h.par ?? 0), 0);
+  const parTotal = courseObject.par?.reduce((sum, p) => sum + (p ?? 0), 0) ?? 0;
+
   const diff = totalStrokes - parTotal;
 
   const renderRow = (holeIndex: number) => {
-    const par = courseObject.holes[holeIndex]?.par ?? '-';
+    const par = courseObject.par?.[holeIndex] ?? '-';
+
     const score = strokes[holeIndex];
     const overPar = score !== undefined ? score - par : null;
 
@@ -49,9 +45,9 @@ export default function ScoreOverview() {
   return (
     <ScrollView style={{ backgroundColor: 'white' }}>
       <ThemedView style={styles.container}>
-        <ThemedText style={styles.title}>{courseObject.name} – Scorecard</ThemedText>
+        <ThemedText style={styles.title}>{courseObject.namn} – Scorecard</ThemedText>
 
-        {/* Header Row */}
+        
         <View style={styles.row}>
           <ThemedText style={styles.header}>Hole</ThemedText>
           <ThemedText style={styles.header}>Par</ThemedText>
@@ -59,15 +55,15 @@ export default function ScoreOverview() {
           <ThemedText style={styles.header}>±</ThemedText>
         </View>
 
-        {/* Front 9 */}
+        
         <ThemedText style={styles.section}>Front 9</ThemedText>
         {courseObject.holes.slice(0, 9).map((_, i) => renderRow(i))}
 
-        {/* Back 9 */}
+        
         <ThemedText style={styles.section}>Back 9</ThemedText>
         {courseObject.holes.slice(9, 18).map((_, i) => renderRow(i + 9))}
 
-        {/* Total Row */}
+        
         <View style={[styles.row, { marginTop: 16 }]}>
           <ThemedText style={styles.cell}>Total</ThemedText>
           <ThemedText style={styles.cell}>{parTotal}</ThemedText>
