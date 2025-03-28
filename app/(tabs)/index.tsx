@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Platform, View, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Platform, View, TouchableOpacity, Animated, Dimensions, PanResponder } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -8,6 +8,9 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
+
+
+const screenHeight = Dimensions.get('window').height;
 
 
 export default function HomeScreen() {
@@ -39,6 +42,7 @@ export default function HomeScreen() {
   const [holeCoords, setHoleCoords] = useState<Object>(courseObject.holes[0].holeCoords);
   const [teeCoords, setTeeCoords] = useState<Object>(courseObject.holes[0].teeCoords);
   const [courseName, setCourseName] = useState<Object>(courseObject.name);
+const [playerScores, setPlayerScores] = useState<number[]>([4, 5, 3]); // mock scores per hole
 
   const latitude = (teeCoords?.latitude + holeCoords?.latitude) / 2;
   const longitude = (teeCoords?.longitude + holeCoords?.longitude) / 2;
@@ -151,7 +155,28 @@ export default function HomeScreen() {
       }
     };
   }, []);
-  
+  const screenHeight = Dimensions.get('window').height;
+const collapsedY = screenHeight - 150;
+const expandedY = screenHeight / 2;
+
+const sheetAnim = useRef(new Animated.Value(collapsedY)).current;
+
+const panResponder = useRef(
+  PanResponder.create({
+    onMoveShouldSetPanResponder: (_, gestureState) => Math.abs(gestureState.dy) > 10,
+    onPanResponderMove: (_, gestureState) => {
+      const newY = Math.max(expandedY, Math.min(collapsedY, collapsedY + gestureState.dy));
+      sheetAnim.setValue(newY);
+    },
+    onPanResponderRelease: (_, gestureState) => {
+      if (gestureState.dy > 50) {
+        Animated.spring(sheetAnim, { toValue: collapsedY, useNativeDriver: false }).start();
+      } else {
+        Animated.spring(sheetAnim, { toValue: expandedY, useNativeDriver: false }).start();
+      }
+    },
+  })
+).current;
 
 
   return (
@@ -195,6 +220,22 @@ export default function HomeScreen() {
         
       </MapView>
     </View>
+    <Animated.View
+  {...panResponder.panHandlers}
+  style={[
+    styles.bottomSheet,
+    {
+      transform: [{ translateY: sheetAnim }],
+    },
+  ]}
+>
+  <View style={styles.sheetHandle} />
+  <ThemedText style={styles.sheetTitle}>Scorecard</ThemedText>
+  <View style={styles.sheetContent}>
+    <ThemedText>Hål {currentHole + 1}</ThemedText>
+    <ThemedText>Slag: {playerScores[currentHole] ?? '-'}</ThemedText>
+  </View>
+</Animated.View>
 
     </View>
   );
@@ -217,4 +258,34 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
   },
+  bottomSheet: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: screenHeight,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    padding: 16,
+    zIndex: 999,
+  },
+  sheetHandle: {
+    width: 50,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: '#ccc',
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  sheetTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  sheetContent: {
+    gap: 8,
+    alignItems: 'center',
+  },
+  
 });
