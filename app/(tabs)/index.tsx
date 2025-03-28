@@ -1,110 +1,97 @@
-import { Image, StyleSheet, Platform, View, TouchableOpacity, Animated, Dimensions, PanResponder } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Platform,
+  View,
+  TouchableOpacity,
+  Animated,
+  Dimensions,
+  PanResponder,
+  Button,
+  TextInput,
+} from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
+import { useRound } from './RoundContext';
 
 
-const screenHeight = Dimensions.get('window').height;
 
+
+
+const courseObject = {
+  name: 'Brollsta',
+  holes: [
+    {
+      holeCoords: { latitude: 59.582875, longitude: 18.292865 },
+      teeCoords: { latitude: 59.582843, longitude: 18.297886 },
+      par: 4,
+    },
+    {
+      holeCoords: { latitude: 59.58045, longitude: 18.286678 },
+      teeCoords: { latitude: 59.582865, longitude: 18.290975 },
+      par: 5,
+    },
+    {
+      holeCoords: { latitude: 59.582523, longitude: 18.292028 },
+      teeCoords: { latitude: 59.580322, longitude: 18.287774 },
+      par: 3,
+    },
+  ],
+};
 
 export default function HomeScreen() {
-
-  const courseObject = {
-    name: 'Brollsta',
-    holes: [
-      {
-        holeCoords: {latitude: 59.582875, longitude: 18.292865},
-        teeCoords: {latitude: 59.582843, longitude: 18.297886},
-      },
-      {
-        holeCoords: {latitude: 59.58045, longitude: 18.286678},
-        teeCoords: {latitude: 59.582865, longitude: 18.290975},
-      },
-      {
-        holeCoords: {latitude: 59.582523, longitude: 18.292028},
-        teeCoords: {latitude: 59.580322, longitude: 18.287774},
-      }
-    ]
-  }
+  
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [distanceLeft, setDistanceLeft] = useState<number | null>(null);
+  const [bearing, setBearing] = useState(0);
+  const [currentHole, setCurrentHole] = useState<number>(0);
+  const { playerScores, setPlayerScores } = useRound();
 
   const mapRef = useRef<MapView | null>(null);
-  const [location, setLocation] = useState<Location.LocationObject | null>(null);
-  const [bearing, setBearing] = useState(0);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [distanceLeft, setDistanceLeft] = useState<number | null>(null);
-  const [currentHole, setCurrentHole] = useState<number>(0);
-  const [holeCoords, setHoleCoords] = useState<Object>(courseObject.holes[0].holeCoords);
-  const [teeCoords, setTeeCoords] = useState<Object>(courseObject.holes[0].teeCoords);
-  const [courseName, setCourseName] = useState<Object>(courseObject.name);
-const [playerScores, setPlayerScores] = useState<number[]>([4, 5, 3]); // mock scores per hole
+  const teeCoords = courseObject.holes[currentHole].teeCoords;
+  const holeCoords = courseObject.holes[currentHole].holeCoords;
 
-  const latitude = (teeCoords?.latitude + holeCoords?.latitude) / 2;
-  const longitude = (teeCoords?.longitude + holeCoords?.longitude) / 2;
+  const latitude = (teeCoords.latitude + holeCoords.latitude) / 2;
+  const longitude = (teeCoords.longitude + holeCoords.longitude) / 2;
 
   const initialRegion = {
     latitude,
     longitude,
-    latitudeDelta: 1/1000,
-    longitudeDelta: 1/1000,
-  }; 
+    latitudeDelta: 1 / 1000,
+    longitudeDelta: 1 / 1000,
+  };
 
-  const calculateBearing = (
-    startLat: number, 
-    startLng: number, 
-    endLat: number, 
-    endLng: number
-  ): number => {
-    const radian = Math.PI / 180;
-    const startLatRad = startLat * radian;
-    const startLngRad = startLng * radian;
-    const endLatRad = endLat * radian;
-    const endLngRad = endLng * radian;
-
-    const deltaLng = endLngRad - startLngRad;
-    const y = Math.sin(deltaLng) * Math.cos(endLatRad);
+  
+  const calculateBearing = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
+    const rad = Math.PI / 180;
+    const deltaLng = (lng2 - lng1) * rad;
+    const y = Math.sin(deltaLng) * Math.cos(lat2 * rad);
     const x =
-      Math.cos(startLatRad) * Math.sin(endLatRad) -
-      Math.sin(startLatRad) * Math.cos(endLatRad) * Math.cos(deltaLng);
-    let bearing = Math.atan2(y, x) / radian;
-    bearing = (bearing + 360) % 360; 
-    return bearing;
+      Math.cos(lat1 * rad) * Math.sin(lat2 * rad) -
+      Math.sin(lat1 * rad) * Math.cos(lat2 * rad) * Math.cos(deltaLng);
+    return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
   };
 
-  const calculateDistance = (
-    lat1: number, lon1: number, lat2: number, lon2: number
-  ): number => {
-    const R = 6371e3; // Earth's radius in meters
-    const radian = Math.PI / 180;
-    
-    const dLat = (lat2 - lat1) * radian;
-    const dLon = (lon2 - lon1) * radian;
-    
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * radian) * Math.cos(lat2 * radian) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distance in meters
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371e3; 
+    const rad = Math.PI / 180;
+    const dLat = (lat2 - lat1) * rad;
+    const dLon = (lon2 - lon1) * rad;
+
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLon / 2) ** 2;
+
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   };
 
-  const nextHole = () => {
-    if (currentHole + 1 === courseObject.holes.length) return; 
-    setCurrentHole(prevHole => prevHole + 1);
-  }
-
-  useEffect(() => {
-
-    setHoleCoords(courseObject.holes[currentHole].holeCoords)
-    setTeeCoords(courseObject.holes[currentHole].teeCoords)
-
-  }, [currentHole]);
-
+  
   useEffect(() => {
     const bearing = calculateBearing(
       teeCoords.latitude,
@@ -112,157 +99,131 @@ const [playerScores, setPlayerScores] = useState<number[]>([4, 5, 3]); // mock s
       holeCoords.latitude,
       holeCoords.longitude
     );
-    setBearing(bearing); 
-  }, [courseObject, currentHole]);
+    setBearing(bearing);
+  }, [currentHole]);
 
   useEffect(() => {
-    let locationSubscription: Location.LocationSubscription | null = null;
-  
-    const startWatchingLocation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
-  
-      locationSubscription = await Location.watchPositionAsync(
+    let subscription: Location.LocationSubscription | null = null;
+
+    const startTracking = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') return;
+
+      subscription = await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.High,
-          timeInterval: 5000, // Minimum time between updates (ms)
-          distanceInterval: 1, // Minimum distance change (meters)
+          timeInterval: 5000,
+          distanceInterval: 1,
         },
         (location) => {
           setLocation(location);
-  
-          if (location) {
-            const distance = calculateDistance(
-              location.coords.latitude,
-              location.coords.longitude,
-              holeCoords.latitude,
-              holeCoords.longitude
-            );
-            setDistanceLeft(Math.round(distance));
-          }
+          const distance = calculateDistance(
+            location.coords.latitude,
+            location.coords.longitude,
+            holeCoords.latitude,
+            holeCoords.longitude
+          );
+          setDistanceLeft(Math.round(distance));
         }
       );
     };
-  
-    startWatchingLocation();
-  
-    return () => {
-      if (locationSubscription) {
-        locationSubscription.remove(); // Stop watching when component unmounts
-      }
-    };
-  }, []);
+
+    startTracking();
+    return () => subscription?.remove();
+  }, [currentHole]);
+
+
   const screenHeight = Dimensions.get('window').height;
-const collapsedY = screenHeight - 150;
-const expandedY = screenHeight / 2;
+  const collapsedY = screenHeight - 150;
+  const expandedY = screenHeight / 2;
+  const sheetAnim = useRef(new Animated.Value(collapsedY)).current;
 
-const sheetAnim = useRef(new Animated.Value(collapsedY)).current;
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gesture) => Math.abs(gesture.dy) > 10,
+      onPanResponderMove: (_, gesture) => {
+        const newY = Math.max(expandedY, Math.min(collapsedY, collapsedY + gesture.dy));
+        sheetAnim.setValue(newY);
+      },
+      onPanResponderRelease: (_, gesture) => {
+        const toValue = gesture.dy > 50 ? collapsedY : expandedY;
+        Animated.spring(sheetAnim, { toValue, useNativeDriver: false }).start();
+      },
+    })
+  ).current;
 
-const panResponder = useRef(
-  PanResponder.create({
-    onMoveShouldSetPanResponder: (_, gestureState) => Math.abs(gestureState.dy) > 10,
-    onPanResponderMove: (_, gestureState) => {
-      const newY = Math.max(expandedY, Math.min(collapsedY, collapsedY + gestureState.dy));
-      sheetAnim.setValue(newY);
-    },
-    onPanResponderRelease: (_, gestureState) => {
-      if (gestureState.dy > 50) {
-        Animated.spring(sheetAnim, { toValue: collapsedY, useNativeDriver: false }).start();
-      } else {
-        Animated.spring(sheetAnim, { toValue: expandedY, useNativeDriver: false }).start();
-      }
-    },
-  })
-).current;
-
+  const nextHole = () => {
+    if (currentHole + 1 < courseObject.holes.length) {
+      setCurrentHole(currentHole + 1);
+    } else {
+      alert(`Rundan är klar! Totalt: ${playerScores.reduce((a, b) => a + b, 0)} slag`);
+    }
+  };
 
   return (
-    <View style={{flex: 1}}>
-    <View style={{flex: 1, backgroundColor: 'violet'}}>
-      <View style={{ width: '80%', height: 120, position: 'absolute', top: '10%', left: '10%', zIndex: 999999}}>
-        <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}} type='title'>{courseName}</ThemedText>
-        <TouchableOpacity onPress={nextHole}>
-          <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}} type='subtitle'>Hole {currentHole + 1}</ThemedText>
-        </TouchableOpacity>
-      </View>
+    <View style={{ flex: 1 }}>
       <MapView
-      // provider={PROVIDER_GOOGLE}
-      ref={mapRef}
-      mapType='satellite'
-      style={{flex: 1, backgroundColor: 'magenta'}}
-      rotateEnabled={true}
-      initialRegion={initialRegion}
-      camera={{
-        center: { latitude, longitude },
-        heading: bearing,
-        pitch: 90, // Optional: Set the pitch if you want a tilted view
-        zoom: 17, // Adjust zoom level as needed
-        altitude: 0.01
-      }}
+        ref={mapRef}
+        mapType="satellite"
+        style={{ flex: 1 }}
+        initialRegion={initialRegion}
+        camera={{
+          center: { latitude, longitude },
+          heading: bearing,
+          pitch: 90,
+          zoom: 17,
+        }}
       >
-        <Marker coordinate={{latitude: teeCoords.latitude, longitude: teeCoords.longitude}}>
-          <MaterialIcons size={28} name="sports-golf" color={'white'} />
+        <Marker coordinate={teeCoords}>
+          <MaterialIcons name="sports-golf" size={28} color="white" />
         </Marker>
-        <Marker coordinate={{latitude: holeCoords.latitude, longitude: holeCoords.longitude}}>
-          <MaterialIcons size={28} name="golf-course" color={'red'} />
+        <Marker coordinate={holeCoords}>
+          <MaterialIcons name="golf-course" size={28} color="red" />
         </Marker>
-        <Marker coordinate={{latitude: location?.coords.latitude || 0, longitude: location?.coords.longitude || 0}}>
-          <View style={{alignItems: 'center', gap: 3}}>
-          <View style={{padding: 5, backgroundColor: 'white', borderRadius: 5}}>
-          <ThemedText>{distanceLeft}m</ThemedText>
-          </View>
-          <MaterialIcons size={28} name="person-pin" color={'white'} />
-          </View>
-        </Marker>
-        
+        {location && (
+          <Marker coordinate={location.coords}>
+            <View style={{ alignItems: 'center', gap: 3 }}>
+              <View style={{ padding: 5, backgroundColor: 'white', borderRadius: 5 }}>
+                <ThemedText>{distanceLeft}m</ThemedText>
+              </View>
+              <MaterialIcons name="person-pin" size={28} color="white" />
+            </View>
+          </Marker>
+        )}
       </MapView>
-    </View>
-    <Animated.View
-  {...panResponder.panHandlers}
-  style={[
-    styles.bottomSheet,
-    {
-      transform: [{ translateY: sheetAnim }],
-    },
-  ]}
->
-  <View style={styles.sheetHandle} />
-  <ThemedText style={styles.sheetTitle}>Scorecard</ThemedText>
-  <View style={styles.sheetContent}>
-    <ThemedText>Hål {currentHole + 1}</ThemedText>
-    <ThemedText>Slag: {playerScores[currentHole] ?? '-'}</ThemedText>
-  </View>
-</Animated.View>
 
+      <Animated.View
+        {...panResponder.panHandlers}
+        style={[styles.bottomSheet, { transform: [{ translateY: sheetAnim }] }]}
+      >
+        <View style={styles.sheetHandle} />
+        <ThemedText style={styles.sheetTitle}>Slag för hål {currentHole + 1}</ThemedText>
+        <TextInput
+          style={styles.input}
+          keyboardType="number-pad"
+          placeholder="Ange slag"
+          value={playerScores[currentHole]?.toString()}
+          onChangeText={(text) => {
+            const updated = [...playerScores];
+            updated[currentHole] = parseInt(text) || 0;
+            setPlayerScores(updated);
+          }}
+        />
+        <Button
+          title={currentHole + 1 === courseObject.holes.length ? 'Avsluta rundan' : 'Nästa hål'}
+          onPress={nextHole}
+        />
+      </Animated.View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
   bottomSheet: {
     position: 'absolute',
     left: 0,
     right: 0,
-    height: screenHeight,
+    height: Dimensions.get('window').height,
     backgroundColor: 'white',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
@@ -283,9 +244,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
   },
-  sheetContent: {
-    gap: 8,
-    alignItems: 'center',
+  input: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    textAlign: 'center',
+    marginBottom: 12,
   },
-  
 });
