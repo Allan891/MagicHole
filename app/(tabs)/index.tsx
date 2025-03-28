@@ -230,7 +230,7 @@ export default function HomeScreen() {
       </View>
         <View style={{
           position: 'absolute', 
-          bottom: 20, // Added some spacing from the bottom
+          bottom: '15%', // Added some spacing from the bottom
           left: '15%', 
           width: '70%', 
           height: 60, 
