@@ -1,13 +1,20 @@
 import { Tabs } from 'expo-router';
 import { RoundProvider } from './RoundContext';
+import { ThemeProvider, DefaultTheme } from '@react-navigation/native';
+
+
+
+
 
 export default function TabLayout() {
   return (
     <RoundProvider>
-      <Tabs>
-        <Tabs.Screen name="index" options={{ title: 'Karta' }} />
-        <Tabs.Screen name="score" options={{ title: 'Scorekort' }} />
-      </Tabs>
+      <ThemeProvider value={DefaultTheme}>
+        <Tabs>
+        <Tabs.Screen name="index" options={{ title: 'Map' }} />
+        <Tabs.Screen name="score" options={{ title: 'Scorecard' }} />
+        </Tabs>
+    </ThemeProvider>
     </RoundProvider>
   );
 }
