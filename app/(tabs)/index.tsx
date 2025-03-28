@@ -45,7 +45,9 @@ export default function HomeScreen() {
   const [currentHole, setCurrentHole] = useState<number>(0);
   const [currentStroke, setCurrentStroke] = useState<number>(0);
   const [strokes, setStrokes] = useState<any[][]>([[]]);
-
+  const [LockedView, setLockedView] = useState<boolean>(false);
+  const [lat2, setLat2] = useState<number>(0);
+  const [lon2, setLon2] = useState<number>(0);
   const { playerScores, setPlayerScores } = useRound();
 
   const teeCoords = courseObject.holes[currentHole].teeCoords;
@@ -84,7 +86,7 @@ export default function HomeScreen() {
 
   const addStroke = () => {
     if (location) {
-      const { latitude, longitude } = location.coords;
+      const { latitude, longitude } = location;
       const thisStroke = { latitude, longitude, strokeNumber: currentStroke };
       const updatedStrokes = [...strokes];
       updatedStrokes[currentHole] = [...updatedStrokes[currentHole], thisStroke];
@@ -106,33 +108,32 @@ export default function HomeScreen() {
     setStrokes([...strokes, []]);
   };
 
-  // GPS tracking
-  useEffect(() => {
-    let subscription: Location.LocationSubscription | null = null;
-    const startTracking = async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') return;
-      subscription = await Location.watchPositionAsync(
-        {
-          accuracy: Location.Accuracy.High,
-          timeInterval: 5000,
-          distanceInterval: 1,
-        },
-        (loc) => {
-          setLocation(loc);
-          const distance = calculateDistance(
-            loc.coords.latitude,
-            loc.coords.longitude,
-            holeCoords.latitude,
-            holeCoords.longitude
-          );
-          setDistanceLeft(Math.round(distance));
-        }
-      );
-    };
-    startTracking();
-    return () => subscription?.remove();
-  }, [currentHole]);
+const ToggleLock = () => {
+      setLockedView (!(LockedView));
+};
+
+
+const updateLocation = (event) => {
+	//console.log(event);
+
+	const { coordinate } = event?.nativeEvent;
+	console.log(coordinate);
+
+	setLat2 ( coordinate.latitude);
+	setLon2 ( coordinate.longitude); // Saves lat & lon of user position in "lat2" and "lon2" for use elsewhere.
+	//return;
+	if (coordinate){
+		setLocation(coordinate);
+		//return;
+		const distance = calculateDistance(
+			coordinate.latitude,
+			coordinate.longitude,
+			holeCoords.latitude,
+			holeCoords.longitude
+		);
+		setDistanceLeft(Math.round(distance));
+	}
+};
 
   // Update bearing when hole changes
   useEffect(() => {
@@ -180,10 +181,24 @@ export default function HomeScreen() {
         <ThemedText style={{ textAlign: 'center', color: 'white' }}>
           Stroke {currentStroke + 1}
         </ThemedText>
+
+        <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}} type='subtitle'>{distanceLeft}m</ThemedText>
       </View>
 
       <MapView
-        
+
+        onUserLocationChange={
+            updateLocation
+        }
+        scrollEnabled={!(LockedView)}
+        rotateEnabled={!(LockedView)}
+        zoomEnabled={!(LockedView)}
+        liteMode={false}
+        showsMyLocationButton={false}
+        showsCompass={!(LockedView)}
+        showsUserLocation={true}
+        userLocationFastestInterval={10000}
+        userLocationUpdateInterval={10000}
         mapType="satellite"
         style={{ flex: 1 }}
         initialRegion={initialRegion}
@@ -200,16 +215,7 @@ export default function HomeScreen() {
         <Marker coordinate={holeCoords}>
           <MaterialIcons name="golf-course" size={28} color="red" />
         </Marker>
-        {location && (
-          <Marker coordinate={location.coords}>
-            <View style={{ alignItems: 'center', gap: 3 }}>
-              <View style={{ padding: 5, backgroundColor: 'white', borderRadius: 5 }}>
-                <ThemedText>{distanceLeft} m</ThemedText>
-              </View>
-              <MaterialIcons name="person-pin" size={28} color="white" />
-            </View>
-          </Marker>
-        )}
+
       </MapView>
 
       <Animated.View
