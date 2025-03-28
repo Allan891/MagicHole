@@ -9,12 +9,21 @@ import {
   Button,
   Alert,
 } from 'react-native';
+export const unstable_settings = {
+  initialRouteName: 'index',
+};
+
+export const screenOptions = {
+  headerShown: false, 
+};
+
 import MapView, { Marker } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
 import { useRound } from './RoundContext';
 import { ThemedText } from '@/components/ThemedText';
+import { globalStateVar } from './globalStateVar';
 
 const courseObject = {
   name: 'Brollsta',
@@ -37,14 +46,18 @@ const courseObject = {
   ],
 };
 
+
 export default function HomeScreen() {
+  const strokes = globalStateVar((state) => state.strokes);
+const setStroke = globalStateVar((state) => state.setStroke);
   const mapRef = useRef<MapView | null>(null);
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [distanceLeft, setDistanceLeft] = useState<number | null>(null);
   const [bearing, setBearing] = useState(0);
   const [currentHole, setCurrentHole] = useState<number>(0);
   const [currentStroke, setCurrentStroke] = useState<number>(0);
-  const [strokes, setStrokes] = useState<any[][]>([[]]);
+  
+  
 
   const { playerScores, setPlayerScores } = useRound();
 
@@ -82,19 +95,26 @@ export default function HomeScreen() {
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   };
 
-  const addStroke = () => {
-    if (location) {
-      const { latitude, longitude } = location.coords;
-      const thisStroke = { latitude, longitude, strokeNumber: currentStroke };
-      const updatedStrokes = [...strokes];
-      updatedStrokes[currentHole] = [...updatedStrokes[currentHole], thisStroke];
-      setStrokes(updatedStrokes);
-      setCurrentStroke(currentStroke + 1);
-      console.log(updatedStrokes);
-    } else {
-      Alert.alert('Error: No location data');
-    }
-  };
+
+const addStroke = () => {
+  if (location) {
+    const { latitude, longitude } = location.coords;
+    const thisStroke = { latitude, longitude, strokeNumber: currentStroke };
+
+    const updatedStrokes = [...strokes];
+    
+    setCurrentStroke(currentStroke + 1);
+
+    
+    const currentScore = strokes[currentHole] || 0;
+setStroke(currentHole, currentScore + 1);
+
+    console.log(updatedStrokes);
+  } else {
+    Alert.alert('Error: No location data');
+  }
+};
+
 
   const nextHole = () => {
     if (currentHole + 1 >= courseObject.holes.length) {
@@ -103,7 +123,7 @@ export default function HomeScreen() {
     }
     setCurrentHole(currentHole + 1);
     setCurrentStroke(0);
-    setStrokes([...strokes, []]);
+    
   };
 
   // GPS tracking
@@ -178,7 +198,7 @@ export default function HomeScreen() {
           </ThemedText>
         </TouchableOpacity>
         <ThemedText style={{ textAlign: 'center', color: 'white' }}>
-          Stroke {currentStroke + 1}
+          Stroke {currentStroke}
         </ThemedText>
       </View>
 
@@ -219,16 +239,16 @@ export default function HomeScreen() {
         <View style={styles.sheetHandle} />
         <ThemedText style={styles.sheetTitle}>Strokes for hole {currentHole + 1}</ThemedText>
         <TextInput
-          style={styles.input}
-          keyboardType="number-pad"
-          placeholder="Enter strokes"
-          value={playerScores[currentHole]?.toString() || ''}
-          onChangeText={(text) => {
-            const updated = [...playerScores];
-            updated[currentHole] = parseInt(text) || 0;
-            setPlayerScores(updated);
-          }}
-        />
+  keyboardType="number-pad"
+  value={strokes[currentHole]?.toString() || ''}
+  onChangeText={(text) => {
+    const value = parseInt(text) || 0;
+    setStroke(currentHole, value);
+  }}
+/>
+
+          
+        
         <Button
           title={currentHole + 1 === courseObject.holes.length ? 'End Round' : 'Next Hole'}
           onPress={nextHole}

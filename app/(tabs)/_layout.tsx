@@ -11,8 +11,14 @@ export default function TabLayout() {
     <RoundProvider>
       <ThemeProvider value={DefaultTheme}>
         <Tabs>
-        <Tabs.Screen name="index" options={{ title: 'Map' }} />
-        <Tabs.Screen name="score" options={{ title: 'Scorecard' }} />
+        <Tabs.Screen
+  name="index"
+  options={{
+    headerShown: false, 
+    tabBarLabel: 'Play', 
+  }}
+/>
+        <Tabs.Screen name="score" options={{ headerShown: false, title: 'Scorecard' }} />
         </Tabs>
     </ThemeProvider>
     </RoundProvider>
