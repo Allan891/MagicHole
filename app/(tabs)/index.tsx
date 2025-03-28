@@ -8,6 +8,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
+import { Alert } from "react-native";
 
 
 const screenHeight = Dimensions.get('window').height;
@@ -33,6 +34,7 @@ export default function HomeScreen() {
     ]
   }
 
+
   const mapRef = useRef<MapView | null>(null);
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [bearing, setBearing] = useState(0);
@@ -44,8 +46,13 @@ export default function HomeScreen() {
   const [courseName, setCourseName] = useState<Object>(courseObject.name);
 const [playerScores, setPlayerScores] = useState<number[]>([4, 5, 3]); // mock scores per hole
 
+  const [strokes, setStrokes] = useState<Object[][]>([[]])
+  const [currentStroke, setCurrentStroke] = useState<number>(0); 
+
   const latitude = (teeCoords?.latitude + holeCoords?.latitude) / 2;
   const longitude = (teeCoords?.longitude + holeCoords?.longitude) / 2;
+
+  
 
   const initialRegion = {
     latitude,
@@ -96,6 +103,27 @@ const [playerScores, setPlayerScores] = useState<number[]>([4, 5, 3]); // mock s
   const nextHole = () => {
     if (currentHole + 1 === courseObject.holes.length) return; 
     setCurrentHole(prevHole => prevHole + 1);
+    strokes.push([]);
+    setStrokes(strokes);
+    setCurrentStroke(0);
+  }
+
+  const addStroke = () => {
+
+    if (location) {
+      const latitude = location.coords.latitude;
+      const longitude = location.coords.longitude;
+      const thisStroke = {longitude,latitude,strokeNumber:currentStroke};
+
+      strokes[currentHole].push(thisStroke);
+      setCurrentStroke(currentStroke + 1);
+      setStrokes(strokes);
+      console.log(strokes);
+
+    }
+    else{
+      Alert.alert("Error: no location data" );
+    }
   }
 
   useEffect(() => {
@@ -104,6 +132,8 @@ const [playerScores, setPlayerScores] = useState<number[]>([4, 5, 3]); // mock s
     setTeeCoords(courseObject.holes[currentHole].teeCoords)
 
   }, [currentHole]);
+
+  
 
   useEffect(() => {
     const bearing = calculateBearing(
@@ -181,12 +211,15 @@ const panResponder = useRef(
 
   return (
     <View style={{flex: 1}}>
-    <View style={{flex: 1, backgroundColor: 'violet'}}>
+    <View style={{flex: 1}}>
       <View style={{ width: '80%', height: 120, position: 'absolute', top: '10%', left: '10%', zIndex: 999999}}>
         <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}} type='title'>{courseName}</ThemedText>
         <TouchableOpacity onPress={nextHole}>
           <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}} type='subtitle'>Hole {currentHole + 1}</ThemedText>
         </TouchableOpacity>
+        <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}} >Stroke {currentStroke + 1}</ThemedText>
+        
+
       </View>
       <MapView
       // provider={PROVIDER_GOOGLE}
@@ -219,6 +252,7 @@ const panResponder = useRef(
         </Marker>
         
       </MapView>
+<<<<<<< HEAD
     </View>
     <Animated.View
   {...panResponder.panHandlers}
@@ -236,8 +270,33 @@ const panResponder = useRef(
     <ThemedText>Slag: {playerScores[currentHole] ?? '-'}</ThemedText>
   </View>
 </Animated.View>
+=======
+      </View>
+        <View style={{
+          position: 'absolute', 
+          bottom: '15%', // Added some spacing from the bottom
+          left: '15%', 
+          width: '70%', 
+          height: 60, 
+          backgroundColor: 'white',
+          borderRadius: 30, // Makes it round
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent:"space-evenly"
+        }}>
+          <TouchableOpacity onPress={nextHole}>
+            <MaterialIcons name="golf-course" size={30} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={addStroke}>
+            <MaterialIcons name="plus-one" size={30} color="black" />
+          </TouchableOpacity>
+
+        </View>
+
+>>>>>>> 4d7796e4fd0090f622aa01e21d3a95dc78d49916
 
     </View>
+    
   );
 }
 
@@ -249,7 +308,7 @@ const styles = StyleSheet.create({
   },
   stepContainer: {
     gap: 8,
-    marginBottom: 8,
+    marginBottom: 8,  
   },
   reactLogo: {
     height: 178,
