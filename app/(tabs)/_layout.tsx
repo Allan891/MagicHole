@@ -11,7 +11,7 @@ export default function TabLayout() {
     <RoundProvider>
       <ThemeProvider value={DefaultTheme}>
         <Tabs>
-        <Tabs.Screen name="index" options={{ title: 'Map',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="golf-course" color={color} />, }} />
+        <Tabs.Screen name="map" options={{ title: 'Map',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="golf-course" color={color} />, }} />
         <Tabs.Screen name="score" options={{ title: 'Scorecard', tabBarIcon: ({ color }) => <MaterialIcons size={28} name="sports-score" color={color} />, // Change from "paperplane.fill"
  }} />
         </Tabs>
