@@ -18,11 +18,11 @@ export default function TabLayout() {
 
         <Tabs initialRouteName="map">
         <Tabs.Screen name="index"
-                    options={{
+                    options={{headerShown: false,
                       tabBarItemStyle: { title: 'no' ,display: "none" },
                     }}
                   />
-        <Tabs.Screen name="map" options={{ title: 'Map',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="golf-course" color={color} />, }} />
+        <Tabs.Screen name="map" options={{headerShown: false, title: 'Map',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="golf-course" color={color} />, }} />
         <Tabs.Screen name="score" options={{ title: 'Scorecard', tabBarIcon: ({ color }) => <MaterialIcons size={28} name="sports-score" color={color} />, // Change from "paperplane.fill"
  }} />
         </Tabs>
