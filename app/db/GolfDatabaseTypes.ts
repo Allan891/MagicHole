@@ -40,8 +40,9 @@ type Round = {
 type Stroke = {
   holeId: number;
   roundId: number;
-  startLatitude?: number;
-  startLongitude?: number;
+  strokeNr: number;
+  startLatitude: number;
+  startLongitude: number;
   distance?: number;
   golfClubId: number;
   playerId: number;

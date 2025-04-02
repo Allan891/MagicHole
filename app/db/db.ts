@@ -54,6 +54,7 @@ class Database {
     CREATE TABLE IF NOT EXISTS Stroke (
       holeId INTEGER NOT NULL,
       roundId INTEGER NOT NULL,
+      strokeNr INTEGER NOT NULL,
       startLatitude REAL,
       startLongitude REAL,
       distance REAL,
