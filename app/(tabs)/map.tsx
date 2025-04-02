@@ -75,10 +75,18 @@ export default function HomeScreen() {
 
   const addStroke = () => {
     if (location) {
-      const { latitude, longitude } = location.coords;
+
+      const { latitude, longitude } = location;
       const thisStroke = { latitude, longitude, strokeNumber: currentStroke };
+
       const updatedMapStrokes = [...mapStrokes];
-      updatedMapStrokes[currentHole] = [...updatedMapStrokes[currentHole], thisStroke];
+        console.log(updatedMapStrokes);
+        console.log('current hole: ',currentHole);
+       if (updatedMapStrokes[currentHole])
+            updatedMapStrokes[currentHole] = [...updatedMapStrokes[currentHole], thisStroke];
+        else
+            updatedMapStrokes[currentHole] = [thisStroke];
+
       setMapStrokes(updatedMapStrokes);
 
       const updatedStrokes = [...strokes];
@@ -91,7 +99,7 @@ export default function HomeScreen() {
       if (test) updateTestLocation();
   
       console.log(updatedMapStrokes);
-      console.log(mapStrokes[currentHole][currentStroke-1]);
+      //console.log(mapStrokes[currentHole][currentStroke-1]);
     } else {
       Alert.alert('Error: No location data');
     }
@@ -129,14 +137,14 @@ const updateTestLocation = (forcedLocation = {}, nextHole = {}) => {
     updatedLatitude = forcedLocation.latitude;
     updatedLongitude = forcedLocation.longitude;
   } else {
-      updatedLatitude = location.coords.latitude - (location.coords.latitude - holeCoords.latitude)* (Math.random() + 0.5) / 2;
-      updatedLongitude = location.coords.longitude - (location.coords.longitude - holeCoords.longitude)* (Math.random() + 0.5) / 2;
+      updatedLatitude = location.latitude - (location.latitude - holeCoords.latitude)* (Math.random()*0.8 + 0.2);
+      updatedLongitude = location.longitude - (location.longitude - holeCoords.longitude)* (Math.random()*0.8 + 0.2);
   }
 
   console.log('Update to: ', updatedLatitude, updatedLongitude);
 
   const testLocation: LocationObject = {
-    coords: {
+
       accuracy: 10,
       altitude: 0,
       altitudeAccuracy: -1,
@@ -144,13 +152,13 @@ const updateTestLocation = (forcedLocation = {}, nextHole = {}) => {
       latitude: updatedLatitude,
       longitude: updatedLongitude,
       speed: 3.63,
-    },
+
     timestamp: Date.now(),
   };
     setLocation(testLocation)
     const distance = calculateDistance(
-      testLocation.coords.latitude,
-      testLocation.coords.longitude,
+      testLocation.latitude,
+      testLocation.longitude,
       nextHole.latitude ? nextHole.latitude : holeCoords.latitude,
       nextHole.longitude ? nextHole.longitude : holeCoords.longitude
     );
@@ -240,10 +248,10 @@ const updateLocation = (event) => {
         <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}} type='subtitle'>{distanceLeft}m</ThemedText>
 {  location && currentStroke > 0 &&
          <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}}
-         type='subtitle'>Prev Shot 
+         type='subtitle'>Prev Shot
           {Math.round(calculateDistance(
-             location.coords.latitude,
-             location.coords.longitude,
+             location.latitude,
+             location.longitude,
              mapStrokes[currentHole][currentStroke-1].latitude,
              mapStrokes[currentHole][currentStroke-1].longitude
          ))}m</ThemedText>
@@ -282,7 +290,7 @@ const updateLocation = (event) => {
         </Marker>
         {test && location &&
         
-        <Marker coordinate={location.coords}>
+        <Marker coordinate={location}>
           <MaterialIcons name="person" size={28} color="white" />
         </Marker>
 
