@@ -5,6 +5,7 @@ class Database {
   private db: SQLite.SQLiteDatabase | null = null;
 
   constructor() {
+    console.log('Database constructor called');
     this.initDb();
   }
 
