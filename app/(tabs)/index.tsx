@@ -9,8 +9,13 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
 import { Alert } from "react-native";
+import { Text, Button } from 'react-native'; // Correct import from react-native
+import { InitDb,getCourseById,getAllCourses,createCourse } from '../db/db';
+// =============================================================================
+// DATABASE START
 
-
+// DATABASE END
+// =============================================================================
 export default function HomeScreen() {
 
   const courseObject = {
@@ -29,6 +34,12 @@ export default function HomeScreen() {
         teeCoords: {latitude: 59.580322, longitude: 18.287774},
       }
     ]
+  }
+
+  const createCourse_test = async (name: string, coordinateX: number, coordinateY: number, active: number, date: string) => {
+  await createCourse("Matue", 420, 69, 1, "2021-10-10");
+  const stats = await getCourseById(2);
+  console.log(stats);
   }
 
 
@@ -104,12 +115,14 @@ export default function HomeScreen() {
     setCurrentStroke(0);
   }
 
-  const addStroke = () => {
+  const addStroke = async () => {
 
     if (location) {
       const latitude = location.coords.latitude;
       const longitude = location.coords.longitude;
       const thisStroke = {longitude,latitude,strokeNumber:currentStroke};
+
+      createCourse_test("Matue", 420, 69, 1, "2021-10-10");
 
       strokes[currentHole].push(thisStroke);
       setCurrentStroke(currentStroke + 1);
