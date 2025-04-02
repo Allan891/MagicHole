@@ -84,7 +84,8 @@ export default function HomeScreen() {
   
       
       const currentScore = strokes[currentHole] || 0;
-  setStroke(currentHole, currentScore + 1);
+      setStroke(currentHole, currentScore + 1);
+      if (test) updateTestLocation();
   
       console.log(updatedStrokes);
     } else {
