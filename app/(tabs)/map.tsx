@@ -16,8 +16,9 @@ import * as Location from 'expo-location';
 import { useRound } from './RoundContext';
 import { ThemedText } from '@/components/ThemedText';
 import { LocationObject } from 'expo-location';
+import { CoursePicker } from '@/components/CoursePicker';
 
-const courseObject = {
+const exampleObject = {
   name: 'Brollsta',
   holes: [
     {
@@ -50,6 +51,9 @@ export default function HomeScreen() {
   const [lat2, setLat2] = useState<number>(0);
   const [lon2, setLon2] = useState<number>(0);
   const { playerScores, setPlayerScores } = useRound();
+  const [courseObject, setCourseObject] = useState<Object>(exampleObject);
+  const [courseChosen, setCourseChosen] = useState<boolean>(false);
+
 
   const teeCoords = courseObject.holes[currentHole].teeCoords;
   const holeCoords = courseObject.holes[currentHole].holeCoords;
@@ -227,6 +231,13 @@ const updateLocation = (event) => {
 
   return (
     <View style={{ flex: 1 }}>
+
+      {!courseChosen &&
+      
+      <CoursePicker />
+
+      }
+
       <View style={{ width: '80%', height: 120, position: 'absolute', top: '10%', left: '10%', zIndex: 999999 }}>
         <ThemedText style={{ textAlign: 'center', color: 'white' }} type="title">
           {courseObject.name}
