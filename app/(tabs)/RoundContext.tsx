@@ -22,596 +22,161 @@ const defaultCourse = {
   ],
 };
 
-
-const lindingoBana = {
+const lidingoCourse = {
   namn: 'Lidingö Golfklubb',
-  par:[3,5,3,4,4,3,4,4,3,5,3,5,4,4,3,5,4],
-  holes:[
-  {
-  greenBack: {latitude: 59.3772872, longitude: 18.1284596},
-  greenMiddle: {latitude: 59.3774159, longitude: 18.1283832},
-  greenFront: {latitude: 59.3775656, longitude: 18.1282329},
-  teeFront: {latitude: 59.3784918, longitude: 18.1276603},
-  teeBack: {latitude: 59.3788689, longitude: 18.1276979},
-  },
-  {
-  greenBack: {latitude: 59.3734963, longitude: 18.1338681},
-  greenMiddle: {latitude: 59.3735908, longitude: 18.1337624},
-  greenFront: {latitude: 59.3736944, longitude: 18.1336024},
-  teeFront: {latitude: 59.3768851, longitude: 18.1306135},
-  teeBack: {latitude: 59.3775764, longitude: 18.1296693},
-  },
-  {
-  greenBack: {latitude: 59.3754886, longitude: 18.1323206},
-  greenMiddle: {latitude: 59.3753821, longitude: 18.1324508},
-  greenFront: {latitude: 59.3752753, longitude: 18.1326078},
-  teeFront: {latitude: 59.374524, longitude: 18.1340333},
-  teeBack: {latitude: 59.3739666, longitude: 18.1343605},
-  },
-  {
-  greenBack: {latitude: 59.3793912, longitude: 18.1281675},
-  greenMiddle: {latitude: 59.3792651, longitude: 18.1282799},
-  greenFront: {latitude: 59.3791413, longitude: 18.128399},
-  teeFront: {latitude: 59.377131, longitude: 18.1312357},
-  teeBack: {latitude: 59.3764561, longitude: 18.1321101},
-  },
-  {
-  greenBack: {latitude: 59.3772466, longitude: 18.123368},
-  greenMiddle: {latitude: 59.37731, longitude: 18.1234345},
-  greenFront: {latitude: 59.3773798, longitude: 18.123537},
-  teeFront: {latitude: 59.3786872, longitude: 18.125929},
-  teeBack: {latitude: 59.3788716, longitude: 18.1263715},
-  },
-  {
-  greenBack: {latitude: 59.375987, longitude: 18.1265261},
-  greenMiddle: {latitude: 59.3760544, longitude: 18.1263595},
-  greenFront: {latitude: 59.3761138, longitude: 18.1261718},
-  teeFront: {latitude: 59.3767949, longitude: 18.1242459},
-  teeBack: {latitude: 59.3770572, longitude: 18.1238275},
-  },
-  {
-  greenBack: {latitude: 59.3774037, longitude: 18.1232905},
-  greenMiddle: {latitude: 59.377312, longitude: 18.1234318},
-  greenFront: {latitude: 59.3772133, longitude: 18.123561},
-  teeFront: {latitude: 59.3755871, longitude: 18.126279},
-  teeBack: {latitude: 59.3753767, longitude: 18.1270193},
-  },
-  {
-  greenBack: {latitude: 59.3788186, longitude: 18.1254883},
-  greenMiddle: {latitude: 59.3787534, longitude: 18.1252946},
-  greenFront: {latitude: 59.3786751, longitude: 18.1250913},
-  teeFront: {latitude: 59.3772758, longitude: 18.1215476},
-  teeBack: {latitude: 59.3769725, longitude: 18.1207054},
-  },
-  {
-  greenBack: {latitude: 59.3785118, longitude: 18.1232334},
-  greenMiddle: {latitude: 59.3785765, longitude: 18.1234278},
-  greenFront: {latitude: 59.3786266, longitude: 18.1236639},
-  teeFront: {latitude: 59.379041, longitude: 18.1249862},
-  teeBack: {latitude: 59.3790273, longitude: 18.1260215},
-  },
-  {
-  greenBack: {latitude: 59.3814461, longitude: 18.1207903},
-  greenMiddle: {latitude: 59.3813156, longitude: 18.1208341},
-  greenFront: {latitude: 59.381178, longitude: 18.1208679},
-  teeFront: {latitude: 59.3783661, longitude: 18.1223683},
-  teeBack: {latitude: 59.3776201, longitude: 18.1214564},
-  },
-  {
-  greenBack: {latitude: 59.3839872, longitude: 18.1195783},
-  greenMiddle: {latitude: 59.383862, longitude: 18.1196084},
-  greenFront: {latitude: 59.383747, longitude: 18.1196485},
-  teeFront: {latitude: 59.382914, longitude: 18.1199369},
-  teeBack: {latitude: 59.3827405, longitude: 18.1199906},
-  },
-  {
-  greenBack: {latitude: 59.3822599, longitude: 18.1265724},
-  greenMiddle: {latitude: 59.3822897, longitude: 18.1263863},
-  greenFront: {latitude: 59.382307, longitude: 18.1261513},
-  teeFront: {latitude: 59.3837377, longitude: 18.1202427},
-  teeBack: {latitude: 59.3842595, longitude: 18.1192342},
-  },
-  {
-  greenBack: {latitude: 59.381231, longitude: 18.125955},
-  greenMiddle: {latitude: 59.3812945, longitude: 18.1259223},
-  greenFront: {latitude: 59.3813587, longitude: 18.1258973},
-  teeFront: {latitude: 59.3815738, longitude: 18.1266331},
-  teeBack: {latitude: 59.3819509, longitude: 18.1255012},
-  },
-  {
-  greenBack: {latitude: 59.3812983, longitude: 18.1263136},
-  greenMiddle: {latitude: 59.3813081, longitude: 18.1260094},
-  greenFront: {latitude: 59.3813181, longitude: 18.1257436},
-  teeFront: {latitude: 59.3818361, longitude: 18.122422},
-  teeBack: {latitude: 59.3821913, longitude: 18.1206893},
-  },
-  {
-  greenBack: {latitude: 59.3832515, longitude: 18.1299987},
-  greenMiddle: {latitude: 59.383151, longitude: 18.1298678},
-  greenFront: {latitude: 59.3830336, longitude: 18.129756},
-  teeFront: {latitude: 59.3808525, longitude: 18.1271266},
-  teeBack: {latitude: 59.3801257, longitude: 18.1269737},
-  },
-  {
-  greenBack: {latitude: 59.3810724, longitude: 18.1297952},
-  greenMiddle: {latitude: 59.3811442, longitude: 18.1298517},
-  greenFront: {latitude: 59.3812176, longitude: 18.1299518},
-  teeFront: {latitude: 59.3822091, longitude: 18.1303761},
-  teeBack: {latitude: 59.382817, longitude: 18.1302742},
-  },
-  {
-  greenBack: {latitude: 59.380369, longitude: 18.1351208},
-  greenMiddle: {latitude: 59.3803559, longitude: 18.1348527},
-  greenFront: {latitude: 59.3803335, longitude: 18.134579},
-  teeFront: {latitude: 59.3805219, longitude: 18.1285052},
-  teeBack: {latitude: 59.3803334, longitude: 18.1271105},
-  },
-  {
-  greenBack: {latitude: 59.3797237, longitude: 18.1285452},
-  greenMiddle: {latitude: 59.3796913, longitude: 18.128811},
-  greenFront: {latitude: 59.379656, longitude: 18.1290602},
-  teeFront: {latitude: 59.3795738, longitude: 18.1338267},
-  teeBack: {latitude: 59.3800875, longitude: 18.1360583},
-  }
-  ]
-  };
-  
-  
-const igcaaBana = {
-  name:'International Golf Club at Arlanda',
-  par:[4,5,3,4,5,3,4,4,4,4,4,3,4,5,5,4,3,4],
-  holes:[
-  {
-  greenBack: {latitude: 59.693518, longitude: 18.0199564},
-  greenMiddle: {latitude: 59.6934303, longitude: 18.0200877},
-  greenFront: {latitude: 59.6933353, longitude: 18.02023},
-  teeFront: {latitude: 59.6912267, longitude: 18.0197229},
-  teeBack: {latitude: 59.6912267, longitude: 18.0197229},
-  },
-  {
-  greenBack: {latitude: 59.6978749, longitude: 18.0217643},
-  greenMiddle: {latitude: 59.6978019, longitude: 18.0214556},
-  greenFront: {latitude: 59.6977152, longitude: 18.0211454},
-  teeFront: {latitude: 59.693479, longitude: 18.0209245},
-  teeBack: {latitude: 59.693479, longitude: 18.0209245},
-  },
-  {
-  greenBack: {latitude: 59.6973699, longitude: 18.0232235},
-  greenMiddle: {latitude: 59.6974486, longitude: 18.0230408},
-  greenFront: {latitude: 59.6975253, longitude: 18.0228814},
-  teeFront: {latitude: 59.6983188, longitude: 18.021418},
-  teeBack: {latitude: 59.6983188, longitude: 18.021418},
-  },
-  {
-  greenBack: {latitude: 59.6948231, longitude: 18.0246},
-  greenMiddle: {latitude: 59.6948298, longitude: 18.0245106},
-  greenFront: {latitude: 59.694838, longitude: 18.0244284},
-  teeFront: {latitude: 59.69709, longitude: 18.0235745},
-  teeBack: {latitude: 59.69709, longitude: 18.0235745},
-  },
-  {
-  greenBack: {latitude: 59.6907308, longitude: 18.0252144},
-  greenMiddle: {latitude: 59.6909614, longitude: 18.0251034},
-  greenFront: {latitude: 59.6911775, longitude: 18.0249784},
-  teeFront: {latitude: 59.6948054, longitude: 18.0251946},
-  teeBack: {latitude: 59.6948054, longitude: 18.0251946},
-  },
-  {
-  greenBack: {latitude: 59.6927429, longitude: 18.0252192},
-  greenMiddle: {latitude: 59.6926358, longitude: 18.0253421},
-  greenFront: {latitude: 59.6925237, longitude: 18.0254472},
-  teeFront: {latitude: 59.6914108, longitude: 18.0257096},
-  teeBack: {latitude: 59.6914108, longitude: 18.0257096},
-  },
-  {
-  greenBack: {latitude: 59.6899077, longitude: 18.0286615},
-  greenMiddle: {latitude: 59.6900315, longitude: 18.0284776},
-  greenFront: {latitude: 59.6901486, longitude: 18.0283074},
-  teeFront: {latitude: 59.6938363, longitude: 18.0257525},
-  teeBack: {latitude: 59.6938363, longitude: 18.0257525},
-  },
-  {
-  greenBack: {latitude: 59.6881454, longitude: 18.0273524},
-  greenMiddle: {latitude: 59.6882162, longitude: 18.0276569},
-  greenFront: {latitude: 59.6882862, longitude: 18.0279238},
-  teeFront: {latitude: 59.6902467, longitude: 18.0296149},
-  teeBack: {latitude: 59.6902467, longitude: 18.0296149},
-  },
-  {
-  greenBack: {latitude: 59.6900102, longitude: 18.0238691},
-  greenMiddle: {latitude: 59.6899083, longitude: 18.0238696},
-  greenFront: {latitude: 59.6897719, longitude: 18.0238557},
-  teeFront: {latitude: 59.6876097, longitude: 18.027394},
-  teeBack: {latitude: 59.6876097, longitude: 18.027394},
-  },
-  {
-  greenBack: {latitude: 59.6927602, longitude: 18.0168358},
-  greenMiddle: {latitude: 59.6927062, longitude: 18.0170031},
-  greenFront: {latitude: 59.6926546, longitude: 18.017163},
-  teeFront: {latitude: 59.6898514, longitude: 18.0194332},
-  teeBack: {latitude: 59.6898514, longitude: 18.0194332},
-  },
-  {
-  greenBack: {latitude: 59.6956932, longitude: 18.0158597},
-  greenMiddle: {latitude: 59.6955918, longitude: 18.0159329},
-  greenFront: {latitude: 59.6954879, longitude: 18.016048},
-  teeFront: {latitude: 59.6926236, longitude: 18.0158927},
-  teeBack: {latitude: 59.6926236, longitude: 18.0158927},
-  },
-  {
-  greenBack: {latitude: 59.6962244, longitude: 18.0149134},
-  greenMiddle: {latitude: 59.6960831, longitude: 18.0149579},
-  greenFront: {latitude: 59.6959356, longitude: 18.0149432},
-  teeFront: {latitude: 59.6946863, longitude: 18.0149915},
-  teeBack: {latitude: 59.6946863, longitude: 18.0149915},
-  },
-  {
-  greenBack: {latitude: 59.7000861, longitude: 18.0125489},
-  greenMiddle: {latitude: 59.6999157, longitude: 18.0126419},
-  greenFront: {latitude: 59.6997415, longitude: 18.012726},
-  teeFront: {latitude: 59.6966623, longitude: 18.0145409},
-  teeBack: {latitude: 59.6966623, longitude: 18.0145409},
-  },
-  {
-  greenBack: {latitude: 59.6958605, longitude: 18.015914},
-  greenMiddle: {latitude: 59.695991, longitude: 18.0160214},
-  greenFront: {latitude: 59.6961488, longitude: 18.0161071},
-  teeFront: {latitude: 59.7001106, longitude: 18.0130496},
-  teeBack: {latitude: 59.7001106, longitude: 18.0130496},
-  },
-  {
-  greenBack: {latitude: 59.6990229, longitude: 18.0200552},
-  greenMiddle: {latitude: 59.6989292, longitude: 18.0198946},
-  greenFront: {latitude: 59.6988403, longitude: 18.0197736},
-  teeFront: {latitude: 59.6952277, longitude: 18.0170085},
-  teeBack: {latitude: 59.6952277, longitude: 18.0170085},
-  },
-  {
-  greenBack: {latitude: 59.6948407, longitude: 18.0195796},
-  greenMiddle: {latitude: 59.6949381, longitude: 18.0195378},
-  greenFront: {latitude: 59.695064, longitude: 18.019475},
-  teeFront: {latitude: 59.6985733, longitude: 18.020431},
-  teeBack: {latitude: 59.6985733, longitude: 18.020431},
-  },
-  {
-  greenBack: {latitude: 59.6936624, longitude: 18.0197096},
-  greenMiddle: {latitude: 59.6937714, longitude: 18.0197068},
-  greenFront: {latitude: 59.6938695, longitude: 18.0196587},
-  teeFront: {latitude: 59.6947621, longitude: 18.0183603},
-  teeBack: {latitude: 59.6947621, longitude: 18.0183603},
-  },
-  {
-  greenBack: {latitude: 59.6904151, longitude: 18.0231813},
-  greenMiddle: {latitude: 59.6905485, longitude: 18.0232151},
-  greenFront: {latitude: 59.6906831, longitude: 18.0232457},
-  teeFront: {latitude: 59.6941016, longitude: 18.0215361},
-  teeBack: {latitude: 59.6941016, longitude: 18.0215361},
-  }
-  ]
+  par: [3, 5, 3, 4, 4, 3, 4, 4, 3, 5, 3, 5, 4, 4, 3, 5, 4],
+  holes: [
+    {
+    greenBack: {latitude: 59.3772872, longitude: 18.1284596},
+    greenMiddle: {latitude: 59.3774159, longitude: 18.1283832},
+    greenFront: {latitude: 59.3775656, longitude: 18.1282329},
+    teeFront: {latitude: 59.3784918, longitude: 18.1276603},
+    teeBack: {latitude: 59.3788689, longitude: 18.1276979},
+    },
+    {
+    greenBack: {latitude: 59.3734963, longitude: 18.1338681},
+    greenMiddle: {latitude: 59.3735908, longitude: 18.1337624},
+    greenFront: {latitude: 59.3736944, longitude: 18.1336024},
+    teeFront: {latitude: 59.3768851, longitude: 18.1306135},
+    teeBack: {latitude: 59.3775764, longitude: 18.1296693},
+    },
+    {
+    greenBack: {latitude: 59.3754886, longitude: 18.1323206},
+    greenMiddle: {latitude: 59.3753821, longitude: 18.1324508},
+    greenFront: {latitude: 59.3752753, longitude: 18.1326078},
+    teeFront: {latitude: 59.374524, longitude: 18.1340333},
+    teeBack: {latitude: 59.3739666, longitude: 18.1343605},
+    },
+    {
+    greenBack: {latitude: 59.3793912, longitude: 18.1281675},
+    greenMiddle: {latitude: 59.3792651, longitude: 18.1282799},
+    greenFront: {latitude: 59.3791413, longitude: 18.128399},
+    teeFront: {latitude: 59.377131, longitude: 18.1312357},
+    teeBack: {latitude: 59.3764561, longitude: 18.1321101},
+    },
+    {
+    greenBack: {latitude: 59.3772466, longitude: 18.123368},
+    greenMiddle: {latitude: 59.37731, longitude: 18.1234345},
+    greenFront: {latitude: 59.3773798, longitude: 18.123537},
+    teeFront: {latitude: 59.3786872, longitude: 18.125929},
+    teeBack: {latitude: 59.3788716, longitude: 18.1263715},
+    },
+    {
+    greenBack: {latitude: 59.375987, longitude: 18.1265261},
+    greenMiddle: {latitude: 59.3760544, longitude: 18.1263595},
+    greenFront: {latitude: 59.3761138, longitude: 18.1261718},
+    teeFront: {latitude: 59.3767949, longitude: 18.1242459},
+    teeBack: {latitude: 59.3770572, longitude: 18.1238275},
+    },
+    {
+    greenBack: {latitude: 59.3774037, longitude: 18.1232905},
+    greenMiddle: {latitude: 59.377312, longitude: 18.1234318},
+    greenFront: {latitude: 59.3772133, longitude: 18.123561},
+    teeFront: {latitude: 59.3755871, longitude: 18.126279},
+    teeBack: {latitude: 59.3753767, longitude: 18.1270193},
+    },
+    {
+    greenBack: {latitude: 59.3788186, longitude: 18.1254883},
+    greenMiddle: {latitude: 59.3787534, longitude: 18.1252946},
+    greenFront: {latitude: 59.3786751, longitude: 18.1250913},
+    teeFront: {latitude: 59.3772758, longitude: 18.1215476},
+    teeBack: {latitude: 59.3769725, longitude: 18.1207054},
+    },
+    {
+    greenBack: {latitude: 59.3785118, longitude: 18.1232334},
+    greenMiddle: {latitude: 59.3785765, longitude: 18.1234278},
+    greenFront: {latitude: 59.3786266, longitude: 18.1236639},
+    teeFront: {latitude: 59.379041, longitude: 18.1249862},
+    teeBack: {latitude: 59.3790273, longitude: 18.1260215},
+    },
+    {
+    greenBack: {latitude: 59.3814461, longitude: 18.1207903},
+    greenMiddle: {latitude: 59.3813156, longitude: 18.1208341},
+    greenFront: {latitude: 59.381178, longitude: 18.1208679},
+    teeFront: {latitude: 59.3783661, longitude: 18.1223683},
+    teeBack: {latitude: 59.3776201, longitude: 18.1214564},
+    },
+    {
+    greenBack: {latitude: 59.3839872, longitude: 18.1195783},
+    greenMiddle: {latitude: 59.383862, longitude: 18.1196084},
+    greenFront: {latitude: 59.383747, longitude: 18.1196485},
+    teeFront: {latitude: 59.382914, longitude: 18.1199369},
+    teeBack: {latitude: 59.3827405, longitude: 18.1199906},
+    },
+    {
+    greenBack: {latitude: 59.3822599, longitude: 18.1265724},
+    greenMiddle: {latitude: 59.3822897, longitude: 18.1263863},
+    greenFront: {latitude: 59.382307, longitude: 18.1261513},
+    teeFront: {latitude: 59.3837377, longitude: 18.1202427},
+    teeBack: {latitude: 59.3842595, longitude: 18.1192342},
+    },
+    {
+    greenBack: {latitude: 59.381231, longitude: 18.125955},
+    greenMiddle: {latitude: 59.3812945, longitude: 18.1259223},
+    greenFront: {latitude: 59.3813587, longitude: 18.1258973},
+    teeFront: {latitude: 59.3815738, longitude: 18.1266331},
+    teeBack: {latitude: 59.3819509, longitude: 18.1255012},
+    },
+    {
+    greenBack: {latitude: 59.3812983, longitude: 18.1263136},
+    greenMiddle: {latitude: 59.3813081, longitude: 18.1260094},
+    greenFront: {latitude: 59.3813181, longitude: 18.1257436},
+    teeFront: {latitude: 59.3818361, longitude: 18.122422},
+    teeBack: {latitude: 59.3821913, longitude: 18.1206893},
+    },
+    {
+    greenBack: {latitude: 59.3832515, longitude: 18.1299987},
+    greenMiddle: {latitude: 59.383151, longitude: 18.1298678},
+    greenFront: {latitude: 59.3830336, longitude: 18.129756},
+    teeFront: {latitude: 59.3808525, longitude: 18.1271266},
+    teeBack: {latitude: 59.3801257, longitude: 18.1269737},
+    },
+    {
+    greenBack: {latitude: 59.3810724, longitude: 18.1297952},
+    greenMiddle: {latitude: 59.3811442, longitude: 18.1298517},
+    greenFront: {latitude: 59.3812176, longitude: 18.1299518},
+    teeFront: {latitude: 59.3822091, longitude: 18.1303761},
+    teeBack: {latitude: 59.382817, longitude: 18.1302742},
+    },
+    {
+    greenBack: {latitude: 59.380369, longitude: 18.1351208},
+    greenMiddle: {latitude: 59.3803559, longitude: 18.1348527},
+    greenFront: {latitude: 59.3803335, longitude: 18.134579},
+    teeFront: {latitude: 59.3805219, longitude: 18.1285052},
+    teeBack: {latitude: 59.3803334, longitude: 18.1271105},
+    },
+    {
+    greenBack: {latitude: 59.3797237, longitude: 18.1285452},
+    greenMiddle: {latitude: 59.3796913, longitude: 18.128811},
+    greenFront: {latitude: 59.379656, longitude: 18.1290602},
+    teeFront: {latitude: 59.3795738, longitude: 18.1338267},
+    teeBack: {latitude: 59.3800875, longitude: 18.1360583},
+    },
+  ],
 }
-  
-const malaroBana = {
-  namn: 'Mälarö GK Skytteholm',
-  par: [4,3,5,4,4,5,4,3,4],
-  holes:[
-  {
-  greenBack: {latitude: 59.3111841, longitude: 17.6746019},
-  greenMiddle: {latitude: 59.3112686, longitude: 17.6743295},
-  greenFront: {latitude: 59.3113689, longitude: 17.6740735},
-  teeFront: {latitude: 59.3122775, longitude: 17.6705905},
-  teeBack: {latitude: 59.313506, longitude: 17.669947},
-  },
-  {
-  greenBack: {latitude: 59.3116693, longitude: 17.6704053},
-  greenMiddle: {latitude: 59.3115903, longitude: 17.6706763},
-  greenFront: {latitude: 59.3115091, longitude: 17.6709498},
-  teeFront: {latitude: 59.3110674, longitude: 17.6723071},
-  teeBack: {latitude: 59.3110072, longitude: 17.6735034},
-  },
-  {
-  greenBack: {latitude: 59.309373, longitude: 17.676827},
-  greenMiddle: {latitude: 59.3094322, longitude: 17.6765611},
-  greenFront: {latitude: 59.3094898, longitude: 17.6762907},
-  teeFront: {latitude: 59.3110181, longitude: 17.6704832},
-  teeBack: {latitude: 59.3115383, longitude: 17.6686593},
-  },
-  {
-  greenBack: {latitude: 59.308992, longitude: 17.6841219},
-  greenMiddle: {latitude: 59.3089838, longitude: 17.6839345},
-  greenFront: {latitude: 59.3089659, longitude: 17.6837296},
-  teeFront: {latitude: 59.3089865, longitude: 17.6793184},
-  teeBack: {latitude: 59.3091234, longitude: 17.6781489},
-  },
-  {
-  greenBack: {latitude: 59.307635, longitude: 17.6923827},
-  greenMiddle: {latitude: 59.3076654, longitude: 17.6921018},
-  greenFront: {latitude: 59.3076925, longitude: 17.691806},
-  teeFront: {latitude: 59.3079281, longitude: 17.6873736},
-  teeBack: {latitude: 59.3087605, longitude: 17.6850665},
-  },
-  {
-  greenBack: {latitude: 59.3100465, longitude: 17.6852999},
-  greenMiddle: {latitude: 59.3099092, longitude: 17.6853855},
-  greenFront: {latitude: 59.3097631, longitude: 17.685493},
-  teeFront: {latitude: 59.3082883, longitude: 17.690809},
-  teeBack: {latitude: 59.3081377, longitude: 17.6923968},
-  },
-  {
-  greenBack: {latitude: 59.3112163, longitude: 17.6783041},
-  greenMiddle: {latitude: 59.3110646, longitude: 17.6783796},
-  greenFront: {latitude: 59.3109274, longitude: 17.678465},
-  teeFront: {latitude: 59.3095643, longitude: 17.682596},
-  teeBack: {latitude: 59.3094164, longitude: 17.684141},
-  },
-  {
-  greenBack: {latitude: 59.3111927, longitude: 17.6759154},
-  greenMiddle: {latitude: 59.3111078, longitude: 17.6760488},
-  greenFront: {latitude: 59.3110216, longitude: 17.676197},
-  teeFront: {latitude: 59.3106841, longitude: 17.6766952},
-  teeBack: {latitude: 59.3101803, longitude: 17.6774086},
-  },
-  {
-  greenBack: {latitude: 59.3131683, longitude: 17.6713808},
-  greenMiddle: {latitude: 59.3130687, longitude: 17.6715453},
-  greenFront: {latitude: 59.312963, longitude: 17.6717456},
-  teeFront: {latitude: 59.3116451, longitude: 17.6752092},
-  teeBack: {latitude: 59.3109708, longitude: 17.6773901}
-  }
-  ]
-}
-  
-const hasselbyBana = { 
-  name:'Golfstar Hässelby',
-  par:[3,4,3,4,3,3,3,3,4],
-  holes:[{
-  greenBack: {latitude: 59.3899171, longitude: 17.7863131},
-  greenMiddle: {latitude: 59.3899641, longitude: 17.786423},
-  greenFront: {latitude: 59.3900148, longitude: 17.7865586},
-  teeFront: {latitude: 59.3909057, longitude: 17.7878406},
-  teeBack: {latitude: 59.390929, longitude: 17.7878164},
-  },
-  {
-  greenBack: {latitude: 59.39151, longitude: 17.7823225},
-  greenMiddle: {latitude: 59.391435, longitude: 17.7823621},
-  greenFront: {latitude: 59.3913587, longitude: 17.7823998},
-  teeFront: {latitude: 59.3894389, longitude: 17.7838253},
-  teeBack: {latitude: 59.389021, longitude: 17.784064},
-  },
-  {
-  greenBack: {latitude: 59.3899318, longitude: 17.7844696},
-  greenMiddle: {latitude: 59.3899955, longitude: 17.7844221},
-  greenFront: {latitude: 59.3900587, longitude: 17.7843626},
-  teeFront: {latitude: 59.3910778, longitude: 17.7833935},
-  teeBack: {latitude: 59.3913155, longitude: 17.7833452},
-  },
-  {
-  greenBack: {latitude: 59.393859, longitude: 17.7851888},
-  greenMiddle: {latitude: 59.3938071, longitude: 17.7851892},
-  greenFront: {latitude: 59.3937456, longitude: 17.7851902},
-  teeFront: {latitude: 59.391086, longitude: 17.7848848},
-  teeBack: {latitude: 59.3910587, longitude: 17.7848901},
-  },
-  {
-  greenBack: {latitude: 59.3921537, longitude: 17.7861403},
-  greenMiddle: {latitude: 59.3922154, longitude: 17.7861467},
-  greenFront: {latitude: 59.3922835, longitude: 17.7861524},
-  teeFront: {latitude: 59.3935442, longitude: 17.7863332},
-  teeBack: {latitude: 59.3938119, longitude: 17.7858128},
-  },
-  {
-  greenBack: {latitude: 59.3902221, longitude: 17.7854883},
-  greenMiddle: {latitude: 59.3902755, longitude: 17.785499},
-  greenFront: {latitude: 59.3903321, longitude: 17.7855258},
-  teeFront: {latitude: 59.3916924, longitude: 17.7857806},
-  teeBack: {latitude: 59.3916924, longitude: 17.7857806},
-  },
-  {
-  greenBack: {latitude: 59.3917126, longitude: 17.786458},
-  greenMiddle: {latitude: 59.3916432, longitude: 17.7864606},
-  greenFront: {latitude: 59.3915746, longitude: 17.786458},
-  teeFront: {latitude: 59.3906135, longitude: 17.7866926},
-  teeBack: {latitude: 59.3906135, longitude: 17.7866926},
-  },
-  {
-  greenBack: {latitude: 59.3930502, longitude: 17.787019},
-  greenMiddle: {latitude: 59.3929747, longitude: 17.7870037},
-  greenFront: {latitude: 59.3928986, longitude: 17.7869681},
-  teeFront: {latitude: 59.3921868, longitude: 17.7868991},
-  teeBack: {latitude: 59.3921704, longitude: 17.7869018},
-  },
-  {
-  greenBack: {latitude: 59.3909539, longitude: 17.7888991},
-  greenMiddle: {latitude: 59.3910089, longitude: 17.7888531},
-  greenFront: {latitude: 59.3910646, longitude: 17.7887971},
-  teeFront: {latitude: 59.3927849, longitude: 17.7878245},
-  teeBack: {latitude: 59.3932643, longitude: 17.7877145}
-  }]
-}
-  
-const malaro1018Bana = {
-  namn:'Mälarö GK Skytteholm (10-18)',
-  par:[5,4,4,3,5,4,4,3,4],
-  
-  holes:[
-  {
-  greenBack: {latitude: 59.3145056, longitude: 17.6789144},
-  greenMiddle: {latitude: 59.3145197, longitude: 17.6786505},
-  greenFront: {latitude: 59.3145166, longitude: 17.6783887},
-  teeFront: {latitude: 59.3148372, longitude: 17.672401},
-  teeBack: {latitude: 59.3148947, longitude: 17.6708399},
-  },
-  {
-  greenBack: {latitude: 59.3141788, longitude: 17.6718531},
-  greenMiddle: {latitude: 59.3141693, longitude: 17.672122},
-  greenFront: {latitude: 59.314161, longitude: 17.6723708},
-  teeFront: {latitude: 59.3138353, longitude: 17.6771324},
-  teeBack: {latitude: 59.3140159, longitude: 17.67871},
-  },
-  {
-  greenBack: {latitude: 59.3123271, longitude: 17.6766575},
-  greenMiddle: {latitude: 59.3123665, longitude: 17.6764565},
-  greenFront: {latitude: 59.3124106, longitude: 17.6762552},
-  teeFront: {latitude: 59.313482, longitude: 17.6730639},
-  teeBack: {latitude: 59.3138188, longitude: 17.6717787},
-  },
-  {
-  greenBack: {latitude: 59.3133863, longitude: 17.6767869},
-  greenMiddle: {latitude: 59.3133, longitude: 17.6768199},
-  greenFront: {latitude: 59.3132166, longitude: 17.6768701},
-  teeFront: {latitude: 59.3124075, longitude: 17.6772947},
-  teeBack: {latitude: 59.3116902, longitude: 17.6780135},
-  },
-  {
-  greenBack: {latitude: 59.3101463, longitude: 17.683623},
-  greenMiddle: {latitude: 59.3102378, longitude: 17.6835294},
-  greenFront: {latitude: 59.3103543, longitude: 17.6833883},
-  teeFront: {latitude: 59.3125357, longitude: 17.6784265},
-  teeBack: {latitude: 59.3135204, longitude: 17.6779665},
-  },
-  {
-  greenBack: {latitude: 59.3133615, longitude: 17.6805507},
-  greenMiddle: {latitude: 59.3132535, longitude: 17.68074},
-  greenFront: {latitude: 59.3131138, longitude: 17.680953},
-  teeFront: {latitude: 59.3115898, longitude: 17.6834239},
-  teeBack: {latitude: 59.3111714, longitude: 17.6838513},
-  },
-  {
-  greenBack: {latitude: 59.315402, longitude: 17.6806559},
-  greenMiddle: {latitude: 59.3152698, longitude: 17.6806756},
-  greenFront: {latitude: 59.3151351, longitude: 17.6807954},
-  teeFront: {latitude: 59.3130085, longitude: 17.6827677},
-  teeBack: {latitude: 59.3124007, longitude: 17.6836636},
-  },
-  {
-  greenBack: {latitude: 59.3156654, longitude: 17.676619},
-  greenMiddle: {latitude: 59.3156927, longitude: 17.6769339},
-  greenFront: {latitude: 59.3157284, longitude: 17.6772279},
-  teeFront: {latitude: 59.3158501, longitude: 17.6790823},
-  teeBack: {latitude: 59.315935, longitude: 17.6802357},
-  },
-  {
-  greenBack: {latitude: 59.316551, longitude: 17.6714509},
-  greenMiddle: {latitude: 59.31654, longitude: 17.6717277},
-  greenFront: {latitude: 59.3165318, longitude: 17.6720812},
-  teeFront: {latitude: 59.3163839, longitude: 17.6764109},
-  teeBack: {latitude: 59.3162963, longitude: 17.6788302}
-  }
-  ]
-}
-  
-  
-const brollstaBana = {
-  name:'Brollsta Golfklubb',
-  par:[4,3,4,3,4,3,3,4,3],
-  holes:[
-  {
-  greenBack: {latitude: 59.5829784, longitude: 18.2926181},
-  greenMiddle: {latitude: 59.5828751, longitude: 18.2928648},
-  greenFront: {latitude: 59.5828127, longitude: 18.2931545},
-  teeFront: {latitude: 59.5824496, longitude: 18.2975129},
-  teeBack: {latitude: 59.5828433, longitude: 18.2978856},
-  },
-  {
-  greenBack: {latitude: 59.5803196, longitude: 18.286463},
-  greenMiddle: {latitude: 59.58045, longitude: 18.2866775},
-  greenFront: {latitude: 59.5805613, longitude: 18.2868707},
-  teeFront: {latitude: 59.5832667, longitude: 18.2918947},
-  teeBack: {latitude: 59.5828646, longitude: 18.2909753},
-  },
-  {
-  greenBack: {latitude: 59.582645, longitude: 18.2922213},
-  greenMiddle: {latitude: 59.5825228, longitude: 18.2920282},
-  greenFront: {latitude: 59.5823924, longitude: 18.2918404},
-  teeFront: {latitude: 59.5798898, longitude: 18.287329},
-  teeBack: {latitude: 59.5803216, longitude: 18.2877743},
-  },
-  {
-  greenBack: {latitude: 59.57867, longitude: 18.2878829},
-  greenMiddle: {latitude: 59.5787882, longitude: 18.2879259},
-  greenFront: {latitude: 59.5788996, longitude: 18.2880036},
-  teeFront: {latitude: 59.5824414, longitude: 18.2929418},
-  teeBack: {latitude: 59.5821236, longitude: 18.2927219},
-  },
-  {
-  greenBack: {latitude: 59.5758323, longitude: 18.2871827},
-  greenMiddle: {latitude: 59.5759219, longitude: 18.2873543},
-  greenFront: {latitude: 59.5760007, longitude: 18.2874831},
-  teeFront: {latitude: 59.5780058, longitude: 18.2889597},
-  teeBack: {latitude: 59.5782286, longitude: 18.2890348},
-  },
-  {
-  greenBack: {latitude: 59.5767176, longitude: 18.2900172},
-  greenMiddle: {latitude: 59.5766252, longitude: 18.2900065},
-  greenFront: {latitude: 59.5765111, longitude: 18.2899689},
-  teeFront: {latitude: 59.5759083, longitude: 18.2882825},
-  teeBack: {latitude: 59.5757996, longitude: 18.2878211},
-  },
-  {
-  greenBack: {latitude: 59.5795197, longitude: 18.2931599},
-  greenMiddle: {latitude: 59.5794518, longitude: 18.2929131},
-  greenFront: {latitude: 59.5794083, longitude: 18.2927146},
-  teeFront: {latitude: 59.5769951, longitude: 18.2897173},
-  teeBack: {latitude: 59.5766483, longitude: 18.2893858},
-  },
-  {
-  greenBack: {latitude: 59.5793732, longitude: 18.2905768},
-  greenMiddle: {latitude: 59.5793841, longitude: 18.2908316},
-  greenFront: {latitude: 59.5794209, longitude: 18.2910424},
-  teeFront: {latitude: 59.5797682, longitude: 18.2932392},
-  teeBack: {latitude: 59.5800892, longitude: 18.2934564},
-  },
-  {
-  greenBack: {latitude: 59.58179, longitude: 18.297821},
-  greenMiddle: {latitude: 59.5818063, longitude: 18.297585},
-  greenFront: {latitude: 59.5818199, longitude: 18.2973168},
-  teeFront: {latitude: 59.5791695, longitude: 18.2894485},
-  teeBack: {latitude: 59.5796562, longitude: 18.290393},
-  },
-  {
-  greenBack: {latitude: 59.5767684, longitude: 18.3028354},
-  greenMiddle: {latitude: 59.5769097, longitude: 18.3029642},
-  greenFront: {latitude: 59.5770156, longitude: 18.3030714},
-  teeFront: {latitude: 59.5812479, longitude: 18.3033968},
-  teeBack: {latitude: 59.5807134, longitude: 18.3039377},
-  },
-  {
-  greenBack: {latitude: 59.5781056, longitude: 18.3056058},
-  greenMiddle: {latitude: 59.5780432, longitude: 18.3053697},
-  greenFront: {latitude: 59.5778775, longitude: 18.3051444},
-  teeFront: {latitude: 59.5769083, longitude: 18.3043082},
-  teeBack: {latitude: 59.5768024, longitude: 18.303922},
-  },
-  {
-  greenBack: {latitude: 59.5759089, longitude: 18.3103346},
-  greenMiddle: {latitude: 59.5759551, longitude: 18.3101415},
-  greenFront: {latitude: 59.5760067, longitude: 18.3099699}
-  }
-  ]
-}
-  
-  
-  
-  
 
+// ------------------- Context Types -------------------
 
 type RoundContextType = {
   playerScores: number[];
   setPlayerScores: React.Dispatch<React.SetStateAction<number[]>>;
-  courseObject: typeof defaultCourse;
-  setCourseObject: React.Dispatch<React.SetStateAction<typeof defaultCourse>>;
+  courseObject: typeof lidingoCourse;
+  setCourseObject: React.Dispatch<React.SetStateAction<typeof lidingoCourse>>;
   courseName: string;
   holeCount: number;
 };
 
+// ------------------- Context Setup -------------------
 
 const RoundContext = createContext<RoundContextType | null>(null);
 
-
 export function RoundProvider({ children }: { children: React.ReactNode }) {
-  const [courseObject, setCourseObject] = useState(defaultCourse);
-  const [playerScores, setPlayerScores] = useState<number[]>(Array(defaultCourse.holes.length).fill(0));
+  const [courseObject, setCourseObject] = useState(lidingoCourse);
+  const [playerScores, setPlayerScores] = useState<number[]>(
+    Array(lidingoCourse.holes.length).fill(0)
+  );
 
-  const courseName = courseObject.name;
+  const courseName = courseObject.namn; // Note: `namn`, not `name`
   const holeCount = courseObject.holes.length;
 
   return (
@@ -629,6 +194,8 @@ export function RoundProvider({ children }: { children: React.ReactNode }) {
     </RoundContext.Provider>
   );
 }
+
+// ------------------- Custom Hook -------------------
 
 export function useRound() {
   const context = useContext(RoundContext);
