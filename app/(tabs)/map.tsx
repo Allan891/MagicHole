@@ -110,7 +110,7 @@ export default function HomeScreen() {
     setStrokes([...strokes, []]);
     if (test) {
       setLocation(null);
-      updateTestLocation(courseObject.holes[currentHole + 1].teeCoords);
+      updateTestLocation(courseObject.holes[currentHole + 1].teeCoords, courseObject.holes[currentHole + 1].holeCoords);
     }
   };
 
@@ -118,12 +118,15 @@ const ToggleLock = () => {
       setLockedView (!(LockedView));
 };
 
-const updateTestLocation = (forcedLocation = {}) => {
+const updateTestLocation = (forcedLocation = {}, nextHole = {}) => {
 
   console.log('Updating test location');
 
   let updatedLatitude;
   let updatedLongitude;
+
+  let updatedHoleLatitude;
+  let updatedHoleLongitude;
 
   if (forcedLocation.latitude) {
     updatedLatitude = forcedLocation.latitude;
@@ -151,8 +154,8 @@ const updateTestLocation = (forcedLocation = {}) => {
     const distance = calculateDistance(
       testLocation.coords.latitude,
       testLocation.coords.longitude,
-      holeCoords.latitude,
-      holeCoords.longitude
+      nextHole.latitude ? nextHole.latitude : holeCoords.latitude,
+      nextHole.longitude ? nextHole.longitude : holeCoords.longitude
     );
     setDistanceLeft(Math.round(distance));
 }
