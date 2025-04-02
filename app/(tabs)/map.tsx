@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
 import { useRound } from './RoundContext';
 import { ThemedText } from '@/components/ThemedText';
+import { LocationObject } from 'expo-location';
 
 const courseObject = {
   name: 'Brollsta',
@@ -93,6 +94,7 @@ export default function HomeScreen() {
       setStrokes(updatedStrokes);
       setCurrentStroke(currentStroke + 1);
       console.log(updatedStrokes);
+      if (test) updateTestLocation();
     } else {
       Alert.alert('Error: No location data');
     }
@@ -106,15 +108,67 @@ export default function HomeScreen() {
     setCurrentHole(currentHole + 1);
     setCurrentStroke(0);
     setStrokes([...strokes, []]);
+    if (test) {
+      setLocation(null);
+      updateTestLocation(courseObject.holes[currentHole + 1].teeCoords);
+    }
   };
 
 const ToggleLock = () => {
       setLockedView (!(LockedView));
 };
 
+const updateTestLocation = (forcedLocation = {}) => {
+
+  console.log('Updating test location');
+
+  let updatedLatitude;
+  let updatedLongitude;
+
+  if (forcedLocation.latitude) {
+    updatedLatitude = forcedLocation.latitude;
+    updatedLongitude = forcedLocation.longitude;
+  } else {
+    updatedLatitude = (location.coords.latitude + holeCoords.latitude) / 2;
+    updatedLongitude = (location.coords.longitude + holeCoords.longitude) / 2;
+  }
+
+  console.log('Update to: ', updatedLatitude, updatedLongitude);
+
+  const testLocation: LocationObject = {
+    coords: {
+      accuracy: 10,
+      altitude: 0,
+      altitudeAccuracy: -1,
+      heading: 187.77,
+      latitude: updatedLatitude,
+      longitude: updatedLongitude,
+      speed: 3.63,
+    },
+    timestamp: Date.now(),
+  };
+    setLocation(testLocation)
+    const distance = calculateDistance(
+      testLocation.coords.latitude,
+      testLocation.coords.longitude,
+      holeCoords.latitude,
+      holeCoords.longitude
+    );
+    setDistanceLeft(Math.round(distance));
+}
+
+const test = true; // Auto generate GPS locations to test
+
+if (test && !location) {
+
+  updateTestLocation(teeCoords);
+  
+}
 
 const updateLocation = (event) => {
 	//console.log(event);
+
+  if (test) return;
 
 	const { coordinate } = event?.nativeEvent;
 	console.log(coordinate);
@@ -123,7 +177,8 @@ const updateLocation = (event) => {
 	setLon2 ( coordinate.longitude); // Saves lat & lon of user position in "lat2" and "lon2" for use elsewhere.
 	//return;
 	if (coordinate){
-		setLocation(coordinate);
+    setLocation(coordinate);
+    console.log('location: ', location)
 		//return;
 		const distance = calculateDistance(
 			coordinate.latitude,
@@ -187,16 +242,14 @@ const updateLocation = (event) => {
 
       <MapView
 
-        onUserLocationChange={
-            updateLocation
-        }
+        onUserLocationChange={updateLocation}
         scrollEnabled={!(LockedView)}
         rotateEnabled={!(LockedView)}
         zoomEnabled={!(LockedView)}
         liteMode={false}
         showsMyLocationButton={false}
         showsCompass={!(LockedView)}
-        showsUserLocation={true}
+        showsUserLocation={test ? false : true}
         userLocationFastestInterval={10000}
         userLocationUpdateInterval={10000}
         mapType="satellite"
@@ -215,6 +268,13 @@ const updateLocation = (event) => {
         <Marker coordinate={holeCoords}>
           <MaterialIcons name="golf-course" size={28} color="red" />
         </Marker>
+        {test && location &&
+        
+        <Marker coordinate={location.coords}>
+          <MaterialIcons name="person" size={28} color="white" />
+        </Marker>
+
+        }
 
       </MapView>
 
