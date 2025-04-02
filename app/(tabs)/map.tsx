@@ -29,6 +29,7 @@ export default function HomeScreen() {
   const mapRef = useRef<MapView | null>(null);
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [distanceLeft, setDistanceLeft] = useState<number | null>(null);
+  const [zoomLevel, setZoomLevel] = useState<number>(18);
   const [bearing, setBearing] = useState(0);
   const [currentHole, setCurrentHole] = useState<number>(0);
   const [currentStroke, setCurrentStroke] = useState<number>(0);
@@ -72,6 +73,17 @@ export default function HomeScreen() {
       Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLon / 2) ** 2;
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   };
+
+  const adjustZoom = (distance: number) => {
+      console.log(distance);
+      if (distance <= 200) setZoomLevel(19);
+      else setZoomLevel(17);
+
+      // Likely needs some adjustment
+
+
+  };
+
 
   const addStroke = () => {
     if (location) {
@@ -117,6 +129,8 @@ export default function HomeScreen() {
       setLocation(null);
       updateTestLocation(courseObject.holes[currentHole + 1].teeBack, courseObject.holes[currentHole + 1].greenMiddle);
     }
+    const distance = calculateDistance(courseObject.holes[currentHole + 1].teeBack.latitude,courseObject.holes[currentHole + 1].teeBack.longitude, courseObject.holes[currentHole + 1].greenMiddle.latitude, courseObject.holes[currentHole + 1].greenMiddle.longitude)
+    adjustZoom(distance);
   };
 
 const ToggleLock = () => {
@@ -162,7 +176,9 @@ const updateTestLocation = (forcedLocation = {}, nextHole = {}) => {
       nextHole.latitude ? nextHole.latitude : holeCoords.latitude,
       nextHole.longitude ? nextHole.longitude : holeCoords.longitude
     );
+
     setDistanceLeft(Math.round(distance));
+
 }
 
 const test = true; // Auto generate GPS locations to test
@@ -279,7 +295,7 @@ const updateLocation = (event) => {
           center: { latitude, longitude },
           heading: bearing,
           pitch: 90,
-          zoom: 17,
+          zoom: zoomLevel,
         }}
       >
         <Marker coordinate={teeCoords}>
