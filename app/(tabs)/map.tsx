@@ -25,7 +25,7 @@ export default function HomeScreen() {
   const { courseObject, } = useRound();
   const strokes = globalStateVar((state) => state.strokes);
   const setStroke = globalStateVar((state) => state.setStroke);
-
+  const [mapStrokes, setMapStrokes] = useState<any[][]>([[]]);
   const mapRef = useRef<MapView | null>(null);
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [distanceLeft, setDistanceLeft] = useState<number | null>(null);
@@ -77,7 +77,10 @@ export default function HomeScreen() {
     if (location) {
       const { latitude, longitude } = location.coords;
       const thisStroke = { latitude, longitude, strokeNumber: currentStroke };
-  
+      const updatedMapStrokes = [...mapStrokes];
+      updatedMapStrokes[currentHole] = [...updatedMapStrokes[currentHole], thisStroke];
+      setMapStrokes(updatedMapStrokes);
+
       const updatedStrokes = [...strokes];
       
       setCurrentStroke(currentStroke + 1);
@@ -87,7 +90,8 @@ export default function HomeScreen() {
       setStroke(currentHole, currentScore + 1);
       if (test) updateTestLocation();
   
-      console.log(updatedStrokes);
+      console.log(updatedMapStrokes);
+      console.log(mapStrokes[currentHole][currentStroke-1]);
     } else {
       Alert.alert('Error: No location data');
     }
@@ -125,8 +129,8 @@ const updateTestLocation = (forcedLocation = {}, nextHole = {}) => {
     updatedLatitude = forcedLocation.latitude;
     updatedLongitude = forcedLocation.longitude;
   } else {
-    updatedLatitude = (location.coords.latitude + holeCoords.latitude) / 2;
-    updatedLongitude = (location.coords.longitude + holeCoords.longitude) / 2;
+      updatedLatitude = location.coords.latitude - (location.coords.latitude - holeCoords.latitude)* (Math.random() + 0.5) / 2;
+      updatedLongitude = location.coords.longitude - (location.coords.longitude - holeCoords.longitude)* (Math.random() + 0.5) / 2;
   }
 
   console.log('Update to: ', updatedLatitude, updatedLongitude);
@@ -234,6 +238,18 @@ const updateLocation = (event) => {
         </ThemedText>
 
         <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}} type='subtitle'>{distanceLeft}m</ThemedText>
+{  location && currentStroke > 0 &&
+         <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}}
+         type='subtitle'>Prev Shot 
+          {Math.round(calculateDistance(
+             location.coords.latitude,
+             location.coords.longitude,
+             mapStrokes[currentHole][currentStroke-1].latitude,
+             mapStrokes[currentHole][currentStroke-1].longitude
+         ))}m</ThemedText>
+
+
+         }
       </View>
 
       <MapView
