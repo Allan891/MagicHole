@@ -21,6 +21,8 @@ const defaultCourse = {
     },
   ],
 };
+
+
 const lindingoBana = {
   namn: 'Lidingö Golfklubb',
   par:[3,5,3,4,4,3,4,4,3,5,3,5,4,4,3,5,4],
