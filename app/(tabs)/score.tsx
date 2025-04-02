@@ -1,11 +1,8 @@
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import { globalStateVar } from './globalStateVar';
+import { globalStateVar } from '../state/globalStateVar';
 import { useRound } from './RoundContext';
-
-
-
 
 export default function ScoreOverview() {
   const strokes = globalStateVar((state) => state.strokes);
@@ -13,17 +10,25 @@ export default function ScoreOverview() {
 
   const totalStrokes = strokes.reduce((sum, val) => sum + (val ?? 0), 0);
   const parTotal = courseObject.par?.reduce((sum, p) => sum + (p ?? 0), 0) ?? 0;
-
   const diff = totalStrokes - parTotal;
 
-  const renderRow = (holeIndex: number) => {
-    const par = courseObject.par?.[holeIndex] ?? '-';
+  const hcp = 6; // mock handicap 
 
+  const renderRow = (holeIndex: number) => {
+    const par = courseObject.par?.[holeIndex] ?? 0;
+    const si = courseObject.si?.[holeIndex] ?? 18;
     const score = strokes[holeIndex];
+
     const overPar = score !== undefined ? score - par : null;
 
-    let scoreStyle = styles.cell;
+    let stableford = 0;
+    if (score !== undefined && par !== undefined && si !== undefined) {
+      const basePoints = 2 + par - score;
+      const strokesFromHcp = Math.floor(hcp / 18) + (hcp % 18 >= si ? 1 : 0);
+      stableford = Math.max(basePoints + strokesFromHcp, 0);
+    }
 
+    let scoreStyle = styles.cell;
     if (overPar !== null) {
       if (overPar === -1) scoreStyle = [styles.cell, styles.birdie];
       else if (overPar === 1) scoreStyle = [styles.cell, styles.bogey];
@@ -38,6 +43,7 @@ export default function ScoreOverview() {
         <ThemedText style={styles.cell}>
           {score === undefined ? '-' : overPar === 0 ? 'E' : overPar > 0 ? `+${overPar}` : overPar}
         </ThemedText>
+        <ThemedText style={styles.cell}>{stableford}</ThemedText>
       </View>
     );
   };
@@ -47,23 +53,20 @@ export default function ScoreOverview() {
       <ThemedView style={styles.container}>
         <ThemedText style={styles.title}>{courseObject.namn} – Scorecard</ThemedText>
 
-        
         <View style={styles.row}>
           <ThemedText style={styles.header}>Hole</ThemedText>
           <ThemedText style={styles.header}>Par</ThemedText>
           <ThemedText style={styles.header}>Strokes</ThemedText>
           <ThemedText style={styles.header}>±</ThemedText>
+          <ThemedText style={styles.header}>Pts</ThemedText>
         </View>
 
-        
         <ThemedText style={styles.section}>Front 9</ThemedText>
         {courseObject.holes.slice(0, 9).map((_, i) => renderRow(i))}
 
-        
         <ThemedText style={styles.section}>Back 9</ThemedText>
         {courseObject.holes.slice(9, 18).map((_, i) => renderRow(i + 9))}
 
-        
         <View style={[styles.row, { marginTop: 16 }]}>
           <ThemedText style={styles.cell}>Total</ThemedText>
           <ThemedText style={styles.cell}>{parTotal}</ThemedText>
@@ -71,6 +74,7 @@ export default function ScoreOverview() {
           <ThemedText style={styles.cell}>
             {diff === 0 ? 'E' : diff > 0 ? `+${diff}` : diff}
           </ThemedText>
+          <ThemedText style={styles.cell}>–</ThemedText>
         </View>
       </ThemedView>
     </ScrollView>
@@ -102,12 +106,12 @@ const styles = StyleSheet.create({
   },
   header: {
     fontWeight: 'bold',
-    width: '25%',
+    width: '20%',
     textAlign: 'center',
     color: 'black',
   },
   cell: {
-    width: '25%',
+    width: '20%',
     textAlign: 'center',
     color: 'black',
   },

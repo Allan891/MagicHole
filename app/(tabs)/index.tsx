@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
 import { useRound } from './RoundContext';
 import { ThemedText } from '@/components/ThemedText';
-import { globalStateVar } from './globalStateVar';
+import { globalStateVar } from '../state/globalStateVar';
 
 
 
@@ -39,7 +39,7 @@ export default function HomeScreen() {
   const { playerScores, setPlayerScores } = useRound();
 
   const teeCoords = courseObject.holes[currentHole].teeBack;
-const holeCoords = courseObject.holes[currentHole].greenMiddle;
+  const holeCoords = courseObject.holes[currentHole].greenMiddle;
 
 
   const latitude = (teeCoords.latitude + holeCoords.latitude) / 2;
@@ -168,7 +168,7 @@ setStroke(currentHole, currentScore + 1);
     <View style={{ flex: 1 }}>
       <View style={{ width: '80%', height: 120, position: 'absolute', top: '10%', left: '10%', zIndex: 999999 }}>
         <ThemedText style={{ textAlign: 'center', color: 'white' }} type="title">
-          {courseObject.name}
+          {courseObject.namn}
         </ThemedText>
         <TouchableOpacity onPress={nextHole}>
           <ThemedText style={{ textAlign: 'center', color: 'white' }} type="subtitle">
@@ -176,7 +176,7 @@ setStroke(currentHole, currentScore + 1);
           </ThemedText>
         </TouchableOpacity>
         <ThemedText style={{ textAlign: 'center', color: 'white' }}>
-          Stroke {currentStroke}
+          Strokes {currentStroke}
         </ThemedText>
       </View>
 
