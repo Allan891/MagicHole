@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MagicHole - Golf App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #43A047;
+            color: #222;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            font-size: 3.5rem;
+            color: #43A047;
+            margin-top: 50px;
+            font-weight: 600;
+            text-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #43A047;
+            margin-top: 10px;
+            font-weight: 600;
+            text-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+            min-width: 280px;
+        }
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(67, 160, 71, 0.2);
+            transition: transform 0.2s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #43A047;
+        }
+        .divider {
+            height: 1px;
+            background: #43A047;
+            margin: 10px 0;
+            opacity: 0.5;
+        }
+        .feature-text {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .image-placeholder {
+            background-image: url('screenshot.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex: 1;
+            min-width: 300px;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1032 / 1816;
+            border-radius: 15px;
+        }
+        .github-link {
+            margin-top: 40px;
+            font-size: 1.2rem;
+        }
+        .github-link a {
+            color: #43A047;
+            text-decoration: none;
+            font-weight: 600;
+            text-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+        }
+        .github-link a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .content {
+                flex-direction: column;
+            }
+            .responsive {
+                color: white;
+            }
+            .github-link a {
+                color: white !important;
+            }
+        }
+        #golf {
+            position: absolute;
+            width: 1000px;
+            height: 1000px;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="golf" src="golf.svg" />
+        <h1 class="responsive">MagicHole</h1>
+        <h2 class="responsive">Elevate Your Golf Game</h2>
+        <div class="content">
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-title">⛳ Precision Tracking</div>
+                    <div class="divider"></div>
+                    <div class="feature-text">Analyze every shot with pinpoint accuracy.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">📊 Smart Analytics</div>
+                    <div class="divider"></div>
+                    <div class="feature-text">Gain insights into your performance trends.</div>
+                </div>
+            </div>
+            <div class="image-placeholder"></div>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-title">📍 GPS Course Mapping</div>
+                    <div class="divider"></div>
+                    <div class="feature-text">Navigate the course like a pro.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">📈 Improve your game</div>
+                    <div class="divider"></div>
+                    <div class="feature-text">Track your improvement with our smart strokes gained functionality.</div>
+                </div>
+            </div>
+        </div>
+        <div class="github-link responsive">
+            <a href="https://github.com/f-r00t/MagicHole" target="_blank">View on GitHub</a>
+        </div>
+    </div>
+</body>
+</html>
