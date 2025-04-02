@@ -47,7 +47,7 @@ class Database {
       playerId INTEGER NOT NULL,
       courseId INTEGER NOT NULL,
       handicap INTEGER NOT NULL,
-      FOREIGN KEY (playerId) REFERENCES player (id),
+      -- FOREIGN KEY (playerId) REFERENCES player (id),
       FOREIGN KEY (courseId) REFERENCES Course (id));
     
     CREATE TABLE IF NOT EXISTS Stroke (
@@ -55,15 +55,15 @@ class Database {
       roundId INTEGER NOT NULL,
       startLatitude REAL,
       startLongitude REAL,
-      endLatitude REAL,
-      endLongitude REAL,
+      distance REAL,
       golfClubId INTEGER NOT NULL,
       playerId INTEGER NOT NULL,
       PRIMARY KEY (holeId, roundId),
       FOREIGN KEY (holeId) REFERENCES Hole (id),
       FOREIGN KEY (roundId) REFERENCES Round (id),
-      FOREIGN KEY (playerId) REFERENCES player (id),
-      FOREIGN KEY (golfClubId) REFERENCES GolfClub (id));
+      -- FOREIGN KEY (playerId) REFERENCES player (id),
+      -- FOREIGN KEY (golfClubId) REFERENCES GolfClub (id)
+      );
       
     CREATE TABLE IF NOT EXISTS TeeSlope (
       id TEXT NOT NULL,
@@ -114,13 +114,12 @@ class Database {
   }
 
   // UPDATE: Update a course
-  async updateCourse(id: number, name: string, coordinateX: number, coordinateY: number, active: number, date: string) {
+  async updateCourse(course: Course) {
     if (!this.db) return;
     try {
       await this.db.runAsync(
-        'UPDATE Course SET name = ?, coordinateX = ?, coordinateY = ?, active = ?, date = ? WHERE id = ?;',
-        name, coordinateX, coordinateY, active, date, id
-      );
+        'UPDATE Course SET name = ?, coordinateX = ?, coordinateY = ?, active = ?, createDate = ? WHERE id = ?;',
+        course.name, course.coordinateX, course.coordinateY, course.active, course.createDate, course.id);
       console.log('Course updated');
     } catch (error) {
       console.error('Error updating course:', error);
@@ -128,15 +127,103 @@ class Database {
   }
 
   // DELETE: Delete a course
-  async deleteCourse(id: number) {
+  async deleteCourse(course: Course) {
     if (!this.db) return;
     try {
-      await this.db.runAsync('DELETE FROM Course WHERE id = ?;', id);
+      await this.db.runAsync('DELETE FROM Course WHERE id = ?;', course.id);
       console.log('Course deleted');
     } catch (error) {
       console.error('Error deleting course:', error);
     }
   }
-}
+
 //#endregion
-export const db =  new Database();
+
+//#region CRUD Operations for Stroke Table
+  // CREATE: Add a new stroke to the database
+  async createStroke(stroke: Stroke) {
+    if (!this.db) return;
+    try {
+      await this.db.runAsync(
+        'INSERT INTO Stroke (holeId, roundId, startLatitude, startLongitude, distance, golfClubId, playerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
+        stroke.holeId, stroke.roundId, stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.golfClubId, stroke.playerId);
+      console.log('Stroke created');
+    } catch (error) {
+      console.error('Error creating stroke:', error);
+    }
+  }
+
+  // READ: Get a stroke by ID
+  async getStrokeById(id: number): Promise<Stroke | null> {
+    if (!this.db) return null;
+    try {
+      return await this.db.getFirstAsync<Stroke>('SELECT * FROM Stroke WHERE id = ?;', id);
+    } catch (error) {
+      console.error('Error fetching stroke:', error);
+      return null;
+    }
+  }
+
+  // READ: Get all strokes for a round
+  async getStrokesByRoundId(roundId: number): Promise<Stroke[]> {
+    if (!this.db) return [];
+    try {
+      const allRows: Stroke[] = await this.db.getAllAsync('SELECT * FROM Stroke WHERE roundId = ?;', roundId);
+      return allRows;
+    } catch (error) {
+      console.error('Error fetching strokes:', error);
+      return [];
+    }
+  }
+
+  // READ: Get all strokes for a course
+  async getStrokesByCourseId(courseId: number): Promise<Stroke[]> {
+    if (!this.db) return [];
+    try {
+      const allRows: Stroke[] = await this.db.getAllAsync(
+        `SELECT Stroke.* FROM Stroke
+         INNER JOIN Hole ON Stroke.holeId = Hole.id
+         WHERE Hole.courseId = ?;`,
+        courseId
+      );
+      return allRows;
+    } catch (error) {
+      console.error('Error fetching strokes by course:', error);
+      return [];
+    }
+  }
+
+  // READ: Get all strokes for a player
+  async getStrokesByPlayerId(playerId: number): Promise<Stroke[]> {
+    if (!this.db) return [];
+    try {
+      const allRows: Stroke[] = await this.db.getAllAsync(
+        'SELECT * FROM Stroke WHERE playerId = ?;',
+        playerId
+      );
+      return allRows;
+    } catch (error) {
+      console.error('Error fetching strokes by player:', error);
+      return [];
+    }
+  }
+
+  // READ: Get all strokes for a golf club
+  async getStrokesByGolfClubId(golfClubId: number): Promise<Stroke[]> {
+    if (!this.db) return [];
+    try {
+      const allRows: Stroke[] = await this.db.getAllAsync(
+        'SELECT * FROM Stroke WHERE golfClubId = ?;',
+        golfClubId
+      );
+      return allRows;
+    } catch (error) {
+      console.error('Error fetching strokes by golf club:', error);
+      return [];
+    }
+  }
+//#endregion
+
+
+
+}export const db =  new Database();

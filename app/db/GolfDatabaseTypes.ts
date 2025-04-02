@@ -42,8 +42,7 @@ type Stroke = {
   roundId: number;
   startLatitude?: number;
   startLongitude?: number;
-  endLatitude?: number;
-  endLongitude?: number;
+  distance?: number;
   golfClubId: number;
   playerId: number;
 };
