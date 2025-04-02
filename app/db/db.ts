@@ -3,24 +3,34 @@ import { useEffect } from 'react';
 
 class Database {
   private db: SQLite.SQLiteDatabase | null = null;
-
+  private isInitialized: boolean = false;
   constructor() {
     console.log('Database constructor called');
-    this.initDb();
+    this.db = SQLite.openDatabaseSync("mh.db", { useNewConnection: true });
+    console.log('DB ', this.db);
+    console.log('Database object created');
   }
 
   // Initialize the database and create tables
-  private async initDb() {
-    this.db = await SQLite.openDatabaseAsync('golfApp');
+  public initDb() {
+    if (this.isInitialized) return;
     console.log('Database opened');
-    await this.db.execAsync(`CREATE TABLE IF NOT EXISTS Course (
+    this.db.execSync(`
+    DROP TABLE IF EXISTS Course;
+    DROP TABLE IF EXISTS Hole;
+    DROP TABLE IF EXISTS Player;
+    DROP TABLE IF EXISTS GolfClub;
+    DROP TABLE IF EXISTS Round;
+    DROP TABLE IF EXISTS Stroke;
+    DROP TABLE IF EXISTS TeeSlope;
+
+    CREATE TABLE IF NOT EXISTS Course (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       name TEXT NOT NULL,
       coordinateX REAL NOT NULL,
       coordinateY REAL NOT NULL,
       active INTEGER NOT NULL,
       createDate TEXT NOT NULL);
-    
     CREATE TABLE IF NOT EXISTS Hole (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       holeNr INTEGER NOT NULL,
@@ -30,27 +40,23 @@ class Database {
       flagLatitude REAL NOT NULL,
       courseId INTEGER NOT NULL,
       FOREIGN KEY (courseId) REFERENCES Course (id));
-    
-    CREATE TABLE IF NOT EXISTS player (
+    CREATE TABLE IF NOT EXISTS Player (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       handicap REAL NOT NULL);
-    
     CREATE TABLE IF NOT EXISTS GolfClub (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       playerId INTEGER NOT NULL,
       name TEXT,
       showInList INTEGER NOT NULL,
       FOREIGN KEY (playerId) REFERENCES player (id));
-    
     CREATE TABLE IF NOT EXISTS Round (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       time TEXT NOT NULL,
       playerId INTEGER NOT NULL,
       courseId INTEGER NOT NULL,
       handicap INTEGER NOT NULL,
-      -- FOREIGN KEY (playerId) REFERENCES player (id),
+      -- FOREIGN KEY (playerId) REFERENCES Player (id),
       FOREIGN KEY (courseId) REFERENCES Course (id));
-    
     CREATE TABLE IF NOT EXISTS Stroke (
       holeId INTEGER NOT NULL,
       roundId INTEGER NOT NULL,
@@ -60,23 +66,24 @@ class Database {
       distance REAL,
       golfClubId INTEGER NOT NULL,
       playerId INTEGER NOT NULL,
-      PRIMARY KEY (holeId, roundId),
+      PRIMARY KEY (holeId, roundId, strokeNr),
       FOREIGN KEY (holeId) REFERENCES Hole (id),
-      FOREIGN KEY (roundId) REFERENCES Round (id),
-      -- FOREIGN KEY (playerId) REFERENCES player (id),
+      FOREIGN KEY (roundId) REFERENCES Round (id)
+      -- FOREIGN KEY (playerId) REFERENCES Player (id),
       -- FOREIGN KEY (golfClubId) REFERENCES GolfClub (id)
       );
-      
     CREATE TABLE IF NOT EXISTS TeeSlope (
       id TEXT NOT NULL,
       courseId INTEGER NOT NULL,
-      slopeMale INT NOT NULL,
-      slopeFemale INT NOT NULL,
+      slopeMale INTEGER NOT NULL,
+      slopeFemale INTEGER NOT NULL,
       courseRatingMale REAL NOT NULL,
       courseRatingFemale REAL NOT NULL,
       PRIMARY KEY (id, courseId),
       FOREIGN KEY (courseId) REFERENCES Course (id));
     `);
+    this.isInitialized = true;
+    console.log('Database created');
   }
 
   //#region CRUD Operations for Course Table
@@ -147,11 +154,24 @@ class Database {
     if (!this.db) return;
     try {
       await this.db.runAsync(
-        'INSERT INTO Stroke (holeId, roundId, startLatitude, startLongitude, distance, golfClubId, playerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
-        stroke.holeId, stroke.roundId, stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.golfClubId, stroke.playerId);
+        'INSERT INTO Stroke (holeId, roundId, strokeNr, startLatitude, startLongitude, distance, golfClubId, playerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
+        stroke.holeId, stroke.roundId, stroke.strokeNr, stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.golfClubId, stroke.playerId);
       console.log('Stroke created');
     } catch (error) {
       console.error('Error creating stroke:', error);
+    }
+  }
+
+  
+  // READ: Get all strokes
+  async getStrokes(): Promise<Stroke[]> {
+    if (!this.db) return [];
+    try {
+      const allRows: Stroke[] = await this.db.getAllAsync('SELECT * FROM Stroke;');
+      return allRows;
+    } catch (error) {
+      console.error('Error fetching strokes:', error);
+      return [];
     }
   }
 
@@ -228,4 +248,4 @@ class Database {
 
 
 
-}export const db =  new Database();
+}export default new Database();
