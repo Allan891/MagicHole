@@ -8,6 +8,7 @@ import {
   TextInput,
   Button,
   Alert,
+  Platform,
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -330,7 +331,12 @@ const updateLocation = (event) => {
 
   // Bottom sheet animation
   const screenHeight = Dimensions.get('window').height;
-  const handleHeight = screenHeight * 0.05;
+  let handleHeight;
+  if (Platform.OS == 'ios') {
+    handleHeight = screenHeight * 0.12;
+  } else {
+    handleHeight = screenHeight * 0.09;
+  }
   const collapsedY = screenHeight - handleHeight;
 
   const expandedY = screenHeight * 0.60;
