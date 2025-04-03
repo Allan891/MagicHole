@@ -100,6 +100,7 @@ class Database {
 //#endregion
   
 
+
 //#region CRUD Operations for Course Table
   // CREATE: Add a new course to the database
   createCourse(course: Course): number {
@@ -184,6 +185,9 @@ class Database {
     }
   }
 
+  // UPDATE: Update a hole
+  async updateHole(hole: Hole) {
+    if (!this.db) return;
     try {
       await this.db.runAsync(
         `UPDATE Hole 
@@ -390,7 +394,6 @@ class Database {
 //#endregion
 
 
-      return result?.id ?? -2;
 
 //#region CRUD Operations for Round Table
 // CREATE: Add a new round to the database
