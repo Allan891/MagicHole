@@ -16,25 +16,27 @@ import * as Location from 'expo-location';
 import { useRound } from './RoundContext';
 import { ThemedText } from '@/components/ThemedText';
 import { LocationObject } from 'expo-location';
+import { CoursePicker } from '@/components/CoursePicker';
+import courses from '@/constants/courses';
 import db from '../db/db';
 import { globalStateVar } from '../state/globalStateVar';
 
-const courseObject = {
+const exampleObject = {
   name: 'Brollsta',
   holes: [
     {
-      holeCoords: { latitude: 59.582875, longitude: 18.292865 },
-      teeCoords: { latitude: 59.582843, longitude: 18.297886 },
+      greenMiddle: { latitude: 59.582875, longitude: 18.292865 },
+      teeBack: { latitude: 59.582843, longitude: 18.297886 },
       par: 4,
     },
     {
-      holeCoords: { latitude: 59.58045, longitude: 18.286678 },
-      teeCoords: { latitude: 59.582865, longitude: 18.290975 },
+      greenMiddle: { latitude: 59.58045, longitude: 18.286678 },
+      teeBack: { latitude: 59.582865, longitude: 18.290975 },
       par: 5,
     },
     {
-      holeCoords: { latitude: 59.582523, longitude: 18.292028 },
-      teeCoords: { latitude: 59.580322, longitude: 18.287774 },
+      greenMiddle: { latitude: 59.582523, longitude: 18.292028 },
+      teeBack: { latitude: 59.580322, longitude: 18.287774 },
       par: 3,
     },
   ],
@@ -58,10 +60,12 @@ export default function HomeScreen() {
   const [lat2, setLat2] = useState<number>(0);
   const [lon2, setLon2] = useState<number>(0);
   const { playerScores, setPlayerScores } = useRound();
-  
 
-  const teeCoords = courseObject.holes[currentHole].teeBack;
-  const holeCoords = courseObject.holes[currentHole].greenMiddle;
+  const [courseObject, setCourseObject] = useState<Object>(exampleObject);
+  const [courseChosen, setCourseChosen] = useState<boolean>(false);
+
+  const teeCoords = courseObject?.holes[currentHole].teeBack;
+  const holeCoords = courseObject?.holes[currentHole].greenMiddle;
 
   const latitude = (teeCoords.latitude + holeCoords.latitude) / 2;
   const longitude = (teeCoords.longitude + holeCoords.longitude) / 2;
@@ -73,9 +77,17 @@ export default function HomeScreen() {
     longitudeDelta: 1 / 1000,
   };
 
+  const handleCourseChosen = (id) => {
+
+    const thisCourse = courses.find(a => a.id === id);
+    setCourseObject(thisCourse);
+    setCourseChosen(true);
+
+  }
   useEffect(() => {
     db.initDb();
   }, []);
+
 
   const calculateBearing = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
     const rad = Math.PI / 180;
@@ -316,6 +328,13 @@ const updateLocation = (event) => {
 
   return (
     <View style={{ flex: 1 }}>
+
+      {!courseChosen &&
+      
+      <CoursePicker onChooseCourse={handleCourseChosen} />
+
+      }
+
       <View style={{ width: '80%', height: 120, position: 'absolute', top: '10%', left: '10%', zIndex: 999999 }}>
         <ThemedText style={{ textAlign: 'center', color: 'white' }} type="title">
           {courseObject.name}
