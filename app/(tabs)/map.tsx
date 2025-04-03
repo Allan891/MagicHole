@@ -19,8 +19,10 @@ import { ThemedText } from '@/components/ThemedText';
 import { LocationObject } from 'expo-location';
 import { CoursePicker } from '@/components/CoursePicker';
 import courses from '@/constants/courses';
+import {calculateBearing, calculateDistance} from '@/utils';
 import db from '../db/db';
 import { globalStateVar } from '../state/globalStateVar';
+
 
 
 export default function HomeScreen() {
@@ -67,40 +69,15 @@ export default function HomeScreen() {
 
   }
 
-
-
-  const calculateBearing = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
-    const rad = Math.PI / 180;
-    const deltaLng = (lng2 - lng1) * rad;
-    const y = Math.sin(deltaLng) * Math.cos(lat2 * rad);
-    const x =
-      Math.cos(lat1 * rad) * Math.sin(lat2 * rad) -
-      Math.sin(lat1 * rad) * Math.cos(lat2 * rad) * Math.cos(deltaLng);
-    return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
-  };
-
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    const R = 6371e3;
-    const rad = Math.PI / 180;
-    const dLat = (lat2 - lat1) * rad;
-    const dLon = (lon2 - lon1) * rad;
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLon / 2) ** 2;
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  };
-
   const adjustZoom = (distance: number) => {
-      console.log(distance);
-      if (distance <= 200) setZoomLevel(19);
-      else {
-          if (distance <= 320) setZoomLevel(18);
-          else setZoomLevel(17);
-      }
+    console.log(distance);
+    if (distance <= 200) setZoomLevel(19);
+    else {
+        if (distance <= 320) setZoomLevel(18);
+        else setZoomLevel(17);
+    }
 
-      // Likely needs some adjustment
-
-  };
+};
 
   const addStroke = () => {
     if (location) {
