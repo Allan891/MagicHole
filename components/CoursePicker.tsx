@@ -11,7 +11,7 @@ import courses from '@/constants/courses';
 
 import { ThemedText } from '@/components/ThemedText';
 
-export function CoursePicker() {
+export function CoursePicker({ onChooseCourse }) {
   const rotationAnimation = useSharedValue(0);
 
   console.log(courses.length);
@@ -30,7 +30,7 @@ export function CoursePicker() {
   const renderCourse = ({ item }) => (
     console.log(item.name),
     <View style={styles.courseItem}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => onChooseCourse(item.id)}>
         <Text style={styles.courseText}>{item.name}</Text>
       </TouchableOpacity>
     </View>
@@ -41,7 +41,7 @@ export function CoursePicker() {
       <ThemedText>Choose your course!</ThemedText>
       <FlatList
         data={courses}
-        // keyExtractor={(item) => item.name}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderCourse}
       />
     </View>
