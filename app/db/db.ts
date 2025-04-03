@@ -166,135 +166,9 @@ class Database {
 //#endregion
 
 
-//#region CRUD Operations for Player Table
-  // CREATE: Add a new player to the database
-  async createPlayer(player: Player) {
-    if (!this.db) return;
-    try {
-      await this.db.runAsync(
-        'INSERT INTO Player (handicap) VALUES (?);',
-        player.handicap);
-      console.log('Player created');
-    } catch (error) {
-      console.error('Error creating player:', error);
-    }
-  }
-
-  // UPDATE: Update a player
-  async updatePlayer(player: Player) {
-    if (!this.db) return;
-    try {
-      await this.db.runAsync(
-        `UPDATE Player
-        SET handicap = ?
-        WHERE id = ?`,
-        player.handicap, player.id);
-      console.log('Player updated');
-    } catch (error) {
-      console.error('Error updating player:', error);
-    }
-  }
-
-  // DELETE: Delete a player
-  async deletePlayer(player: Player) {
-    if (!this.db) return;
-    try {
-      await this.db.runAsync('DELETE FROM Player WHERE id = ?;', player.id);
-      console.log('Player deleted');
-    } catch (error) {
-      console.error('Error deleting player:', error);
-    }
-  }
-
-  // READ: Get a player by ID
-  async getPlayerById(id: number): Promise<Player | null> {
-    if (!this.db) return null;
-    try {
-      return await this.db.getFirstAsync<Player>('SELECT * FROM Player WHERE id = ?;', id);
-    } catch (error) {
-      console.error('Error fetching player:', error);
-      return null;
-    }
-  }
-
-  // READ: Get a player by handicap
-  async getPlayerByHandicap(handicap: number): Promise<Player | null> {
-    if (!this.db) return null;
-    try {
-      return await this.db.getFirstAsync<Player>('SELECT * FROM Player WHERE handicap = ?;', handicap);
-    } catch (error) {
-      console.error('Error fetching player:', error);
-      return null;
-    }
-  }
-//#endregion
-
-
-//#region CRUD Operations for GolfClub Table
-  // CREATE: Add a new golf club to the database
-  async createGolfClub(golfClub: GolfClub) {
-    if (!this.db) return;
-    try {
-      await this.db.runAsync(
-        'INSERT INTO GolfClub (playerId, name, showInList) VALUES (?, ?, ?);',
-        golfClub.playerId, golfClub.name, golfClub.showInList);
-      console.log('Golf club created');
-    } catch (error) {
-      console.error('Error creating golf club:', error);
-    }
-  }
-
-  // UPDATE: Update a golf club
-  async updateGolfClub(golfClub: GolfClub) {
-    if (!this.db) return;
-    try {
-      await this.db.runAsync(
-        'UPDATE GolfClub SET playerId = ?, name = "?", showInList = ? WHERE id = ?;',
-        golfClub.playerId, golfClub.name, golfClub.showInList, golfClub.id);
-      console.log('Golf club updated');
-    } catch (error) {
-      console.error('Error updating golf club:', error);
-    }
-  }
-
-  // DELETE: Delete a golf club
-  async deleteGolfClub(golfClub: GolfClub) {
-    if (!this.db) return;
-    try {
-      await this.db.runAsync('DELETE FROM GolfClub WHERE id = ?;', golfClub.id);
-      console.log('Golf club deleted');
-    } catch (error) {
-      console.error('Error deleting golf club:', error);
-    }
-  }
-  
-    // READ: Get all golf clubs by player
-  async getAllGolfClubsByPlayer(playerId: number): Promise<GolfClub[]> {
-    if (!this.db) return [];
-    try {
-      return await this.db.getAllAsync('SELECT * FROM GolfClub WHERE playerId = ?;', playerId);
-    } catch (error) {
-      console.error('Error fetching golf clubs:', error);
-      return [];
-    }
-  }
-
-  // READ: Get a golf club by ID
-  async getGolfClubsById(id: number): Promise<GolfClub | null> {
-    if (!this.db) return null;
-    try {
-      return await this.db.getFirstAsync<GolfClub>('SELECT * FROM GolfClub WHERE id = ?;', id);
-    } catch (error) {
-      console.error('Error fetching golf club:', error);
-      return null;
-    }
-  }
-
-//#endregion
-
 
 //#region CRUD Operations for Hole Table
-  // CREATE: Add a new stroke to the database
+  // CREATE: Add a new hole to the database
   async createHole(hole: Hole): Promise<number> {
     if (!this.db) return -1;
     try {
@@ -310,9 +184,6 @@ class Database {
     }
   }
 
-  // UPDATE: Update a hole
-  async updateHole(hole: Hole) {
-    if (!this.db) return;
     try {
       await this.db.runAsync(
         `UPDATE Hole 
@@ -388,6 +259,201 @@ class Database {
     }
   }
 //#endregion
+
+
+
+//#region CRUD Operations for Player Table
+  // CREATE: Add a new player to the database
+  async createPlayer(player: Player) {
+    if (!this.db) return;
+    try {
+      await this.db.runAsync(
+        'INSERT INTO Player (handicap) VALUES (?);',
+        player.handicap);
+      console.log('Player created');
+    } catch (error) {
+      console.error('Error creating player:', error);
+    }
+  }
+
+  // UPDATE: Update a player
+  async updatePlayer(player: Player) {
+    if (!this.db) return;
+    try {
+      await this.db.runAsync(
+        `UPDATE Player
+        SET handicap = ?
+        WHERE id = ?`,
+        player.handicap, player.id);
+      console.log('Player updated');
+    } catch (error) {
+      console.error('Error updating player:', error);
+    }
+  }
+
+  // DELETE: Delete a player
+  async deletePlayer(player: Player) {
+    if (!this.db) return;
+    try {
+      await this.db.runAsync('DELETE FROM Player WHERE id = ?;', player.id);
+      console.log('Player deleted');
+    } catch (error) {
+      console.error('Error deleting player:', error);
+    }
+  }
+
+  // READ: Get a player by ID
+  async getPlayerById(id: number): Promise<Player | null> {
+    if (!this.db) return null;
+    try {
+      return await this.db.getFirstAsync<Player>('SELECT * FROM Player WHERE id = ?;', id);
+    } catch (error) {
+      console.error('Error fetching player:', error);
+      return null;
+    }
+  }
+
+  // READ: Get a player by handicap
+  async getPlayerByHandicap(handicap: number): Promise<Player | null> {
+    if (!this.db) return null;
+    try {
+      return await this.db.getFirstAsync<Player>('SELECT * FROM Player WHERE handicap = ?;', handicap);
+    } catch (error) {
+      console.error('Error fetching player:', error);
+      return null;
+    }
+  }
+//#endregion
+
+
+
+//#region CRUD Operations for GolfClub Table
+  // CREATE: Add a new golf club to the database
+  async createGolfClub(golfClub: GolfClub) {
+    if (!this.db) return;
+    try {
+      await this.db.runAsync(
+        'INSERT INTO GolfClub (playerId, name, showInList) VALUES (?, ?, ?);',
+        golfClub.playerId, golfClub.name, golfClub.showInList);
+      console.log('Golf club created');
+    } catch (error) {
+      console.error('Error creating golf club:', error);
+    }
+  }
+
+  // UPDATE: Update a golf club
+  async updateGolfClub(golfClub: GolfClub) {
+    if (!this.db) return;
+    try {
+      await this.db.runAsync(
+        'UPDATE GolfClub SET playerId = ?, name = "?", showInList = ? WHERE id = ?;',
+        golfClub.playerId, golfClub.name, golfClub.showInList, golfClub.id);
+      console.log('Golf club updated');
+    } catch (error) {
+      console.error('Error updating golf club:', error);
+    }
+  }
+
+  // DELETE: Delete a golf club
+  async deleteGolfClub(golfClub: GolfClub) {
+    if (!this.db) return;
+    try {
+      await this.db.runAsync('DELETE FROM GolfClub WHERE id = ?;', golfClub.id);
+      console.log('Golf club deleted');
+    } catch (error) {
+      console.error('Error deleting golf club:', error);
+    }
+  }
+  
+    // READ: Get all golf clubs by player
+  async getAllGolfClubsByPlayer(playerId: number): Promise<GolfClub[]> {
+    if (!this.db) return [];
+    try {
+      return await this.db.getAllAsync('SELECT * FROM GolfClub WHERE playerId = ?;', playerId);
+    } catch (error) {
+      console.error('Error fetching golf clubs:', error);
+      return [];
+    }
+  }
+
+  // READ: Get a golf club by ID
+  async getGolfClubsById(id: number): Promise<GolfClub | null> {
+    if (!this.db) return null;
+    try {
+      return await this.db.getFirstAsync<GolfClub>('SELECT * FROM GolfClub WHERE id = ?;', id);
+    } catch (error) {
+      console.error('Error fetching golf club:', error);
+      return null;
+    }
+  }
+
+//#endregion
+
+
+      return result?.id ?? -2;
+
+//#region CRUD Operations for Round Table
+// CREATE: Add a new round to the database
+async createRound(round: Round) {
+  if (!this.db) return;
+  try {
+    await this.db.runAsync(
+      'INSERT INTO Round (time, playerId, courseId, handicap) VALUES (?, ?, ?, ?);',
+      round.time, round.playerId, round.courseId, round.handicap);
+    console.log('Round created');
+  } catch (error) {
+    console.error('Error creating round:', error);
+  }
+}
+
+// UPDATE: Update a round
+async updateRound(round: Round) {
+  if (!this.db) return;
+  try {
+    await this.db.runAsync(
+      'UPDATE Round SET time = ?, playerId = ?, courseId = ?, handicap = ? WHERE id = ?;',
+      round.time, round.playerId, round.courseId, round.handicap, round.id);
+    console.log('Course updated');
+  } catch (error) {
+    console.error('Error updating round:', error);
+  }
+}
+
+// DELETE: Delete a round
+async deleteRound(round: Round) {
+  if (!this.db) return;
+  try {
+    await this.db.runAsync('DELETE FROM Round WHERE id = ?;', round.id);
+    console.log('Round deleted');
+  } catch (error) {
+    console.error('Error deleting round:', error);
+  }
+}
+
+  // READ: Get all rounds by player
+async getAllRoundsByPlayer(playerId: number): Promise<Round[]> {
+  if (!this.db) return [];
+  try {
+    return await this.db.getAllAsync('SELECT * FROM Round WHERE playerId = ?;', playerId);
+  } catch (error) {
+    console.error('Error fetching rounds:', error);
+    return [];
+  }
+}
+
+// READ: Get a rounds by ID
+async getRoundById(id: number): Promise<Round | null> {
+  if (!this.db) return null;
+  try {
+    return await this.db.getAllAsync('SELECT * FROM Round WHERE id = ?;', id);
+  } catch (error) {
+    console.error('Error fetching round:', error);
+    return null;
+  }
+}
+
+//#endregion
+
 
 
 //#region CRUD Operations for Stroke Table
