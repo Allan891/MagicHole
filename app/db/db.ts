@@ -63,7 +63,7 @@ class Database {
       strokeNr INTEGER NOT NULL,
       startLatitude REAL,
       startLongitude REAL,
-      distance REAL,
+      distance INTEGER,
       golfClubId INTEGER NOT NULL,
       playerId INTEGER NOT NULL,
       PRIMARY KEY (holeId, roundId, strokeNr),

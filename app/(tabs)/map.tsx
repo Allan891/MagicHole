@@ -130,7 +130,7 @@ export default function HomeScreen() {
       if (previousStroke !== null) {
         console.log('=======================================');
         console.log('Previous stroke: ', previousStroke);
-        const distance = previousStroke ? calculateDistance(previousStroke.startLatitude, previousStroke.startLongitude, latitude, longitude): 0;
+        const distance = previousStroke ? Math.round(calculateDistance(previousStroke.startLatitude, previousStroke.startLongitude, latitude, longitude)): 0;
         console.log('Distance: ', distance);
         previousStroke.distance = distance;
         console.log('Updated previous stroke: ', previousStroke);
