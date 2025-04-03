@@ -63,6 +63,7 @@ export default function HomeScreen() {
     const thisCourse = courses.find(a => a.id === id);
     setCourseObject(thisCourse);
     setCourseChosen(true);
+    if (test) updateTestLocation(thisCourse.holes[0].teeBack, thisCourse.holes[0].greenMiddle);
 
   }
 
