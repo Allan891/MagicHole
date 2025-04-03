@@ -40,7 +40,7 @@ export default function HomeScreen() {
   const [lon2, setLon2] = useState<number>(0);
   const { playerScores, setPlayerScores } = useRound();
 
-  const [courseObject, setCourseObject] = useState<Object>(exampleObject);
+  const [courseObject, setCourseObject] = useState<Object>(courses[0]);
   const [courseChosen, setCourseChosen] = useState<boolean>(false);
 
   const teeCoords = courseObject?.holes[currentHole].teeBack;
