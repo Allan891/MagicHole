@@ -44,7 +44,6 @@ const exampleObject = {
 
 export default function HomeScreen() {
 
-  const { courseObject, } = useRound();
   const strokes = globalStateVar((state) => state.strokes);
   const setStroke = globalStateVar((state) => state.setStroke);
   const [mapStrokes, setMapStrokes] = useState<any[][]>([[]]);
