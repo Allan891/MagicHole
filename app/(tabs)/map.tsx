@@ -91,7 +91,10 @@ export default function HomeScreen() {
   const adjustZoom = (distance: number) => {
       console.log(distance);
       if (distance <= 200) setZoomLevel(19);
-      else setZoomLevel(17);
+      else {
+          if (distance <= 320) setZoomLevel(18);
+          else setZoomLevel(17);
+      }
 
       // Likely needs some adjustment
 
@@ -244,8 +247,14 @@ const updateTestLocation = (forcedLocation = {}, nextHole = {}) => {
     updatedLatitude = forcedLocation.latitude;
     updatedLongitude = forcedLocation.longitude;
   } else {
-      updatedLatitude = location.latitude - (location.latitude - holeCoords.latitude)* (Math.random()*0.8 + 0.2);
-      updatedLongitude = location.longitude - (location.longitude - holeCoords.longitude)* (Math.random()*0.8 + 0.2);
+    if (distanceLeft > 175){  // if distance > X, advance lat & long by 25-75% of delta
+        updatedLatitude = location.latitude - (location.latitude - holeCoords.latitude)* (Math.random() + 0.5)/2;
+        updatedLongitude = location.longitude - (location.longitude - holeCoords.longitude)* (Math.random() + 0.5)/2;
+    }
+    else{ // if distance < X, advance by 50-100% of delta
+        updatedLatitude = location.latitude - (location.latitude - holeCoords.latitude)* (Math.random()*0.5 + 0.5);
+        updatedLongitude = location.longitude - (location.longitude - holeCoords.longitude)* (Math.random()*0.5 + 0.5);
+    }
   }
 
   console.log('Update to: ', updatedLatitude, updatedLongitude);
@@ -367,11 +376,11 @@ const updateLocation = (event) => {
 {  location && currentStroke > 0 &&
          <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}}
          type='subtitle'>Prev Shot
-          {Math.round(calculateDistance(
+          {' ' + Math.round(calculateDistance(
              location.latitude,
              location.longitude,
-             mapStrokes[currentHole][currentStroke-1].latitude,
-             mapStrokes[currentHole][currentStroke-1].longitude
+             mapStrokes[currentHole][currentStroke-1].startLatitude,
+             mapStrokes[currentHole][currentStroke-1].startLongitude
          ))}m</ThemedText>
 
 
