@@ -16,9 +16,29 @@ import * as Location from 'expo-location';
 import { useRound } from './RoundContext';
 import { ThemedText } from '@/components/ThemedText';
 import { LocationObject } from 'expo-location';
+import db from '../db/db';
 import { globalStateVar } from '../state/globalStateVar';
 
-
+const courseObject = {
+  name: 'Brollsta',
+  holes: [
+    {
+      holeCoords: { latitude: 59.582875, longitude: 18.292865 },
+      teeCoords: { latitude: 59.582843, longitude: 18.297886 },
+      par: 4,
+    },
+    {
+      holeCoords: { latitude: 59.58045, longitude: 18.286678 },
+      teeCoords: { latitude: 59.582865, longitude: 18.290975 },
+      par: 5,
+    },
+    {
+      holeCoords: { latitude: 59.582523, longitude: 18.292028 },
+      teeCoords: { latitude: 59.580322, longitude: 18.287774 },
+      par: 3,
+    },
+  ],
+};
 
 export default function HomeScreen() {
 
@@ -53,6 +73,10 @@ export default function HomeScreen() {
     longitudeDelta: 1 / 1000,
   };
 
+  useEffect(() => {
+    db.initDb();
+  }, []);
+
   const calculateBearing = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
     const rad = Math.PI / 180;
     const deltaLng = (lng2 - lng1) * rad;
@@ -81,16 +105,39 @@ export default function HomeScreen() {
 
       // Likely needs some adjustment
 
-
   };
-
 
   const addStroke = () => {
     if (location) {
 
       const { latitude, longitude } = location;
-      const thisStroke = { latitude, longitude, strokeNumber: currentStroke };
+      // const thisStroke = { latitude, longitude, strokeNumber: currentStroke };
+      // Get the previous stroke if it exists
+      const previousStrokes = mapStrokes[currentHole];
+      const previousStroke: Stroke = previousStrokes.length > 1 ? previousStrokes[previousStrokes.length - 1] : null;
 
+      // Calculate distance if there's a previous stroke
+      if (previousStroke !== null) {
+        console.log('=======================================');
+        console.log('Previous stroke: ', previousStroke);
+        const distance = previousStroke ? calculateDistance(previousStroke.startLatitude, previousStroke.startLongitude, latitude, longitude): 0;
+        console.log('Distance: ', distance);
+        previousStroke.distance = distance;
+        console.log('Updated previous stroke: ', previousStroke);
+        console.log('=======================================');
+        db.createStroke(previousStroke); // Save the previous stroke to the database
+        console.log('Saved previous stroke to database',);
+      }
+      const thisStroke: Stroke = {
+        holeId: currentHole,
+        roundId: 1,
+        strokeNr: currentStroke,
+        startLatitude: latitude,
+        startLongitude: longitude,
+        distance: 0, // Placeholder, calculate if needed
+        golfClubId: 69, // Placeholder, update with actual golf club ID
+        playerId: 999,
+      };
       const updatedMapStrokes = [...mapStrokes];
         console.log(updatedMapStrokes);
         console.log('current hole: ',currentHole);
@@ -100,7 +147,7 @@ export default function HomeScreen() {
             updatedMapStrokes[currentHole] = [thisStroke];
 
       setMapStrokes(updatedMapStrokes);
-
+      
       const updatedStrokes = [...strokes];
       
       setCurrentStroke(currentStroke + 1);
@@ -118,6 +165,27 @@ export default function HomeScreen() {
   };
 
   const nextHole = () => {
+    if (test){
+      db.getStrokes()
+      .then((strokes) => {
+      console.log('All strokes:');
+      strokes.forEach((stroke, index) => {
+        console.log(`Stroke ${index + 1}:`);
+        console.log(`  Hole ID: ${stroke.holeId}`);
+        console.log(`  Round ID: ${stroke.roundId}`);
+        console.log(`  Stroke Number: ${stroke.strokeNr}`);
+        console.log(`  Start Latitude: ${stroke.startLatitude}`);
+        console.log(`  Start Longitude: ${stroke.startLongitude}`);
+        console.log(`  Distance: ${stroke.distance}`);
+        console.log(`  Golf Club ID: ${stroke.golfClubId}`);
+        console.log(`  Player ID: ${stroke.playerId}`);
+        console.log('-----------------------------');
+      });
+      })
+      .catch((error) => {
+      console.error('Error fetching strokes:', error);
+      });
+    } 
     if (currentHole + 1 >= courseObject.holes.length) {
       alert(`Round complete! Total strokes: ${playerScores.reduce((a, b) => a + b, 0)}`);
       return;

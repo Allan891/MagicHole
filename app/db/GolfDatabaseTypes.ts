@@ -1,5 +1,5 @@
 type Course = {
-  id?: number;
+  id: number;
   name: string;
   coordinateX: number;
   coordinateY: number;
@@ -8,7 +8,7 @@ type Course = {
 };
 
 type Hole = {
-  id?: number;
+  id: number;
   holeNr: number;
   backTeeLongitude: number;
   backTeeLatitude: number;
@@ -25,12 +25,12 @@ type Player = {
 type GolfClub = {
   id?: number;
   playerId: number;
-  name?: string;
+  name: string;
   showInList: number;
 };
 
 type Round = {
-  id?: number;
+  id: number;
   time: string;
   playerId: number;
   courseId: number;
@@ -40,9 +40,10 @@ type Round = {
 type Stroke = {
   holeId: number;
   roundId: number;
-  startLatitude?: number;
-  startLongitude?: number;
-  distance?: number;
+  strokeNr: number;
+  startLatitude: number;
+  startLongitude: number;
+  distance: number;
   golfClubId: number;
   playerId: number;
 };
