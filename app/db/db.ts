@@ -103,24 +103,13 @@ class Database {
 
   //#region CRUD Operations for Course Table
   // CREATE: Add a new course to the database
-  async createCourse(course: Course) {
-    if (!this.db) return;
-    try {
-      await this.db.runAsync(
-        'INSERT INTO Course (name, longitude, latitude, active, dateAdded) VALUES (?, ?, ?, ?, ?);',
-        course.name, course.longitude, course.latitude, course.active, course.dateAdded);
-      console.log('Course created');
-    } catch (error) {
-      console.error('Error creating course:', error);
-    }
-  }
-  async createCourse2(course: Course): Promise<number> {
+  createCourse(course: Course): number {
     if (!this.db) return -1;
     try {
-      await this.db.runAsync(
+      this.db.runSync(
         'INSERT INTO Course (name, longitude, latitude, active, dateAdded) VALUES (?, ?, ?, ?, ?);',
         course.name, course.longitude, course.latitude, course.active, course.dateAdded);       // Fetch the last inserted row ID
-      const result = await this.db.getAsync("SELECT last_insert_rowid() AS id;");
+      const result = this.db.getFirstSync("SELECT last_insert_rowid() AS id;");
       console.log('Course created with ID:', result?.id);
       return result?.id ?? -2;
     } catch (error) {
@@ -309,15 +298,18 @@ class Database {
 
 //#region CRUD Operations for Hole Table
   // CREATE: Add a new stroke to the database
-  async createHole(hole: Hole) {
-    if (!this.db) return;
+  async createHole(hole: Hole): Promise<number> {
+    if (!this.db) return -1;
     try {
       await this.db.runAsync(
         'INSERT INTO Hole (holeNr, backTeeLongitude, backTeeLatitude, flagLongitude, flagLatitude, courseId) VALUES (?, ?, ?, ?, ?, ?);',
         hole.holeNr, hole.backTeeLongitude, hole.backTeeLatitude, hole.flagLongitude, hole.flagLatitude, hole.courseId);
-      console.log('Hole created');
+      const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
+      console.log('Hole created with ID:', result?.id);
+      return result?.id ?? -2;
     } catch (error) {
       console.error('Error creating hole:', error);
+      return -3;
     }
   }
 
