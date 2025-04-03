@@ -43,15 +43,18 @@ class Database {
       flagLatitude REAL NOT NULL,
       courseId INTEGER NOT NULL,
       FOREIGN KEY (courseId) REFERENCES Course (id));
+
     CREATE TABLE IF NOT EXISTS Player (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       handicap REAL NOT NULL);
+
     CREATE TABLE IF NOT EXISTS GolfClub (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       playerId INTEGER NOT NULL,
       name TEXT,
       showInList INTEGER NOT NULL,
       FOREIGN KEY (playerId) REFERENCES player (id));
+
     CREATE TABLE IF NOT EXISTS Round (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       time TEXT NOT NULL,
@@ -60,6 +63,7 @@ class Database {
       handicap INTEGER NOT NULL,
       -- FOREIGN KEY (playerId) REFERENCES Player (id),
       FOREIGN KEY (courseId) REFERENCES Course (id));
+
     CREATE TABLE IF NOT EXISTS Stroke (
       holeId INTEGER NOT NULL,
       roundId INTEGER NOT NULL,
@@ -75,6 +79,7 @@ class Database {
       -- FOREIGN KEY (playerId) REFERENCES Player (id),
       -- FOREIGN KEY (golfClubId) REFERENCES GolfClub (id)
       );
+
     CREATE TABLE IF NOT EXISTS TeeSlope (
       id TEXT NOT NULL,
       courseId INTEGER NOT NULL,
@@ -151,6 +156,119 @@ class Database {
   }
 
 //#endregion
+
+//#region CRUD Operations for Hole Table
+  // CREATE: Add a new stroke to the database
+
+  /*
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  holeNr INTEGER NOT NULL,
+  backTeeLongitude REAL NOT NULL,
+  backTeeLatitude REAL NOT NULL,
+  flagLongitude REAL NOT NULL,
+  flagLatitude REAL NOT NULL,
+  courseId INTEGER NOT NULL,*/
+
+  async createHole(hole: Hole) {
+    if (!this.db) return;
+    try {
+      await this.db.runAsync(
+        'INSERT INTO Hole (id, holeNr, backTeeLongitude, backTeeLatitude, flagLongitude, flagLatitude, courseId) VALUES (?, ?, ?, ?, ?, ?, ?);',
+        hole.id, hole.holeNr, hole.backTeeLongitude, hole.backTeeLatitude, hole.flagLongitude, hole.flagLatitude, hole.courseId);
+      console.log('Hole created');
+    } catch (error) {
+      console.error('Error creating hole:', error);
+    }
+  }
+
+  
+  // READ: Get all holes
+  async getHoles(): Promise<Hole[]> {
+    if (!this.db) return [];
+    try {
+      const allRows: Hole[] = await this.db.getAllAsync('SELECT * FROM Hole;');
+      return allRows;
+    } catch (error) {
+      console.error('Error fetching holes:', error);
+      return [];
+    }
+  }
+
+  // READ: Get a hole by ID
+  async getHoleById(id: number): Promise<Hole | null> {
+    if (!this.db) return null;
+    try {
+      return await this.db.getFirstAsync<Hole>('SELECT * FROM Stroke WHERE id = ?;', id);
+    } catch (error) {
+      console.error('Error fetching hole:', error);
+      return null;
+    }
+  }
+
+  // READ: Get all holes for a round
+  async getHolesByRoundId(roundId: number): Promise<Hole[]> {
+    if (!this.db) return [];
+    try {
+      const allRows: Hole[] = await this.db.getAllAsync(
+        `SELECT Hole.* FROM Round 
+        INNER JOIN Hole ON  Hole.courseId = Round.courseId 
+        WHERE Round.id = ?;`, roundId
+      );
+      return allRows;
+    } catch (error) {
+      console.error('Error fetching holes:', error);
+      return [];
+    }
+  }
+/*
+  // READ: Get all strokes for a course
+  async getStrokesByCourseId(courseId: number): Promise<Stroke[]> {
+    if (!this.db) return [];
+    try {
+      const allRows: Stroke[] = await this.db.getAllAsync(
+        `SELECT Stroke.* FROM Stroke
+         INNER JOIN Hole ON Stroke.holeId = Hole.id
+         WHERE Hole.courseId = ?;`,
+        courseId
+      );
+      return allRows;
+    } catch (error) {
+      console.error('Error fetching strokes by course:', error);
+      return [];
+    }
+  }
+
+  // READ: Get all strokes for a player
+  async getStrokesByPlayerId(playerId: number): Promise<Stroke[]> {
+    if (!this.db) return [];
+    try {
+      const allRows: Stroke[] = await this.db.getAllAsync(
+        'SELECT * FROM Stroke WHERE playerId = ?;',
+        playerId
+      );
+      return allRows;
+    } catch (error) {
+      console.error('Error fetching strokes by player:', error);
+      return [];
+    }
+  }
+
+  // READ: Get all strokes for a golf club
+  async getStrokesByGolfClubId(golfClubId: number): Promise<Stroke[]> {
+    if (!this.db) return [];
+    try {
+      const allRows: Stroke[] = await this.db.getAllAsync(
+        'SELECT * FROM Stroke WHERE golfClubId = ?;',
+        golfClubId
+      );
+      return allRows;
+    } catch (error) {
+      console.error('Error fetching strokes by golf club:', error);
+      return [];
+    }
+  }
+//#endregion
+*/
 
 //#region CRUD Operations for Stroke Table
   // CREATE: Add a new stroke to the database
@@ -271,7 +389,5 @@ class Database {
     }
   }
 //#endregion
-
-
 
 }export default new Database();
