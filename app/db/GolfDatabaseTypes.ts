@@ -44,6 +44,8 @@ type Stroke = {
   startLatitude: number;
   startLongitude: number;
   distance: number;
+  strokesGained: number;
+  lye: number;
   golfClubId: number;
   playerId: number;
 };
