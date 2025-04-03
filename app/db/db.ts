@@ -15,6 +15,7 @@ class Database {
 //#endregion
 
 
+
 //#region Initialize the database and create tables
   public initDb() {
     if (this.isInitialized) return;

@@ -72,9 +72,9 @@ export default function ScoreOverview() {
         </View>
 
         {[
-        { label: 'Import Courses', action: importCourses },
+        { label: 'Import Courses & Holes', action: importCourses },
         { label: 'Reset Data', action: () => console.log('Reset Data') },
-        { label: 'Get Courses', action: getCourses}
+        { label: 'Get Courses & Holes', action: getCourses}
         ].map((button, index) => (
         <View key={index} style={{ marginBottom: 10 }}>
           <ThemedView
