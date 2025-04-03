@@ -114,6 +114,20 @@ class Database {
       console.error('Error creating course:', error);
     }
   }
+  async createCourse2(course: Course): Promise<number> {
+    if (!this.db) return -1;
+    try {
+      await this.db.runAsync(
+        'INSERT INTO Course (name, longitude, latitude, active, dateAdded) VALUES (?, ?, ?, ?, ?);',
+        course.name, course.longitude, course.latitude, course.active, course.dateAdded);       // Fetch the last inserted row ID
+      const result = await this.db.getAsync("SELECT last_insert_rowid() AS id;");
+      console.log('Course created with ID:', result?.id);
+      return result?.id ?? -2;
+    } catch (error) {
+      console.error('Error creating course:', error);
+      return -3;
+    }
+  }
 
   // UPDATE: Update a course
   async updateCourse(course: Course) {
@@ -365,8 +379,7 @@ class Database {
       const allRows: Hole[] = await this.db.getAllAsync(
         `SELECT Hole.* FROM Round 
         INNER JOIN Hole ON  Hole.courseId = Round.courseId 
-        WHERE Round.id = ?;`, roundId
-      );
+        WHERE Round.id = ?;`, roundId);
       return allRows;
     } catch (error) {
       console.error('Error fetching holes:', error);
