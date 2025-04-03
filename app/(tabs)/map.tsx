@@ -1,3 +1,5 @@
+// This is the latest map.tsx
+
 import {
   View,
   StyleSheet,
@@ -363,7 +365,7 @@ export default function HomeScreen() {
   }
   const collapsedY = screenHeight - handleHeight;
 
-  const expandedY = screenHeight * 0.60;
+  const expandedY = screenHeight - 300;
   const sheetAnim = useRef(new Animated.Value(collapsedY)).current;
 
   const panResponder = useRef(
@@ -390,30 +392,26 @@ export default function HomeScreen() {
       }
 
       <View style={{ width: '80%', height: 120, position: 'absolute', top: '10%', left: '10%', zIndex: 999999 }}>
-        <ThemedText style={{ textAlign: 'center', color: 'white' }} type="title">
-          {courseObject.namn}
+      {currentHole == 0 && currentStroke == 0 &&
+        <ThemedText style={{ textAlign: 'center', color: 'white'}} type="title">
+          {courseObject.name}
         </ThemedText>
+      }
+
         <TouchableOpacity onPress={nextHole}>
           <ThemedText style={{ textAlign: 'center', color: 'white' }} type="subtitle">
-            Hole {currentHole + 1} Par {courseObject.par[currentHole]}
+          Hole {currentHole + 1} {currentStroke == 0 && `Par ${courseObject.par[currentHole]}`}
           </ThemedText>
         </TouchableOpacity>
-        <ThemedText style={{ textAlign: 'center', color: 'white' }}>
-          Strokes {currentStroke}
-        </ThemedText>
 
         <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}} type='subtitle'>{distanceLeft}m</ThemedText>
-{  location && currentStroke > 0 &&
-         <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}}
-         type='subtitle'>Prev Shot
-          {' ' + Math.round(calculateDistance(
-             location.latitude,
-             location.longitude,
-             mapStrokes[currentHole][currentStroke-1].startLatitude,
-             mapStrokes[currentHole][currentStroke-1].startLongitude
-         ))}m</ThemedText>
 
-
+         { currentStroke > 0 &&
+         (
+           <ThemedText style={{ textAlign: 'center', color: 'white' }}>
+            Strokes {currentStroke}
+          </ThemedText>
+          )
          }
       </View>
 
@@ -449,14 +447,14 @@ export default function HomeScreen() {
         <Polyline
             coordinates={strokeCoordinates}
             strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
-            // strokeColors={[
-            //   '#7F0000',
-            //   '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
-            //   '#B24112',
-            //   '#E5845C',
-            //   '#238C23',
-            //   '#7F0000',
-            // ]}
+            strokeColors={[
+              '#7F0000',
+              // '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
+              '#B24112',
+              '#E5845C',
+              '#238C23',
+              '#7F0000',
+            ]}
             strokeWidth={3}
           />
 
@@ -474,14 +472,6 @@ export default function HomeScreen() {
   {...panResponder.panHandlers}
   style={[styles.bottomSheet, { transform: [{ translateY: sheetAnim }] }]}
 >
-<View style={styles.buttonRow}>
-  <View style={{ alignItems: 'center' }}>
-    <TouchableOpacity onPress={nextHole}>
-      <MaterialIcons name="golf-course" size={30} color="black" />
-    </TouchableOpacity>
-    <ThemedText style={styles.holeOutText}>Next Hole</ThemedText>
-  </View>
-</View>
 
   <View style={styles.strokeAdjusterRow}>
   <TouchableOpacity onPress={removeStroke}>
@@ -502,6 +492,32 @@ export default function HomeScreen() {
   </TouchableOpacity>
 </View>
 
+<View style={[styles.buttonRow, {flexDirection: 'column'}]}>
+{  location && currentStroke > 0 &&
+         <ThemedText>Previous shot length:
+          {' ' + Math.round(calculateDistance(
+             location.latitude,
+             location.longitude,
+             mapStrokes[currentHole][currentStroke-1].startLatitude,
+             mapStrokes[currentHole][currentStroke-1].startLongitude
+         ))}m</ThemedText>
+
+
+         }</View>
+
+<View style={styles.buttonRow}>
+  <View style={{ alignItems: 'center' }}>
+    <TouchableOpacity onPress={nextHole}>
+      <MaterialIcons name="golf-course" size={30} color="black" />
+    </TouchableOpacity>
+    <ThemedText style={styles.holeOutText}>Next Hole</ThemedText>
+  </View>
+</View>
+
+<View style={styles.buttonRow}>
+  <ThemedText type="subtitle">{courseObject?.name}</ThemedText>
+</View>
+
 </Animated.View>
 
     </View>
@@ -513,12 +529,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    height: Dimensions.get('window').height,
+    height: 300, //  Dimensions.get('window').height,
     backgroundColor: 'white',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     paddingHorizontal: 16,
-    paddingTop: 40, 
+    paddingTop: 30, 
     zIndex: 999,
   },
   
@@ -551,9 +567,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center', 
     alignItems: 'center',     
-    gap: 32,                  
-    marginTop: 12,
-    marginBottom: 44,
+    gap: 12,                  
+    // marginTop: 12,
+    // marginBottom: 44,
   },
   strokeAdjusterRow: {
     flexDirection: 'row',
