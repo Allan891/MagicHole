@@ -321,8 +321,10 @@ const updateLocation = (event) => {
 
   // Bottom sheet animation
   const screenHeight = Dimensions.get('window').height;
-  const collapsedY = screenHeight - 150;
-  const expandedY = screenHeight / 2;
+  const handleHeight = 75; 
+  const collapsedY = screenHeight - handleHeight;
+
+  const expandedY = screenHeight * 0.60;
   const sheetAnim = useRef(new Animated.Value(collapsedY)).current;
 
   const panResponder = useRef(
