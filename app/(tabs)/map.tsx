@@ -10,7 +10,7 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { LatLng, Marker, Polyline } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
@@ -37,7 +37,7 @@ export default function HomeScreen() {
   const [bearing, setBearing] = useState(0);
   const [currentHole, setCurrentHole] = useState<number>(0);
   const [currentStroke, setCurrentStroke] = useState<number>(0);
-
+  const [strokeCoordinates, setStrokeCoordinates] = useState<LatLng[]>([]);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
   
   const [LockedView, setLockedView] = useState<boolean>(false);
@@ -69,9 +69,30 @@ export default function HomeScreen() {
     setCourseObject(thisCourse);
     setSelectedCourse(thisCourse);
     setCourseChosen(true);
-    
-  };
-  
+    //setCurrentHole(1);
+    console.log('thisCourse', thisCourse);
+    if (thisCourse){
+      setBearing(  //set bearing for hole 0, since we dont switch holes here it doesnt happen automatically.
+        calculateBearing(
+          thisCourse.holes[0].teeBack.latitude,
+          thisCourse.holes[0].teeBack.longitude,
+          thisCourse.holes[0].greenMiddle.latitude,
+          thisCourse.holes[0].greenMiddle.longitude
+        )
+      );
+    // adjustzoom for hole 1 aswell
+        adjustZoom(calculateDistance(
+            thisCourse.holes[0].teeBack.latitude,
+            thisCourse.holes[0].teeBack.longitude,
+            thisCourse.holes[0].greenMiddle.latitude,
+            thisCourse.holes[0].greenMiddle.longitude
+        ));
+    }
+
+    //setCurrentHole(0); //we need to change hole to get correct bearing, so we change it to 1 and then to 0.
+    if (test) updateTestLocation(thisCourse.holes[0].teeBack, thisCourse.holes[0].greenMiddle);
+
+  }
 
   const adjustZoom = (distance: number) => {
     console.log(distance);
@@ -81,7 +102,7 @@ export default function HomeScreen() {
         else setZoomLevel(17);
     }
 
-};
+  };
 
   const addStroke = () => {
     if (location) {
@@ -90,10 +111,10 @@ export default function HomeScreen() {
       // const thisStroke = { latitude, longitude, strokeNumber: currentStroke };
       // Get the previous stroke if it exists
       const previousStrokes = mapStrokes[currentHole];
-      const previousStroke: Stroke = previousStrokes.length > 1 ? previousStrokes[previousStrokes.length - 1] : null;
+      const previousStroke: Stroke = previousStrokes?.length > 0 ? previousStrokes[previousStrokes.length - 1] : null;
 
       // Calculate distance if there's a previous stroke
-      if (previousStroke !== null) {
+      if (previousStroke) {
         console.log('=======================================');
         console.log('Previous stroke: ', previousStroke);
         const distance = previousStroke ? calculateDistance(previousStroke.startLatitude, previousStroke.startLongitude, latitude, longitude): 0;
@@ -117,44 +138,48 @@ export default function HomeScreen() {
       const updatedMapStrokes = [...mapStrokes];
         console.log(updatedMapStrokes);
         console.log('current hole: ',currentHole);
-       if (updatedMapStrokes[currentHole])
+        if (updatedMapStrokes[currentHole])
             updatedMapStrokes[currentHole] = [...updatedMapStrokes[currentHole], thisStroke];
         else
             updatedMapStrokes[currentHole] = [thisStroke];
 
       setMapStrokes(updatedMapStrokes);
+
+      const newArr = [...strokeCoordinates, { latitude, longitude }];
+      console.log('newArr', newArr);
+      setStrokeCoordinates(newArr);
       
       const updatedStrokes = [...strokes];
       
       setCurrentStroke(currentStroke + 1);
-  
+
       
       const currentScore = strokes[currentHole] || 0;
       setStroke(currentHole, currentScore + 1);
       if (test) updateTestLocation();
-  
+
       console.log(updatedMapStrokes);
       //console.log(mapStrokes[currentHole][currentStroke-1]);
     } else {
       Alert.alert('Error: No location data');
     }
   };
+
   const removeStroke = () => {
     const current = strokes[currentHole] || 0;
     if (current === 0) return; 
-  
+
     
     setStroke(currentHole, current - 1);
-  
+
     
     const updated = [...mapStrokes];
     updated[currentHole] = updated[currentHole].slice(0, -1);
     setMapStrokes(updated);
-  
+
     
     setCurrentStroke(current - 1);
   };
-
 
   const nextHole = () => {
     if (test){
@@ -184,25 +209,27 @@ export default function HomeScreen() {
     }
     setCurrentHole(currentHole + 1);
     setCurrentStroke(0); // This will make the first stroke for the new hole be 1
+    setStrokeCoordinates([]); // Reset map strokes
 
-    // Add a stroke 0 for the new hole
-    const newStroke: Stroke = {
-      holeId: currentHole + 1, // New hole ID
-      roundId: 1, // Assuming round ID is 1
-      strokeNr: 0, // Stroke number 0
-      startLatitude: courseObject.holes[currentHole + 1].teeBack.latitude,
-      startLongitude: courseObject.holes[currentHole + 1].teeBack.longitude,
-      distance: 0, // Placeholder for distance
-      golfClubId: 69, // Placeholder, update with actual golf club ID
-      playerId: 999, // Placeholder, update with actual player ID
-    };
+    // // Add a stroke 0 for the new hole
+    // const newStroke: Stroke = {
+    //   holeId: currentHole + 1, // New hole ID
+    //   roundId: 1, // Assuming round ID is 1
+    //   strokeNr: 0, // Stroke number 0
+    //   startLatitude: courseObject.holes[currentHole + 1].teeBack.latitude,
+    //   startLongitude: courseObject.holes[currentHole + 1].teeBack.longitude,
+    //   distance: 0, // Placeholder for distance
+    //   golfClubId: 69, // Placeholder, update with actual golf club ID
+    //   playerId: 999, // Placeholder, update with actual player ID
+    // };
     
-    // Update mapStrokes with the new stroke
-    const updatedMapStrokes = [...mapStrokes];
+    // // Update mapStrokes with the new stroke
+    // const updatedMapStrokes = [...mapStrokes];
 
-    updatedMapStrokes[currentHole + 1] = [newStroke]; // Create new array for the new hole
+    // // updatedMapStrokes[currentHole + 1] = []; // Create new array for the new hole
     
-    setMapStrokes(updatedMapStrokes);
+    // setMapStrokes(updatedMapStrokes);
+
     
     if (test) {
       setLocation(null);
@@ -212,92 +239,107 @@ export default function HomeScreen() {
     adjustZoom(distance);
   };
 
-const ToggleLock = () => {
-      setLockedView (!(LockedView));
-};
+  const ToggleLock = () => {
+        setLockedView (!(LockedView));
+  };
 
-const updateTestLocation = (forcedLocation = {}, nextHole = {}) => {
+  const updateTestLocation = (forcedLocation = {}, nextHole = {}) => {
 
-  console.log('Updating test location');
+    console.log('Updating test location');
 
-  let updatedLatitude;
-  let updatedLongitude;
+    let updatedLatitude;
+    let updatedLongitude;
 
-  let updatedHoleLatitude;
-  let updatedHoleLongitude;
+    let updatedHoleLatitude;
+    let updatedHoleLongitude;
 
-  if (forcedLocation.latitude) {
-    updatedLatitude = forcedLocation.latitude;
-    updatedLongitude = forcedLocation.longitude;
-  } else {
-    if (distanceLeft > 175){  // if distance > X, advance lat & long by 25-75% of delta
-        updatedLatitude = location.latitude - (location.latitude - holeCoords.latitude)* (Math.random() + 0.5)/2;
-        updatedLongitude = location.longitude - (location.longitude - holeCoords.longitude)* (Math.random() + 0.5)/2;
+    if (forcedLocation.latitude) {
+      updatedLatitude = forcedLocation.latitude;
+      updatedLongitude = forcedLocation.longitude;
+    } else {
+      if (distanceLeft > 175){  // if distance > X, advance lat & long by 25-75% of delta
+          updatedLatitude = location.latitude - (location.latitude - holeCoords.latitude)* (Math.random() + 0.5)/2;
+          updatedLongitude = location.longitude - (location.longitude - holeCoords.longitude)* (Math.random() + 0.5)/2;
+      }
+      else{ // if distance < X, advance by 50-100% of delta
+          updatedLatitude = location.latitude - (location.latitude - holeCoords.latitude)* (Math.random()*0.5 + 0.5);
+          updatedLongitude = location.longitude - (location.longitude - holeCoords.longitude)* (Math.random()*0.5 + 0.5);
+      }
     }
-    else{ // if distance < X, advance by 50-100% of delta
-        updatedLatitude = location.latitude - (location.latitude - holeCoords.latitude)* (Math.random()*0.5 + 0.5);
-        updatedLongitude = location.longitude - (location.longitude - holeCoords.longitude)* (Math.random()*0.5 + 0.5);
-    }
+
+    console.log('Update to: ', updatedLatitude, updatedLongitude);
+
+    const testLocation: LocationObject = {
+
+        accuracy: 10,
+        altitude: 0,
+        altitudeAccuracy: -1,
+        heading: 187.77,
+        latitude: updatedLatitude,
+        longitude: updatedLongitude,
+        speed: 3.63,
+
+      timestamp: Date.now(),
+    };
+      setLocation(testLocation)
+      const distance = calculateDistance(
+        testLocation.latitude,
+        testLocation.longitude,
+        nextHole.latitude ? nextHole.latitude : holeCoords.latitude,
+        nextHole.longitude ? nextHole.longitude : holeCoords.longitude
+      );
+
+      setDistanceLeft(Math.round(distance));
+
   }
 
-  console.log('Update to: ', updatedLatitude, updatedLongitude);
+  const test = true; // Auto generate GPS locations to test
 
-  const testLocation: LocationObject = {
+  if (test && !location) {
 
-      accuracy: 10,
-      altitude: 0,
-      altitudeAccuracy: -1,
-      heading: 187.77,
-      latitude: updatedLatitude,
-      longitude: updatedLongitude,
-      speed: 3.63,
+    updateTestLocation(teeCoords);
+    
+  }
 
-    timestamp: Date.now(),
+  const updateLocation = (event) => {
+    //console.log(event);
+
+    if (test) return;
+
+    const { coordinate } = event?.nativeEvent;
+    console.log(coordinate);
+
+    setLat2 ( coordinate.latitude);
+    setLon2 ( coordinate.longitude); // Saves lat & lon of user position in "lat2" and "lon2" for use elsewhere.
+    //return;
+    if (coordinate){
+      setLocation(coordinate);
+      console.log('location: ', location)
+      //return;
+      const distance = calculateDistance(
+        coordinate.latitude,
+        coordinate.longitude,
+        holeCoords.latitude,
+        holeCoords.longitude
+      );
+      setDistanceLeft(Math.round(distance));
+    }
   };
-    setLocation(testLocation)
-    const distance = calculateDistance(
-      testLocation.latitude,
-      testLocation.longitude,
-      nextHole.latitude ? nextHole.latitude : holeCoords.latitude,
-      nextHole.longitude ? nextHole.longitude : holeCoords.longitude
-    );
 
-    setDistanceLeft(Math.round(distance));
+    // // Update stroke lines on map
+    // useEffect(() => {
+    //   if (!mapStrokes[currentHole]) return; // Ensure the array exists
 
-}
-
-const test = true; // Auto generate GPS locations to test
-
-if (test && !location) {
-
-  updateTestLocation(teeCoords);
-  
-}
-
-const updateLocation = (event) => {
-	//console.log(event);
-
-  if (test) return;
-
-	const { coordinate } = event?.nativeEvent;
-	console.log(coordinate);
-
-	setLat2 ( coordinate.latitude);
-	setLon2 ( coordinate.longitude); // Saves lat & lon of user position in "lat2" and "lon2" for use elsewhere.
-	//return;
-	if (coordinate){
-    setLocation(coordinate);
-    console.log('location: ', location)
-		//return;
-		const distance = calculateDistance(
-			coordinate.latitude,
-			coordinate.longitude,
-			holeCoords.latitude,
-			holeCoords.longitude
-		);
-		setDistanceLeft(Math.round(distance));
-	}
-};
+    //   console.log('Strokes for this hole:', mapStrokes[currentHole])
+    
+    //   const newStrokeCoordinates = mapStrokes[currentHole].map((stroke) => ({
+    //     latitude: stroke.startLatitude,
+    //     longitude: stroke.startLongitude,
+    //   }));
+    
+    //   console.log('newStrokeCoordinates', newStrokeCoordinates); // Debugging output
+    //   setStrokeCoordinates(newStrokeCoordinates);
+    // }, [mapStrokes, currentHole]);
 
   // Update bearing when hole changes
   useEffect(() => {
@@ -403,6 +445,21 @@ const updateLocation = (event) => {
         <Marker coordinate={holeCoords}>
           <MaterialIcons name="golf-course" size={28} color="red" />
         </Marker>
+
+        <Polyline
+            coordinates={strokeCoordinates}
+            strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+            // strokeColors={[
+            //   '#7F0000',
+            //   '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
+            //   '#B24112',
+            //   '#E5845C',
+            //   '#238C23',
+            //   '#7F0000',
+            // ]}
+            strokeWidth={3}
+          />
+
         {test && location &&
         
         <Marker coordinate={location}>
