@@ -67,6 +67,27 @@ export default function HomeScreen() {
     const thisCourse = courses.find(a => a.id === id);
     setCourseObject(thisCourse);
     setCourseChosen(true);
+    //setCurrentHole(1);
+    console.log('thisCourse', thisCourse);
+    if (thisCourse){
+      setBearing(  //set bearing for hole 0, since we dont switch holes here it doesnt happen automatically.
+        calculateBearing(
+          thisCourse.holes[0].teeBack.latitude,
+          thisCourse.holes[0].teeBack.longitude,
+          thisCourse.holes[0].greenMiddle.latitude,
+          thisCourse.holes[0].greenMiddle.longitude
+        )
+      );
+    // adjustzoom for hole 1 aswell
+        adjustZoom(calculateDistance(
+            thisCourse.holes[0].teeBack.latitude,
+            thisCourse.holes[0].teeBack.longitude,
+            thisCourse.holes[0].greenMiddle.latitude,
+            thisCourse.holes[0].greenMiddle.longitude
+        ));
+    }
+
+    //setCurrentHole(0); //we need to change hole to get correct bearing, so we change it to 1 and then to 0.
     if (test) updateTestLocation(thisCourse.holes[0].teeBack, thisCourse.holes[0].greenMiddle);
 
   }
