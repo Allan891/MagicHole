@@ -10,31 +10,22 @@ import Animated, {
 import courses from '@/constants/courses';
 
 import { ThemedText } from '@/components/ThemedText';
+import { globalStateVar } from '@/app/state/globalStateVar';
 
-export function CoursePicker({ onChooseCourse }) {
-  const rotationAnimation = useSharedValue(0);
-
-  console.log(courses.length);
-
-  useEffect(() => {
-    rotationAnimation.value = withRepeat(
-      withSequence(withTiming(25, { duration: 150 }), withTiming(0, { duration: 150 })),
-      4 // Run the animation 4 times
-    );
-  }, []);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${rotationAnimation.value}deg` }],
-  }));
-
-  const renderCourse = ({ item }) => (
-    console.log(item.name),
-    <View style={styles.courseItem}>
-      <TouchableOpacity onPress={() => onChooseCourse(item.id)}>
+export const CoursePicker = ({ onChooseCourse }) => {
+  const renderCourse = ({ item }) => {
+    return (
+      <TouchableOpacity
+        style={styles.courseItem}
+        onPress={() => {
+          globalStateVar.getState().setSelectedCourse(item);
+          onChooseCourse(item.id);
+        }}
+      >
         <Text style={styles.courseText}>{item.name}</Text>
       </TouchableOpacity>
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={styles.modal}>

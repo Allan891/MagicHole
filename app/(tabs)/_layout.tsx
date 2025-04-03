@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { RoundProvider } from './RoundContext';
+
 import { ThemeProvider, DefaultTheme } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons'; // Import directly
 
@@ -13,7 +13,7 @@ import { useClientOnlyValue } from "@/hooks/useClientOnlyValue";
 
 export default function TabLayout() {
   return (
-    <RoundProvider>
+    
       <ThemeProvider value={DefaultTheme}>
 
         <Tabs initialRouteName="map">
@@ -27,6 +27,6 @@ export default function TabLayout() {
  }} />
         </Tabs>
     </ThemeProvider>
-    </RoundProvider>
+    
   );
 }

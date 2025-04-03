@@ -14,7 +14,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
-import { useRound } from './RoundContext';
+
 import { ThemedText } from '@/components/ThemedText';
 import { LocationObject } from 'expo-location';
 import { CoursePicker } from '@/components/CoursePicker';
@@ -37,11 +37,13 @@ export default function HomeScreen() {
   const [bearing, setBearing] = useState(0);
   const [currentHole, setCurrentHole] = useState<number>(0);
   const [currentStroke, setCurrentStroke] = useState<number>(0);
+
+  const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
   
   const [LockedView, setLockedView] = useState<boolean>(false);
   const [lat2, setLat2] = useState<number>(0);
   const [lon2, setLon2] = useState<number>(0);
-  const { playerScores, setPlayerScores } = useRound();
+  
 
   const [courseObject, setCourseObject] = useState<Object>(courses[0]);
   const [courseChosen, setCourseChosen] = useState<boolean>(false);
@@ -60,14 +62,16 @@ export default function HomeScreen() {
   };
 
 
-  const handleCourseChosen = (id) => {
 
+
+  const handleCourseChosen = (id) => {
     const thisCourse = courses.find(a => a.id === id);
     setCourseObject(thisCourse);
+    setSelectedCourse(thisCourse);
     setCourseChosen(true);
-    if (test) updateTestLocation(thisCourse.holes[0].teeBack, thisCourse.holes[0].greenMiddle);
-
-  }
+    
+  };
+  
 
   const adjustZoom = (distance: number) => {
     console.log(distance);
@@ -175,7 +179,7 @@ export default function HomeScreen() {
       });
     } 
     if (currentHole + 1 >= courseObject.holes.length) {
-      alert(`Round complete! Total strokes: ${playerScores.reduce((a, b) => a + b, 0)}`);
+      //alert(`Round complete! Total strokes: ${playerScores.reduce((a, b) => a + b, 0)}`);
       return;
     }
     setCurrentHole(currentHole + 1);
@@ -435,9 +439,6 @@ const updateLocation = (event) => {
   <TouchableOpacity
     onPress= {() => {
       addStroke();
-      const updated = [...playerScores];
-      updated[currentHole] = (updated[currentHole] || 0) + 1;
-      setPlayerScores(updated);
     }}
   >
     <MaterialIcons name="add-circle-outline" size={36} color="black" />
