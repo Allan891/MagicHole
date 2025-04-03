@@ -73,9 +73,7 @@ export default function HomeScreen() {
     longitudeDelta: 1 / 1000,
   };
 
-  useEffect(() => {
-    db.initDb();
-  }, []);
+
 
   const calculateBearing = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
     const rad = Math.PI / 180;
@@ -164,6 +162,7 @@ export default function HomeScreen() {
     }
   };
 
+
   const nextHole = () => {
     if (test){
       db.getStrokes()
@@ -191,7 +190,28 @@ export default function HomeScreen() {
       return;
     }
     setCurrentHole(currentHole + 1);
-    setCurrentStroke(0);
+    setCurrentStroke(0); // This will make the first stroke for the new hole be 1
+
+    // Add a stroke 0 for the new hole
+    const newStroke: Stroke = {
+      holeId: currentHole + 1, // New hole ID
+      roundId: 1, // Assuming round ID is 1
+      strokeNr: 0, // Stroke number 0
+      startLatitude: courseObject.holes[currentHole + 1].teeBack.latitude,
+      startLongitude: courseObject.holes[currentHole + 1].teeBack.longitude,
+      distance: 0, // Placeholder for distance
+      golfClubId: 69, // Placeholder, update with actual golf club ID
+      playerId: 999, // Placeholder, update with actual player ID
+    };
+    
+    // Update mapStrokes with the new stroke
+    const updatedMapStrokes = [...mapStrokes];
+    if (updatedMapStrokes[currentHole + 1]) {
+        updatedMapStrokes[currentHole + 1] = [newStroke]; // Start with stroke 0
+    } else {
+        updatedMapStrokes[currentHole + 1] = [newStroke]; // Create new array for the new hole
+    }
+    setMapStrokes(updatedMapStrokes);
     
     if (test) {
       setLocation(null);
