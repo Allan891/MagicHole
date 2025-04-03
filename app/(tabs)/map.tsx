@@ -8,6 +8,7 @@ import {
   TextInput,
   Button,
   Alert,
+  Platform,
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -18,29 +19,11 @@ import { ThemedText } from '@/components/ThemedText';
 import { LocationObject } from 'expo-location';
 import { CoursePicker } from '@/components/CoursePicker';
 import courses from '@/constants/courses';
+import {calculateBearing, calculateDistance} from '@/utils';
 import db from '../db/db';
 import { globalStateVar } from '../state/globalStateVar';
 
-const exampleObject = {
-  name: 'Brollsta',
-  holes: [
-    {
-      greenMiddle: { latitude: 59.582875, longitude: 18.292865 },
-      teeBack: { latitude: 59.582843, longitude: 18.297886 },
-      par: 4,
-    },
-    {
-      greenMiddle: { latitude: 59.58045, longitude: 18.286678 },
-      teeBack: { latitude: 59.582865, longitude: 18.290975 },
-      par: 5,
-    },
-    {
-      greenMiddle: { latitude: 59.582523, longitude: 18.292028 },
-      teeBack: { latitude: 59.580322, longitude: 18.287774 },
-      par: 3,
-    },
-  ],
-};
+
 
 export default function HomeScreen() {
 
@@ -60,7 +43,7 @@ export default function HomeScreen() {
   const [lon2, setLon2] = useState<number>(0);
   const { playerScores, setPlayerScores } = useRound();
 
-  const [courseObject, setCourseObject] = useState<Object>(exampleObject);
+  const [courseObject, setCourseObject] = useState<Object>(courses[0]);
   const [courseChosen, setCourseChosen] = useState<boolean>(false);
 
   const teeCoords = courseObject?.holes[currentHole].teeBack;
@@ -82,40 +65,19 @@ export default function HomeScreen() {
     const thisCourse = courses.find(a => a.id === id);
     setCourseObject(thisCourse);
     setCourseChosen(true);
+    if (test) updateTestLocation(thisCourse.holes[0].teeBack, thisCourse.holes[0].greenMiddle);
 
   }
 
-
-
-  const calculateBearing = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
-    const rad = Math.PI / 180;
-    const deltaLng = (lng2 - lng1) * rad;
-    const y = Math.sin(deltaLng) * Math.cos(lat2 * rad);
-    const x =
-      Math.cos(lat1 * rad) * Math.sin(lat2 * rad) -
-      Math.sin(lat1 * rad) * Math.cos(lat2 * rad) * Math.cos(deltaLng);
-    return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
-  };
-
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    const R = 6371e3;
-    const rad = Math.PI / 180;
-    const dLat = (lat2 - lat1) * rad;
-    const dLon = (lon2 - lon1) * rad;
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLon / 2) ** 2;
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  };
-
   const adjustZoom = (distance: number) => {
-      console.log(distance);
-      if (distance <= 200) setZoomLevel(19);
-      else setZoomLevel(17);
+    console.log(distance);
+    if (distance <= 200) setZoomLevel(19);
+    else {
+        if (distance <= 320) setZoomLevel(18);
+        else setZoomLevel(17);
+    }
 
-      // Likely needs some adjustment
-
-  };
+};
 
   const addStroke = () => {
     if (location) {
@@ -172,6 +134,21 @@ export default function HomeScreen() {
     } else {
       Alert.alert('Error: No location data');
     }
+  };
+  const removeStroke = () => {
+    const current = strokes[currentHole] || 0;
+    if (current === 0) return; 
+  
+    
+    setStroke(currentHole, current - 1);
+  
+    
+    const updated = [...mapStrokes];
+    updated[currentHole] = updated[currentHole].slice(0, -1);
+    setMapStrokes(updated);
+  
+    
+    setCurrentStroke(current - 1);
   };
 
 
@@ -249,8 +226,14 @@ const updateTestLocation = (forcedLocation = {}, nextHole = {}) => {
     updatedLatitude = forcedLocation.latitude;
     updatedLongitude = forcedLocation.longitude;
   } else {
-      updatedLatitude = location.latitude - (location.latitude - holeCoords.latitude)* (Math.random()*0.8 + 0.2);
-      updatedLongitude = location.longitude - (location.longitude - holeCoords.longitude)* (Math.random()*0.8 + 0.2);
+    if (distanceLeft > 175){  // if distance > X, advance lat & long by 25-75% of delta
+        updatedLatitude = location.latitude - (location.latitude - holeCoords.latitude)* (Math.random() + 0.5)/2;
+        updatedLongitude = location.longitude - (location.longitude - holeCoords.longitude)* (Math.random() + 0.5)/2;
+    }
+    else{ // if distance < X, advance by 50-100% of delta
+        updatedLatitude = location.latitude - (location.latitude - holeCoords.latitude)* (Math.random()*0.5 + 0.5);
+        updatedLongitude = location.longitude - (location.longitude - holeCoords.longitude)* (Math.random()*0.5 + 0.5);
+    }
   }
 
   console.log('Update to: ', updatedLatitude, updatedLongitude);
@@ -326,8 +309,15 @@ const updateLocation = (event) => {
 
   // Bottom sheet animation
   const screenHeight = Dimensions.get('window').height;
-  const collapsedY = screenHeight - 150;
-  const expandedY = screenHeight / 2;
+  let handleHeight;
+  if (Platform.OS == 'ios') {
+    handleHeight = screenHeight * 0.12;
+  } else {
+    handleHeight = screenHeight * 0.09;
+  }
+  const collapsedY = screenHeight - handleHeight;
+
+  const expandedY = screenHeight * 0.60;
   const sheetAnim = useRef(new Animated.Value(collapsedY)).current;
 
   const panResponder = useRef(
@@ -355,7 +345,7 @@ const updateLocation = (event) => {
 
       <View style={{ width: '80%', height: 120, position: 'absolute', top: '10%', left: '10%', zIndex: 999999 }}>
         <ThemedText style={{ textAlign: 'center', color: 'white' }} type="title">
-          {courseObject.name}
+          {courseObject.namn}
         </ThemedText>
         <TouchableOpacity onPress={nextHole}>
           <ThemedText style={{ textAlign: 'center', color: 'white' }} type="subtitle">
@@ -370,11 +360,11 @@ const updateLocation = (event) => {
 {  location && currentStroke > 0 &&
          <ThemedText style={{textAlign: 'center', verticalAlign: 'middle', color: 'white'}}
          type='subtitle'>Prev Shot
-          {Math.round(calculateDistance(
+          {' ' + Math.round(calculateDistance(
              location.latitude,
              location.longitude,
-             mapStrokes[currentHole][currentStroke-1].latitude,
-             mapStrokes[currentHole][currentStroke-1].longitude
+             mapStrokes[currentHole][currentStroke-1].startLatitude,
+             mapStrokes[currentHole][currentStroke-1].startLongitude
          ))}m</ThemedText>
 
 
@@ -420,49 +410,42 @@ const updateLocation = (event) => {
       </MapView>
 
       <Animated.View
-        {...panResponder.panHandlers}
-        style={[styles.bottomSheet, { transform: [{ translateY: sheetAnim }] }]}
-      >
-        <View style={styles.sheetHandle} />
-        <ThemedText style={styles.sheetTitle}>Strokes for hole {currentHole + 1}</ThemedText>
-        <TextInput
-          style={styles.input}
-          keyboardType="number-pad"
-          placeholder="Enter strokes"
-          value={playerScores[currentHole]?.toString() || ''}
-          onChangeText={(text) => {
-            const updated = [...playerScores];
-            updated[currentHole] = parseInt(text) || 0;
-            setPlayerScores(updated);
-          }}
-        />
-        <Button
-          title={currentHole + 1 === courseObject.holes.length ? 'End Round' : 'Next Hole'}
-          onPress={nextHole}
-        />
-      </Animated.View>
+  {...panResponder.panHandlers}
+  style={[styles.bottomSheet, { transform: [{ translateY: sheetAnim }] }]}
+>
+<View style={styles.buttonRow}>
+  <View style={{ alignItems: 'center' }}>
+    <TouchableOpacity onPress={nextHole}>
+      <MaterialIcons name="golf-course" size={30} color="black" />
+    </TouchableOpacity>
+    <ThemedText style={styles.holeOutText}>Next Hole</ThemedText>
+  </View>
+</View>
 
-      <View
-        style={{
-          position: 'absolute',
-          bottom: '15%',
-          left: '15%',
-          width: '70%',
-          height: 60,
-          backgroundColor: 'white',
-          borderRadius: 30,
-          alignItems: 'center',
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-        }}
-      >
-        <TouchableOpacity onPress={nextHole}>
-          <MaterialIcons name="golf-course" size={30} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={addStroke}>
-          <MaterialIcons name="plus-one" size={30} color="black" />
-        </TouchableOpacity>
-      </View>
+  <View style={styles.strokeAdjusterRow}>
+  <TouchableOpacity onPress={removeStroke}>
+  <MaterialIcons name="remove-circle-outline" size={36} color="black" />
+</TouchableOpacity>
+
+
+  <ThemedText style={styles.strokeCount}>
+    {strokes[currentHole] ?? 0}
+  </ThemedText>
+
+  <TouchableOpacity
+    onPress= {() => {
+      addStroke();
+      const updated = [...playerScores];
+      updated[currentHole] = (updated[currentHole] || 0) + 1;
+      setPlayerScores(updated);
+    }}
+  >
+    <MaterialIcons name="add-circle-outline" size={36} color="black" />
+  </TouchableOpacity>
+</View>
+
+</Animated.View>
+
     </View>
   );
 }
@@ -476,17 +459,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 40, 
     zIndex: 999,
   },
+  
   sheetHandle: {
     width: 50,
     height: 5,
-    borderRadius: 2.5,
+    borderRadius: 3,
     backgroundColor: '#ccc',
     alignSelf: 'center',
-    marginBottom: 10,
+    marginTop: 4,
+    marginBottom: 8,
   },
+  
   sheetTitle: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -501,5 +488,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     textAlign: 'center',
     marginBottom: 12,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'center', 
+    alignItems: 'center',     
+    gap: 32,                  
+    marginTop: 12,
+    marginBottom: 44,
+  },
+  strokeAdjusterRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+    gap: 4, 
+  },
+  strokeCount: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: 'black',
+    lineHeight: 38, 
+    marginHorizontal: 24,
+    textAlignVertical: 'center', 
+    textAlign: 'center',
+  },
+  holeOutText: {
+    fontSize: 14,
+    color: 'black',
+    marginTop: 4,
   },
 });
