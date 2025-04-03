@@ -474,8 +474,8 @@ const courses =
   ]
 },{
   id: 5,
-  name:'Brollsta Golfklubb',
-  par:[4,3,4,3,4,3,3,4,3],
+  name:'Brollsta 18 Golfklubb',
+  par:[4,4,4,5,4,3,4,3,5,5,3,4,3,4,4,5,4,4],
   holes:[
   {
   greenBack: {latitude: 59.5829784, longitude: 18.2926181},
@@ -557,8 +557,52 @@ const courses =
   {
   greenBack: {latitude: 59.5759089, longitude: 18.3103346},
   greenMiddle: {latitude: 59.5759551, longitude: 18.3101415},
-  greenFront: {latitude: 59.5760067, longitude: 18.3099699}
-  }
+  greenFront: {latitude: 59.5760067, longitude: 18.3099699},
+  teeFront: {latitude: 59.578213, longitude: 18.307618},
+  teeBack: {latitude: 59.578606, longitude: 18.308085},
+  },
+  {
+  greenBack: {latitude: 59.575099, longitude: 18.308956},
+  greenMiddle: {latitude: 59.575134, longitude: 18.309044},
+  greenFront: {latitude: 59.57517, longitude: 18.309111},
+  teeFront: {latitude: 59.575827, longitude: 18.310722},
+  teeBack: {latitude: 59.576126, longitude: 18.310939},
+  },
+  {
+  greenBack: {latitude: 59.576378, longitude: 18.302288},
+  greenMiddle: {latitude: 59.576318, longitude: 18.302476},
+  greenFront: {latitude: 59.576261, longitude: 18.302653},
+  teeFront: {latitude: 59.575755, longitude: 18.309644},
+  teeBack: {latitude: 59.575899, longitude: 18.308796},
+  },
+  {
+  greenBack: {latitude: 59.573511, longitude: 18.300298},
+  greenMiddle: {latitude: 59.573547, longitude: 18.300496},
+  greenFront: {latitude: 59.573563, longitude: 18.300684},
+  teeFront: {latitude: 59.576575, longitude: 18.30161},
+  teeBack: {latitude: 59.576132, longitude: 18.301567},
+  },
+  {
+  greenBack: {latitude: 59.576604, longitude: 18.298571},
+  greenMiddle: {latitude: 59.576485, longitude: 18.298662},
+  greenFront: {latitude: 59.576351, longitude: 18.298774},
+  teeFront: {latitude: 59.572201, longitude: 18.299947},
+  teeBack: {latitude: 59.573186, longitude: 18.299905},
+  },
+  {
+  greenBack: {latitude: 59.579191, longitude: 18.298752},
+  greenMiddle: {latitude: 59.579069, longitude: 18.298698},
+  greenFront: {latitude: 59.578958, longitude: 18.298666},
+  teeFront: {latitude: 59.575422, longitude: 18.298186},
+  teeBack: {latitude: 59.576113, longitude: 18.298298},
+  },
+  {
+  greenBack: {latitude: 59.581275, longitude: 18.301439},
+  greenMiddle: {latitude: 59.58115, longitude: 18.301547},
+  greenFront: {latitude: 59.581039, longitude: 18.301761},
+  teeFront: {latitude: 59.579698, longitude: 18.299969},
+  teeBack: {latitude: 59.579321, longitude: 18.299357},
+  },
   ]
 }]
 

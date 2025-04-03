@@ -6,8 +6,10 @@ import { useRound } from './RoundContext';
 
 export default function ScoreOverview() {
   const strokes = globalStateVar((state) => state.strokes);
-  const { courseObject } = useRound();
-
+  const courseObject = globalStateVar((state) => state.selectedCourse);
+  if (!courseObject) {
+    return <ThemedText>Loading course...</ThemedText>;
+  }
   const totalStrokes = strokes.reduce((sum, val) => sum + (val ?? 0), 0);
   const parTotal = courseObject.par?.reduce((sum, p) => sum + (p ?? 0), 0) ?? 0;
   const diff = totalStrokes - parTotal;
