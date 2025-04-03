@@ -158,7 +158,7 @@ export default function HomeScreen() {
       setStroke(currentHole, currentScore + 1);
       if (test) updateTestLocation();
 
-      console.log(updatedMapStrokes);
+      //console.log(updatedMapStrokes);
       //console.log(mapStrokes[currentHole][currentStroke-1]);
     } else {
       Alert.alert('Error: No location data');
@@ -395,7 +395,7 @@ export default function HomeScreen() {
         </ThemedText>
         <TouchableOpacity onPress={nextHole}>
           <ThemedText style={{ textAlign: 'center', color: 'white' }} type="subtitle">
-            Hole {currentHole + 1}
+            Hole {currentHole + 1} Par {courseObject.par[currentHole]}
           </ThemedText>
         </TouchableOpacity>
         <ThemedText style={{ textAlign: 'center', color: 'white' }}>
