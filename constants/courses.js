@@ -2,6 +2,7 @@
 export default courses = 
 [
 {
+  id: 0,
   name: 'Lidingö Golfklubb',
   par:[3,5,3,4,4,3,4,4,3,5,3,5,4,4,3,5,4],
   holes:[
@@ -133,6 +134,7 @@ export default courses =
   }
   ]
   },{
+  id: 1,
   name:'International Golf Club at Arlanda',
   par:[4,5,3,4,5,3,4,4,4,4,4,3,4,5,5,4,3,4],
   holes:[
@@ -264,6 +266,7 @@ export default courses =
   }
   ]
 },{
+  id: 2,
   name: 'Mälarö GK Skytteholm',
   par: [4,3,5,4,4,5,4,3,4],
   holes:[
@@ -332,6 +335,7 @@ export default courses =
   }
   ]
 },{ 
+  id: 3,
   name:'Golfstar Hässelby',
   par:[3,4,3,4,3,3,3,3,4],
   holes:[{
@@ -399,6 +403,7 @@ export default courses =
   }]
 }
 ,{
+  id: 4,
   name:'Mälarö GK Skytteholm (10-18)',
   par:[5,4,4,3,5,4,4,3,4],
   
@@ -468,6 +473,7 @@ export default courses =
   }
   ]
 },{
+  id: 5,
   name:'Brollsta Golfklubb',
   par:[4,3,4,3,4,3,3,4,3],
   holes:[

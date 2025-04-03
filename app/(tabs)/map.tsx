@@ -17,6 +17,7 @@ import { useRound } from './RoundContext';
 import { ThemedText } from '@/components/ThemedText';
 import { LocationObject } from 'expo-location';
 import { CoursePicker } from '@/components/CoursePicker';
+import courses from '@/constants/courses';
 
 const exampleObject = {
   name: 'Brollsta',
@@ -67,6 +68,14 @@ export default function HomeScreen() {
     latitudeDelta: 1 / 1000,
     longitudeDelta: 1 / 1000,
   };
+
+  const handleCourseChosen = (id) => {
+
+    const thisCourse = courses.find(a => a.id === id);
+    setCourseObject(thisCourse);
+    setCourseChosen(true);
+
+  }
 
   const calculateBearing = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
     const rad = Math.PI / 180;
@@ -234,7 +243,7 @@ const updateLocation = (event) => {
 
       {!courseChosen &&
       
-      <CoursePicker />
+      <CoursePicker onChooseCourse={handleCourseChosen} />
 
       }
 
