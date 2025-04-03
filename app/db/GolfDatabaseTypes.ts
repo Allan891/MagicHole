@@ -4,7 +4,7 @@ type Course = {
   longitude: number;
   latitude: number;
   active: number;
-  createDate: string;
+  dateAdded: string;
 };
 
 type Hole = {
