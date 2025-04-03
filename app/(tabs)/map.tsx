@@ -218,11 +218,9 @@ export default function HomeScreen() {
     
     // Update mapStrokes with the new stroke
     const updatedMapStrokes = [...mapStrokes];
-    if (updatedMapStrokes[currentHole + 1]) {
-        updatedMapStrokes[currentHole + 1] = [newStroke]; // Start with stroke 0
-    } else {
-        updatedMapStrokes[currentHole + 1] = [newStroke]; // Create new array for the new hole
-    }
+
+    updatedMapStrokes[currentHole + 1] = [newStroke]; // Create new array for the new hole
+    
     setMapStrokes(updatedMapStrokes);
     
     if (test) {
