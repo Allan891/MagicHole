@@ -591,4 +591,84 @@ async getRoundById(id: number): Promise<Round | null> {
   }
 //#endregion
 
+
+/*CREATE TABLE IF NOT EXISTS TeeSlope (
+  id TEXT NOT NULL,
+  courseId INTEGER NOT NULL,
+  slopeMale INTEGER NOT NULL,
+  slopeFemale INTEGER NOT NULL,
+  courseRatingMale REAL NOT NULL,
+  courseRatingFemale REAL NOT NULL,
+  PRIMARY KEY (id, courseId),
+  FOREIGN KEY (courseId) REFERENCES Course (id));*/
+
+
+//#region CRUD Operations for TeeSlope Table
+  // CREATE: Add a new tee slope to the database
+  createTeeSlope(teeSlope: TeeSlope): number {          //!!!!!!!!!Fortsätt med metoder för TeeSlope!!!!!!
+    if (!this.db) return -1;
+    try {
+      this.db.runSync(
+        'INSERT INTO TeeSlope (courseId, slopeMale, slopeFemale, courseRatingMale, courseRatingFemale) VALUES (?, ?, ?, ?, ?);',
+        teeSlope.courseId, teeSlope.slopeMale, teeSlope.slopeFemale, teeSlope.courseRatingMale, teeSlope.courseRatingFemale);       // Fetch the last inserted row ID
+      const result = this.db.getFirstSync("SELECT last_insert_rowid() AS id;");
+      console.log('Tee Slope created with ID:', result?.id);
+      return result?.id ?? -2;
+    } catch (error) {
+      console.error('Error creating tee slope:', error);
+      return -3;
+    }
+  }
+
+  /*
+  // UPDATE: Update a course
+  async updateCourse(course: Course) {
+    if (!this.db) return;
+    try {
+      await this.db.runAsync(
+        'UPDATE Course SET name = "?", longitude = ?, latitude = ?, active = ?, dateAdded = ? WHERE id = ?;',
+        course.name, course.longitude, course.latitude, course.active, course.dateAdded, course.id);
+      console.log('Course updated');
+    } catch (error) {
+      console.error('Error updating course:', error);
+    }
+  }
+
+  // DELETE: Delete a course
+  async deleteCourse(course: Course) {
+    if (!this.db) return;
+    try {
+      await this.db.runAsync('DELETE FROM Course WHERE id = ?;', course.id);
+      console.log('Course deleted');
+    } catch (error) {
+      console.error('Error deleting course:', error);
+    }
+  }
+  
+    // READ: Get all courses
+  async getAllCourses(): Promise<Course[]> {
+    if (!this.db) return [];
+    try {
+      return await this.db.getAllAsync('SELECT * FROM Course;');
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+      return [];
+    }
+  }
+
+  // READ: Get a course by ID
+  async getCourseById(id: number): Promise<Course | null> {
+    if (!this.db) return null;
+    try {
+      return await this.db.getFirstAsync<Course>('SELECT * FROM Course WHERE id = ?;', id);
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+      return null;
+    }
+  }
+    */
+
+//#endregion
+
+
 }export default new Database();
