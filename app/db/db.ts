@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 class Database {
 
-  //#region Define the database schema
+//#region Define the database schema
   private db: SQLite.SQLiteDatabase | null = null;
   private isInitialized: boolean = false;
   constructor() {
@@ -12,9 +12,10 @@ class Database {
     console.log('DB ', this.db);
     console.log('Database object created');
   }
-  //#endregion
+//#endregion
 
-  //#region Initialize the database and create tables
+
+//#region Initialize the database and create tables
   public initDb() {
     if (this.isInitialized) return;
     console.log('Database opened');
@@ -96,12 +97,10 @@ class Database {
     this.isInitialized = true;
     console.log('Database created');
   }
-  //#endregion
+//#endregion
   
 
-
-
-  //#region CRUD Operations for Course Table
+//#region CRUD Operations for Course Table
   // CREATE: Add a new course to the database
   createCourse(course: Course): number {
     if (!this.db) return -1;
@@ -167,7 +166,6 @@ class Database {
 //#endregion
 
 
-
 //#region CRUD Operations for Player Table
   // CREATE: Add a new player to the database
   async createPlayer(player: Player) {
@@ -230,7 +228,6 @@ class Database {
     }
   }
 //#endregion
-
 
 
 //#region CRUD Operations for GolfClub Table
@@ -391,7 +388,6 @@ class Database {
     }
   }
 //#endregion
-
 
 
 //#region CRUD Operations for Stroke Table

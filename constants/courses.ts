@@ -4,7 +4,7 @@ const courses =
 {
   id: 0,
   name: 'Lidingö Golfklubb',
-  par:[3,5,3,4,4,3,4,4,3,5,3,5,4,4,3,5,4],
+  par:[3,5,3,4,4,3,4,4,3,5,3,5,4,4,3,5,4,4],
   holes:[
   {
   greenBack: {latitude: 59.3772872, longitude: 18.1284596},
