@@ -86,7 +86,7 @@ export default function HomeScreen() {
       // const thisStroke = { latitude, longitude, strokeNumber: currentStroke };
       // Get the previous stroke if it exists
       const previousStrokes = mapStrokes[currentHole];
-      const previousStroke: Stroke = previousStrokes.length > 1 ? previousStrokes[previousStrokes.length - 1] : null;
+      const previousStroke: Stroke = previousStrokes.length > 0 ? previousStrokes[previousStrokes.length - 1] : null;
 
       // Calculate distance if there's a previous stroke
       if (previousStroke !== null) {
