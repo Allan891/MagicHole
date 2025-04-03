@@ -330,7 +330,7 @@ const updateLocation = (event) => {
 
   // Bottom sheet animation
   const screenHeight = Dimensions.get('window').height;
-  const handleHeight = 75; 
+  const handleHeight = screenHeight * 0.05;
   const collapsedY = screenHeight - handleHeight;
 
   const expandedY = screenHeight * 0.60;
