@@ -1,8 +1,8 @@
 type Course = {
   id: number;
   name: string;
-  coordinateX: number;
-  coordinateY: number;
+  longitude: number;
+  latitude: number;
   active: number;
   createDate: string;
 };
@@ -18,12 +18,12 @@ type Hole = {
 };
 
 type Player = {
-  id?: number;
+  id: number;
   handicap: number;
 };
 
 type GolfClub = {
-  id?: number;
+  id: number;
   playerId: number;
   name: string;
   showInList: number;

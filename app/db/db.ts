@@ -27,8 +27,8 @@ class Database {
     CREATE TABLE IF NOT EXISTS Course (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       name TEXT NOT NULL,
-      coordinateX REAL NOT NULL,
-      coordinateY REAL NOT NULL,
+      longitude REAL NOT NULL,
+      latitude REAL NOT NULL,
       active INTEGER NOT NULL,
       createDate TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS Hole (
@@ -92,8 +92,8 @@ class Database {
     if (!this.db) return;
     try {
       await this.db.runAsync(
-        'INSERT INTO Course (name, coordinateX, coordinateY, active, createDate) VALUES (?, ?, ?, ?, ?);',
-        course.name, course.coordinateX, course.coordinateY, course.active, course.createDate);
+        'INSERT INTO Course (name, longitude, latitude, active, createDate) VALUES (?, ?, ?, ?, ?);',
+        course.name, course.longitude, course.latitude, course.active, course.createDate);
       console.log('Course created');
     } catch (error) {
       console.error('Error creating course:', error);
@@ -127,8 +127,8 @@ class Database {
     if (!this.db) return;
     try {
       await this.db.runAsync(
-        'UPDATE Course SET name = ?, coordinateX = ?, coordinateY = ?, active = ?, createDate = ? WHERE id = ?;',
-        course.name, course.coordinateX, course.coordinateY, course.active, course.createDate, course.id);
+        'UPDATE Course SET name = ?, longitude = ?, latitude = ?, active = ?, createDate = ? WHERE id = ?;',
+        course.name, course.longitude, course.latitude, course.active, course.createDate, course.id);
       console.log('Course updated');
     } catch (error) {
       console.error('Error updating course:', error);
