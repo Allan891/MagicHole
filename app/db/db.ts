@@ -455,7 +455,22 @@ async getAllRoundsByPlayer(playerId: number): Promise<Round[]> {
   }
 }
 
-// READ: Get a rounds by ID
+// READ: Get last rounds by player and specified number of rounds
+async getLatestRoundsByPlayer(playerId: number, numberOfRounds: number): Promise<Round[]> {
+  if (!this.db) return [];
+  try {
+    return await this.db.getAllAsync(
+      `SELECT * FROM Round
+      WHERE playerId = ?
+      ORDER BY time DESC
+      LIMIT ?;`, playerId, numberOfRounds);
+  } catch (error) {
+    console.error('Error fetching rounds:', error);
+    return [];
+  }
+}
+
+// READ: Get a round by ID
 async getRoundById(id: number): Promise<Round | null> {
   if (!this.db) return null;
   try {
@@ -600,6 +615,20 @@ async getRoundById(id: number): Promise<Round | null> {
     } catch (error) {
       console.error('Error fetching strokes by strokes gained:', error);
       return [];
+    }
+  }
+
+  // READ: Get last stroke for a round and hole  
+  async getLastStrokeByRoundAndHoleId(roundId: number, holeId: number): Promise<Stroke | null> {
+    if (!this.db) return null;
+    try {
+      return await this.db.getFirstAsync(
+        `SELECT * FROM Stroke
+        WHERE roundId = ? AND holeId = ?
+        ORDER BY strokeNr DESC;`,roundId, holeId);
+    } catch (error) {
+      console.error('Error fetching strokes by strokes gained:', error);
+      return null;
     }
   }
 //#endregion
