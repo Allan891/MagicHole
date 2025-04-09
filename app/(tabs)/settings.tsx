@@ -1,7 +1,7 @@
 // import { StyleSheet, View, ScrollView, SafeAreaView, Text,TouchableOpacity,Switch,Image } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import { globalStateVar } from '../state/globalStateVar';
+import { globalStateVar,MODE } from '../state/globalStateVar';
 import db from '../db/db';
 import coursesJson  from "../../constants/courses";
 import React, { useState } from 'react';
@@ -22,6 +22,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 interface FormState {
   emailNotifications: boolean;
   pushNotifications: boolean;
+  test: boolean;
 }
 
 export default function Example() {
@@ -29,6 +30,7 @@ export default function Example() {
   const [form, setForm] = useState<FormState>({
     emailNotifications: true,
     pushNotifications: false,
+    test: MODE.test,
   });
 
   return (
@@ -64,6 +66,31 @@ export default function Example() {
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.section}></View>
+          <Text style={styles.sectionTitle}>Test Mode</Text>
+
+          <View style={styles.sectionBody}>
+          <View style={styles.rowWrapper}>
+              <View style={styles.row}>
+                <Text style={styles.rowLabel}>Test</Text>
+
+                <View style={styles.rowSpacer} />
+
+                <Switch
+                  onValueChange={(test: boolean) =>{
+                    setForm({ ...form, test });
+                    MODE.test = test;
+                    if(MODE.test){
+                      console.log('Form', test);
+                      console.log('Global', MODE.test);
+                    }
+                  }}
+                  style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
+                  value={form.test} />
+              </View>
+            </View>
+          </View>  
+
         <View style={[styles.section, { paddingTop: 4 }]}>
           <Text style={styles.sectionTitle}>Account</Text>
 
