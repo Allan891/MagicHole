@@ -24,3 +24,15 @@ export const globalStateVar = create<Stroke>((set) => ({
 export const MODE = {
   test:false,
 };
+
+export const HANDICAP = {
+  value : 0,
+};
+
+export const someNumericValue = {
+  value : '',
+};
+
+export const someTextValue = {
+  value : '',
+};

@@ -1,10 +1,11 @@
 // import { StyleSheet, View, ScrollView, SafeAreaView, Text,TouchableOpacity,Switch,Image } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import { globalStateVar,MODE } from '../state/globalStateVar';
+import { globalStateVar,MODE, someNumericValue,someTextValue } from '../state/globalStateVar';
 import db from '../db/db';
 import coursesJson  from "../../constants/courses";
 import React, { useState } from 'react';
+import DropdownMenu, { MenuOption } from '../../components/DropdownMenu'; // Adjust the import path based on your project structure
 
 import {
   StyleSheet,
@@ -15,22 +16,42 @@ import {
   TouchableOpacity,
   Switch,
   Image,
+  TextInput,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-
+import { Dropdown } from 'react-native-element-dropdown';
+import AntDesign from '@expo/vector-icons/AntDesign';
 // Define the type for the state
 interface FormState {
   emailNotifications: boolean;
   pushNotifications: boolean;
   test: boolean;
+  numericValue:string;
+  textValue:string;
 }
 
 export default function Example() {
+  const data = [
+    { label: 'Item 1', value: '1' },
+    { label: 'Item 2', value: '2' },
+    { label: 'Item 3', value: '3' },
+    { label: 'Item 4', value: '4' },
+    { label: 'Item 5', value: '5' },
+    { label: 'Item 6', value: '6' },
+    { label: 'Item 7', value: '7' },
+    { label: 'Item 8', value: '8' },
+  ];
   // Set the state type to FormState
+  const [visible, setVisible] = useState(false);
+  const [value, setValue] = useState(null);
+  const [isFocus, setIsFocus] = useState(false);
   const [form, setForm] = useState<FormState>({
+    
     emailNotifications: true,
     pushNotifications: false,
     test: MODE.test,
+    numericValue: someNumericValue.value,
+    textValue:'',
   });
 
   return (
@@ -90,6 +111,7 @@ export default function Example() {
               </View>
             </View>
           </View>  
+        
 
         <View style={[styles.section, { paddingTop: 4 }]}>
           <Text style={styles.sectionTitle}>Account</Text>
@@ -120,6 +142,94 @@ export default function Example() {
             </TouchableOpacity>
           </View>
         </View>
+        {/* Dropdown */}
+        <View style={styles.section}></View>
+          <Text style={styles.sectionTitle}>Dropdown Menu</Text>
+          <View style={styles.sectionBody}>
+            <View style={[styles.rowWrapper, styles.rowFirst, styles.rowLast]}>
+      <DropdownMenu
+        visible={visible}
+        handleOpen={() => setVisible(true)}
+        handleClose={() => setVisible(false)}
+        trigger={
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Dropdown me!</Text>
+          </View>
+        }>
+        <MenuOption onSelect={() => {setVisible(false);}}>
+          <Text>View Details</Text>
+        </MenuOption>
+        <MenuOption onSelect={() => {setVisible(false);}}>
+          <Text>Delete</Text>
+        </MenuOption>
+      </DropdownMenu>
+    </View>
+    </View>
+
+        {/* Text Fields */}
+        <View style={styles.section}></View>
+          <Text style={styles.sectionTitle}>Text Fields</Text>
+          <View style={styles.sectionBody}>
+            <View style={[styles.rowWrapper, styles.rowFirst]}>
+
+                <TextInput
+                  value={form.textValue.toString()}
+                  onChangeText={(text: string) => {
+                    setForm({ ...form, textValue: text });
+                    someTextValue.value = form.textValue; 
+                    if (MODE.test) {
+                      console.log('Form', form.textValue);
+                      console.log('Global', someTextValue.value);
+                    }}}
+                  keyboardType="default" // This will bring up the numeric keyboard on mobile
+                  placeholder="Enter a text"
+                  placeholderTextColor="#888888"
+                  style={{
+                    height: 40,
+                    marginTop: 5,
+                    marginBottom: 10,
+                    borderBottomWidth: 1,
+                    borderRadius: 12,
+                    paddingLeft: 10,                    
+                    paddingRight: 10,           
+                    paddingBottom: 0,                     
+                    borderColor: '#ccc',
+                    color: '#000',
+                    fontSize: 16,}}/>
+              </View>
+
+              <View style={[styles.rowWrapper, styles.rowLast]}>
+                
+                <TextInput
+                  value={form.numericValue.toString()}
+                  onChangeText={(text: string) => {
+                    const numericValue = text || '';
+                    setForm({ ...form, numericValue });
+                    someNumericValue.value = numericValue; 
+                    if (MODE.test) {
+                      console.log('Form', form.numericValue);
+                      console.log('Global', someNumericValue.value);
+                    }}}
+                  keyboardType="decimal-pad" // This will bring up the numeric keyboard on mobile
+                  placeholder="Enter a number"
+                  placeholderTextColor="#888888"
+                  style={{
+                    height: 40,
+                    marginTop: 5,
+                    marginBottom: 10,
+                    borderBottomWidth: 1,
+                    borderRadius: 12,
+                    paddingLeft: 10,                    
+                    paddingRight: 10,           
+                    paddingBottom: 0,         
+                    borderColor: '#ccc',
+                    color: '#00ff00',
+                    fontSize: 16,}}/>
+              </View>
+
+            </View> 
+        {/* Text Fields */}
+
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Preferences</Text>
@@ -296,8 +406,43 @@ export default function Example() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
+  /* Dropdown */
+  container: {
+    backgroundColor: 'white',
+    padding: 16,
+  },
+  dropdown: {
+    height: 50,
+    paddingHorizontal: 8,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  label: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+
   /** Header */
   header: {
     flexDirection: 'row',
@@ -396,6 +541,7 @@ const styles = StyleSheet.create({
   },
   rowWrapper: {
     paddingLeft: 16,
+    paddingRight: 16,
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderColor: '#f0f0f0',
@@ -412,7 +558,7 @@ const styles = StyleSheet.create({
   rowSpacer: {
     flexGrow: 1,
     flexShrink: 1,
-    flexBasis: 0,
+    flexBasis: 2,
   },
   rowValue: {
     fontSize: 16,
