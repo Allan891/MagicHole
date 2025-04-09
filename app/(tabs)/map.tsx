@@ -22,8 +22,10 @@ import { LocationObject } from 'expo-location';
 import { CoursePicker } from '@/components/CoursePicker';
 import courses from '@/constants/courses';
 import {calculateBearing, calculateDistance} from '@/utils';
+import {calculateStrokesGained,calculateRawSG} from '@/utils';
 import db from '../db/db';
 import { globalStateVar } from '../state/globalStateVar';
+import { setBackgroundColorAsync } from 'expo-system-ui';
 
 
 
@@ -136,6 +138,7 @@ export default function HomeScreen() {
         distance: 0, // Placeholder, calculate if needed
         golfClubId: 69, // Placeholder, update with actual golf club ID
         playerId: 999,
+        strokesGained: calculateStrokesGained()
       };
       const updatedMapStrokes = [...mapStrokes];
         console.log(updatedMapStrokes);
