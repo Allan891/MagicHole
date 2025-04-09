@@ -1,5 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 import { useEffect } from 'react';
+import coursesJson  from "../../constants/courses";
 
 class Database {
 
@@ -75,7 +76,7 @@ class Database {
       startLongitude REAL,
       distance INTEGER,
       strokesGained REAL,
-      lye INTEGER,
+      lie INTEGER,
       golfClubId INTEGER NOT NULL,
       playerId INTEGER NOT NULL,
       PRIMARY KEY (holeId, roundId, strokeNr),
@@ -269,15 +270,18 @@ class Database {
 
 //#region CRUD Operations for Player Table
   // CREATE: Add a new player to the database
-  async createPlayer(player: Player) {
-    if (!this.db) return;
+  async createPlayer(player: Player): Promise<number> {
+    if (!this.db) return -1;
     try {
       await this.db.runAsync(
         'INSERT INTO Player (handicap) VALUES (?);',
         player.handicap);
-      console.log('Player created');
+      const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
+      console.log('Player created with ID:', result?.id);
+      return result?.id ?? -2;
     } catch (error) {
       console.error('Error creating player:', error);
+      return -3;
     }
   }
 
@@ -334,15 +338,18 @@ class Database {
 
 //#region CRUD Operations for GolfClub Table
   // CREATE: Add a new golf club to the database
-  async createGolfClub(golfClub: GolfClub) {
-    if (!this.db) return;
+  async createGolfClub(golfClub: GolfClub): Promise<number>  {
+    if (!this.db) return -1;
     try {
       await this.db.runAsync(
         'INSERT INTO GolfClub (playerId, name, showInList) VALUES (?, ?, ?);',
         golfClub.playerId, golfClub.name, golfClub.showInList);
-      console.log('Golf club created');
+      const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
+      console.log('Golf club created with ID:', result?.id);
+      return result?.id ?? -2 //returns -2 if result.id is null or undefined
     } catch (error) {
       console.error('Error creating golf club:', error);
+      return -3;
     }
   }
 
@@ -398,15 +405,18 @@ class Database {
 
 //#region CRUD Operations for Round Table
 // CREATE: Add a new round to the database
-async createRound(round: Round) {
-  if (!this.db) return;
+async createRound(round: Round): Promise<number> {
+  if (!this.db) return -1;
   try {
     await this.db.runAsync(
       'INSERT INTO Round (time, playerId, courseId, handicap) VALUES (?, ?, ?, ?);',
       round.time, round.playerId, round.courseId, round.handicap);
-    console.log('Round created');
+    const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
+    console.log('Round created with ID', result?.id);
+    return result?.id ?? -2
   } catch (error) {
     console.error('Error creating round:', error);
+    return -3;
   }
 }
 
@@ -462,15 +472,18 @@ async getRoundById(id: number): Promise<Round | null> {
 
 //#region CRUD Operations for Stroke Table
   // CREATE: Add a new stroke to the database
-  async createStroke(stroke: Stroke) {
-    if (!this.db) return;
+  async createStroke(stroke: Stroke): Promise<number> {
+    if (!this.db) return -1;
     try {
       await this.db.runAsync(
-        'INSERT INTO Stroke (holeId, roundId, strokeNr, startLatitude, startLongitude, distance, strokesGained, lye, golfClubId, playerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-        stroke.holeId, stroke.roundId, stroke.strokeNr, stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.strokesGained, stroke.lye, stroke.golfClubId, stroke.playerId);
-      console.log('Stroke created');
+        'INSERT INTO Stroke (holeId, roundId, strokeNr, startLatitude, startLongitude, distance, strokesGained, lie, golfClubId, playerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+        stroke.holeId, stroke.roundId, stroke.strokeNr, stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.strokesGained, stroke.lie, stroke.golfClubId, stroke.playerId);
+      const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
+      console.log('Stroke created with ID', result?.id);
+      return result?.id ?? -2;
     } catch (error) {
       console.error('Error creating stroke:', error);
+      return -3;
     }
   }
 
@@ -480,9 +493,9 @@ async getRoundById(id: number): Promise<Round | null> {
     try {
       await this.db.runAsync(
         `UPDATE Stroke 
-         SET startLatitude = ?, startLongitude = ?, distance = ?, strokesGained = ?, lye = ?, golfClubId = ?, playerId = ? 
+         SET startLatitude = ?, startLongitude = ?, distance = ?, strokesGained = ?, lie = ?, golfClubId = ?, playerId = ? 
          WHERE holeId = ? AND roundId = ? AND strokeNr = ?;`,
-        stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.strokesGained, stroke.lye, stroke.golfClubId, stroke.playerId,
+        stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.strokesGained, stroke.lie, stroke.golfClubId, stroke.playerId,
         stroke.holeId, stroke.roundId, stroke.strokeNr);
       console.log('Stroke updated');
     } catch (error) {
@@ -595,10 +608,10 @@ async getRoundById(id: number): Promise<Round | null> {
 
 //#region CRUD Operations for TeeSlope Table
   // CREATE: Add a new tee slope to the database
-  createTeeSlope(teeSlope: TeeSlope): number {
+  async createTeeSlope(teeSlope: TeeSlope): Promise<number> {
     if (!this.db) return -1;
     try {
-      this.db.runSync(
+      await this.db.runSync(
         'INSERT INTO TeeSlope (id, courseId, slopeMale, slopeFemale, courseRatingMale, courseRatingFemale) VALUES (?, ?, ?, ?, ?, ?);',
         teeSlope.id, teeSlope.courseId, teeSlope.slopeMale, teeSlope.slopeFemale, teeSlope.courseRatingMale, teeSlope.courseRatingFemale);     
       const result = this.db.getFirstSync("SELECT last_insert_rowid() AS id;");   // Fetch the last inserted row ID
@@ -658,5 +671,63 @@ async getRoundById(id: number): Promise<Round | null> {
   }
 //#endregion
 
+
+
+//#region import and get courses
+importCourses = async () => {
+    
+
+    const holes: Hole[] = [];
+    console.log("Courses from JSON: ", coursesJson);
+    coursesJson.forEach(async (courseData: any) => {
+      // const courseId = Math.floor(Math.random() * 1000000); // Simulating DB ID
+      const firstHole = courseData.holes[0];
+
+      const course: Course = {
+        id: -1,
+        name: courseData.name,
+        longitude: firstHole.teeBack.longitude,
+        latitude: firstHole.teeBack.latitude,
+        active: 1,
+        dateAdded: new Date().toISOString(),
+      };
+      console.log("Inserting Course: ",course);
+      const insertedCourseId = this.createCourse(course);  
+      console.log("Inserted Course ID: ",insertedCourseId);
+      if (insertedCourseId !== null) {
+        console.log(`New course inserted with ID: ${insertedCourseId}`);
+      } else {
+        console.log("Failed to insert course.");
+        return;
+      }
+      courseData.holes.forEach(async(hole: any, index: number) => {
+        const holeEntry: Hole = {
+          id: -1,
+          holeNr: index + 1,
+          backTeeLongitude: hole.teeBack.longitude,
+          backTeeLatitude: hole.teeBack.latitude,
+          flagLongitude: hole.greenMiddle.longitude,
+          flagLatitude: hole.greenMiddle.latitude,
+          courseId: insertedCourseId,
+        };
+        const insertedHoleId = await this.createHole(holeEntry);  
+        console.log("Inserted Hole ID: ",insertedHoleId);
+      });
+    });
+    return };
+
+  getCourses = async () => {
+    const allCourses: Course[] = await this.getAllCourses();
+    const allHoles: Hole[] = await this.getHoles();
+    console.log("Courses:");
+    allCourses.forEach((course) => {
+      console.log(`- ID: ${course.id}, Name: ${course.name}, Active: ${course.active}, Date Added: ${course.dateAdded}`);
+    });
+    console.log("Holes ",allHoles);
+    allHoles.forEach((hole) => {
+      console.log(`- ID: ${hole.id}, Nr: ${hole.holeNr}, Course: ${hole.courseId}, BackTLong: ${hole.backTeeLongitude}, BackTLat: ${hole.backTeeLatitude}, FlagLong: ${hole.flagLongitude}, FlagLat: ${hole.flagLatitude}`);
+    });
+  }
+//#endregion
 
 }export default new Database();
