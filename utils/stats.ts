@@ -7,10 +7,8 @@ export
   }
   
   const calculateRawSG = (slag:Stroke, latitude:number , longitude:number) => {
-    //TODO:
-    //Måste Lägga in slag.lie
     if (!slag.lie){
-      slag.lie = "Fairway"
+      slag.lie = 1 //lie = 1 Equals "Fairway"
     }
     const sGdata = require('./constants/StokesGained.json')
     
@@ -22,7 +20,7 @@ export
     const secondSG = sGValues[indices[1]]
     const firstDistance = sGDistance[indices[0]]
     const secondDistance = sGDistance[indices[1]] 
-    if (slag.lie != "Green"){
+    if (slag.lie != 4){ ///lie = 4 Equals "Green"
       try{
         return firstSG + (DLeft - firstDistance)  / (secondDistance - firstDistance) * (secondSG - firstSG)
       }
@@ -35,7 +33,7 @@ export
     const secondDistanceGreen = sGDistanceGreen[indices[1]] 
     //TODO: 
     //Lägg till manuell inmatning där man pekar mot flaggan istället för GPS koordinater
-    if (slag.lie = "green")
+    if (slag.lie = 4) // lie = 4 Equals "Green"
         try{
             return firstSGGreen + (DLeftGreen - firstDistanceGreen)  / (secondDistanceGreen - firstDistanceGreen) * (secondSGGreen - firstSGGreen)
         }
