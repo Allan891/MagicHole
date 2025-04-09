@@ -76,7 +76,7 @@ class Database {
       startLongitude REAL,
       distance INTEGER,
       strokesGained REAL,
-      lye INTEGER,
+      lie INTEGER,
       golfClubId INTEGER NOT NULL,
       playerId INTEGER NOT NULL,
       PRIMARY KEY (holeId, roundId, strokeNr),
@@ -476,8 +476,8 @@ async getRoundById(id: number): Promise<Round | null> {
     if (!this.db) return -1;
     try {
       await this.db.runAsync(
-        'INSERT INTO Stroke (holeId, roundId, strokeNr, startLatitude, startLongitude, distance, strokesGained, lye, golfClubId, playerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-        stroke.holeId, stroke.roundId, stroke.strokeNr, stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.strokesGained, stroke.lye, stroke.golfClubId, stroke.playerId);
+        'INSERT INTO Stroke (holeId, roundId, strokeNr, startLatitude, startLongitude, distance, strokesGained, lie, golfClubId, playerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+        stroke.holeId, stroke.roundId, stroke.strokeNr, stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.strokesGained, stroke.lie, stroke.golfClubId, stroke.playerId);
       const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
       console.log('Stroke created with ID', result?.id);
       return result?.id ?? -2;
@@ -493,9 +493,9 @@ async getRoundById(id: number): Promise<Round | null> {
     try {
       await this.db.runAsync(
         `UPDATE Stroke 
-         SET startLatitude = ?, startLongitude = ?, distance = ?, strokesGained = ?, lye = ?, golfClubId = ?, playerId = ? 
+         SET startLatitude = ?, startLongitude = ?, distance = ?, strokesGained = ?, lie = ?, golfClubId = ?, playerId = ? 
          WHERE holeId = ? AND roundId = ? AND strokeNr = ?;`,
-        stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.strokesGained, stroke.lye, stroke.golfClubId, stroke.playerId,
+        stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.strokesGained, stroke.lie, stroke.golfClubId, stroke.playerId,
         stroke.holeId, stroke.roundId, stroke.strokeNr);
       console.log('Stroke updated');
     } catch (error) {
