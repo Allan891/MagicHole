@@ -67,7 +67,7 @@ export default function History() {
       console.log(item.name),
       <View style={styles.courseItem}>
         <TouchableOpacity onPress={() => onChooseRound(item.id)}>
-          <ThemedText>{getCourseTotal(getPar(item.courseid),item.strokes)}</ThemedText>
+          <ThemedText style={styles.courseTotal}>{getCourseTotal(getPar(item.courseid),item.strokes)}</ThemedText>
           <ThemedText style={styles.courseText}>{getCourseName(item.courseid)}</ThemedText>
           <ThemedText>{getCourseTime(item.timestamp)}</ThemedText>
           <View style={{flex: 1}}>
@@ -86,7 +86,7 @@ export default function History() {
 
       <FlatList
               data={rounds}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={renderRound}
             />
     </ThemedView>
@@ -153,4 +153,10 @@ const styles = StyleSheet.create({
   courseText: {
     fontSize: 18,
   },
+  courseTotal: {
+    fontSize: 24,
+    position: 'absolute',
+    right: 0,
+    top: 5
+  }
 });
