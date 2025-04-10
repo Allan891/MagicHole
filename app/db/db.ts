@@ -648,7 +648,16 @@ async getRoundById(id: number): Promise<Round | null> {
     try {
       return await this.db.getAllAsync(
         'SELECT * FROM Stroke WHERE strokesGained = ?;',strokesGained);
-    } catch (error) {
+    } catch
+
+
+
+
+
+
+
+
+(error) {
       console.error('Error fetching strokes by strokes gained:', error);
       return [];
     }
