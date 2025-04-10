@@ -9,6 +9,12 @@ import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 
 //const { theme } = useTheme();
 const Stats = () => {
+   useEffect(() => {
+         const allStrokes = db.getStrokes()
+         const onlySG = allStrokes.map(t=>t.StrokesGained)
+         console.log('All SG Values', onlySG)
+       }, []);
+
       return (
         <SafeAreaProvider>
           <SafeAreaView style={{height: '50%', backgroundColor: "black" ,flexDirection: 'row'}}>
@@ -105,11 +111,7 @@ view2: {
   largeText: {
     fontSize: 30,
   },
-  useEffect(() => {
-      const allStrokes = db.getStrokes()
-      const onlySG = allStrokes.map(t=>t.StrokesGained)
-      console.log('All SG Values', onlySG)
-    }, []);
+
 });
 
 
