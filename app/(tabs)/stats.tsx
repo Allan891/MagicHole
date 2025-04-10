@@ -9,12 +9,18 @@ import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 
 //const { theme } = useTheme();
 const Stats = () => {
+    const [sgApproach, setsgApproach] = useState<number>(0);
+
+
+
    useEffect(() => {
          db.getStrokes()
                .then((strokes) => {
                console.log('All strokes: ', strokes);
                    const sGained = strokes.map(t=>t.strokesGained )
                           console.log("sgained: ", sGained)
+                          setsgApproach(sGained[0])
+                          console.log('sgApproach',sgApproach)
                })
                .catch((error) => {
                console.error('Error fetching strokes:', error);
@@ -32,7 +38,7 @@ const Stats = () => {
                                   a
                           </ThemedText>
                          <ThemedText style={{  textAlign: 'center', color: 'magenta'}} type="title">
-                            Avg -0.77
+                            Avg -0.77, {sgApproach}
 
                          </ThemedText>
 
