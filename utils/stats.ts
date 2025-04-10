@@ -100,3 +100,8 @@ export
     return [distanceArray.length - 2, distanceArray.length - 1]; // fallback
   }
 
+  export const calculateAverage = (array: number[]): number => {
+    const sum = array.reduce((a: number, b: number): number => a + b);
+    return sum / array.length;
+};
+

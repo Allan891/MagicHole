@@ -5,11 +5,13 @@ import React from 'react';
 import {View, Text,  StyleSheet} from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
+import { calculateDistance } from "@/utils";
+import {calculateAverage} from "@/utils";
 //import { Text, useTheme } from '@rneui/themed';
 
 //const { theme } = useTheme();
 const Stats = () => {
-    const [sgApproach, setsgApproach] = useState<number>(0);
+    const [sgApproach, setsgApproach] = useState<number>(1);
 
 
 
@@ -19,7 +21,8 @@ const Stats = () => {
                console.log('All strokes: ', strokes);
                    const sGained = strokes.map(t=>t.strokesGained )
                           console.log("sgained: ", sGained)
-                          setsgApproach(sGained[0])
+                          setsgApproach(
+                          calculateAverage(sGained))
                           console.log('sgApproach',sgApproach)
                })
                .catch((error) => {
