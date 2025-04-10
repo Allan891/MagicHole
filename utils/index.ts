@@ -1,3 +1,6 @@
 export * from './gps';
+
+export * from './course';
+
 export * from './stats';
-export * from './course.ts';
+
