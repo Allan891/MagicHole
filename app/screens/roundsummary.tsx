@@ -8,6 +8,7 @@ import {getCourse} from '@/utils';
 import db from '../db/dbParameterCalls';
 import { useEffect, useState } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Scorecard } from '@/components/Scorecard';
 
 
 
@@ -25,6 +26,7 @@ export default function RoundSummary() {
     async function updateRoundData() {
       const thisRoundData = await db.getRoundDetails(roundChosenId);
       setRoundData(thisRoundData);
+      console.log('thisRoundData', thisRoundData)
       const thisCourse = getCourse(thisRoundData.round?.courseId);
       setCourse(thisCourse);
       const thisSimpleRoundData = await db.getRoundData(roundChosenId);
@@ -82,12 +84,9 @@ export default function RoundSummary() {
 
     <ThemedView style={styles.container}>
             <ThemedText style={styles.title}>History</ThemedText>
-
-      <FlatList
-              data={course?.holes}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={renderHole}
-            />
+            {simpleRoundData?.strokes?.length && 
+              <Scorecard handlePress={onChooseHole} strokes={simpleRoundData?.strokes} courseId={course?.id} />
+            }
     </ThemedView>
   );
 }
