@@ -113,7 +113,12 @@ export const generateStatTables = async (): strokes[][]=>{
     for (const stroke of strokes) {
         console.log('Stroke: ', stroke.roundId);
         let myRound = await db.getRoundById(stroke.roundId);
-        console.log('myRound:' , myRound);
+        console.log('myRound:' , myRound.courseId);
+        const hole = getHole(myRound.courseId, stroke.holeId)
+        console.log('hole: ', hole);
+        //const dbhole = async db.getHole
+        const distance = calculateDistance(stroke.startLatitude, stroke.startLongitude, hole.greenMiddle.latitude, hole.greenMiddle.longitude );
+        console.log('distance: ', distance);
     }
      /*db.getStrokes()
        .then((strokes) => {
