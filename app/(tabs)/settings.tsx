@@ -1,12 +1,13 @@
 // import { StyleSheet, View, ScrollView, SafeAreaView, Text,TouchableOpacity,Switch,Image } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import { globalStateVar,MODE, someNumericValue,someTextValue } from '../state/globalStateVar';
+import { globalStateVar,MODE, HANDICAP,someTextValue } from '../state/globalStateVar';
 import db from '../db/db';
 import coursesJson  from "../../constants/courses";
-import React, { useState } from 'react';
+import React, { useState,useCallback } from 'react';
 import DropdownMenu, { MenuOption } from '../../components/DropdownMenu'; // Adjust the import path based on your project structure
 import { useRouter } from 'expo-router';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import {
   StyleSheet,
@@ -18,15 +19,18 @@ import {
   Switch,
   Image,
   TextInput,
+  Alert, 
+  Button, 
+  Linking,
 } from 'react-native';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 // Define the type for the state
 interface FormState {
-  emailNotifications: boolean;
-  pushNotifications: boolean;
-  test: boolean;
-  numericValue:string;
+  toggleButton: boolean;
   textValue:string;
+  handicap:number;
+  language:string;
+  location:string;
+
 }
 
 export default function Example() {
@@ -34,12 +38,16 @@ export default function Example() {
   const router = useRouter();
   const [form, setForm] = useState<FormState>({
   
-    emailNotifications: true,
-    pushNotifications: false,
-    test: MODE.test,
-    numericValue: someNumericValue.value,
+
+    toggleButton: MODE.test,
     textValue:'',
+    handicap: 36,
+    language: 'English',
+    location:'Stockholm',
   });
+
+  // SetSettings
+  // GetSettings
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#f8f8f8' }}>
@@ -62,12 +70,15 @@ export default function Example() {
 
         <View style={[styles.headerAction, { alignItems: 'flex-end' }]}>
           <TouchableOpacity
-            onPress={() => {
-              // handle onPress
+            onPress={async() => {
+              // db.setSeting(string,string)
+              for(const [key,value] of Object.entries(form)){
+                await db.setSetting(key,value);
+              }
             }}>
             <FeatherIcon
               color="#000"
-              name="more-vertical"
+              name="check"
               size={24} />
           </TouchableOpacity>
         </View>
@@ -85,16 +96,16 @@ export default function Example() {
                 <View style={styles.rowSpacer} />
 
                 <Switch
-                  onValueChange={(test: boolean) =>{
-                    setForm({ ...form, test });
-                    MODE.test = test;
+                  onValueChange={(toggleButton: boolean) =>{
+                    setForm({ ...form, toggleButton });
+                    MODE.test = toggleButton;
                     if(MODE.test){
-                      console.log('Form', test);
+                      console.log('Form', toggleButton);
                       console.log('Global', MODE.test);
                     }
                   }}
                   style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
-                  value={form.test} />
+                  value={form.toggleButton} />
               </View>
             </View>
           </View>  
@@ -164,17 +175,20 @@ export default function Example() {
               <View style={[styles.rowWrapper, styles.rowLast]}>
                 
                 <TextInput
-                  value={form.numericValue.toString()}
+                  value={form.handicap.toString()}
                   onChangeText={(text: string) => {
-                    const numericValue = text || '';
-                    setForm({ ...form, numericValue });
-                    someNumericValue.value = numericValue; 
+                    let handicap: number = parseInt(text);
+                    setForm({ ...form, handicap });
+                    HANDICAP.value = handicap; 
                     if (MODE.test) {
-                      console.log('Form', form.numericValue);
-                      console.log('Global', someNumericValue.value);
-                    }}}
+                      console.log('Form', form.handicap);
+                      console.log('Global', HANDICAP.value);
+                    }
+
+                  }
+                  }
                   keyboardType="decimal-pad" // This will bring up the numeric keyboard on mobile
-                  placeholder="Enter a number"
+                  placeholder="Change yor handicap here:"
                   placeholderTextColor="#888888"
                   style={{
                     height: 40,
@@ -201,7 +215,7 @@ export default function Example() {
             <View style={[styles.rowWrapper, styles.rowFirst]}>
               <TouchableOpacity
                 onPress={() => {
-                  router.push({pathname: "../screens/settings/LanguageScreen"});
+                  router.push({pathname: "../screens/settings/LanguageScreen"}); //TODO: Create a Language Screen
                 }}
                 style={styles.row}>
                 <Text style={styles.rowLabel}>Language</Text>
@@ -217,54 +231,24 @@ export default function Example() {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.rowWrapper}>
+            <View style={[styles.rowWrapper,styles.rowLast]}>
               <TouchableOpacity
                 onPress={() => {
-                  // handle onPress
+                  router.push({pathname: "../screens/settings/LocationScreen"}); //TODO: Create a Location Screen
                 }}
                 style={styles.row}>
                 <Text style={styles.rowLabel}>Location</Text>
 
                 <View style={styles.rowSpacer} />
 
-                <Text style={styles.rowValue}>Hong Kong</Text>
-
+                <Text style={styles.rowValue}> {form.location} </Text> 
+                {/* Doublecheck syntax */}
                 <FeatherIcon
                   color="#bcbcbc"
                   name="chevron-right"
                   size={19} />
               </TouchableOpacity>
-            </View>
-
-            <View style={styles.rowWrapper}>
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>Email Notifications</Text>
-
-                <View style={styles.rowSpacer} />
-
-                <Switch
-                  onValueChange={(emailNotifications: boolean) =>
-                    setForm({ ...form, emailNotifications })
-                  }
-                  style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
-                  value={form.emailNotifications} />
-              </View>
-            </View>
-
-            <View style={[styles.rowWrapper, styles.rowLast]}>
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>Push Notifications</Text>
-
-                <View style={styles.rowSpacer} />
-
-                <Switch
-                  onValueChange={(pushNotifications: boolean) =>
-                    setForm({ ...form, pushNotifications })
-                  }
-                  style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
-                  value={form.pushNotifications} />
-              </View>
-            </View>
+            </View>            
           </View>
         </View>
 
@@ -275,6 +259,7 @@ export default function Example() {
             <View style={[styles.rowWrapper, styles.rowFirst]}>
               <TouchableOpacity
                 onPress={() => {
+
                   // handle onPress
                 }}
                 style={styles.row}>
@@ -369,6 +354,9 @@ export default function Example() {
     </SafeAreaView>
   );
 }
+
+
+
 const styles = StyleSheet.create({
   /* Dropdown */
   container: {

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import db from '../db/db';
 
 type Stroke = {
   selectedCourse: any;
@@ -29,9 +30,6 @@ export const HANDICAP = {
   value : 0,
 };
 
-export const someNumericValue = {
-  value : '',
-};
 
 export const someTextValue = {
   value : '',
