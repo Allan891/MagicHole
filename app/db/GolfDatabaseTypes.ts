@@ -23,7 +23,7 @@ type Player = {
 };
 
 type GolfClub = {
-  id: number;
+  id: number;  //ClubId = 0 = Putter
   playerId: number;
   name: string;
   showInList: number;
@@ -46,7 +46,7 @@ type Stroke = {
   distance: number;
   strokesGained: number;
   lie: number; // 0 = Tee, 1 = Fairway, 2 = Rough, 3 = Sand, 4 = Green, 5 = Recovery 
-  golfClubId: number;
+  golfClubId: number; //ClubId = 0 = Putter
   playerId: number;
 };
 

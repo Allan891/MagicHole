@@ -6,128 +6,168 @@ import {View, Text,  StyleSheet} from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { calculateDistance } from "@/utils";
-import {calculateAverage} from "@/utils";
+import {calculateAverage, generateStatTables} from "@/utils";
 //import { Text, useTheme } from '@rneui/themed';
 
+
 //const { theme } = useTheme();
-const Stats = () => {
-    const [sgApproach, setsgApproach] = useState<number>(1);
-
-
+export const Stats = () => {
+   const [sgApproach, setsgApproach] = useState<number[]>(1);
 
    useEffect(() => {
-         db.getStrokes()
+        /* db.getStrokes()
                .then((strokes) => {
                console.log('All strokes: ', strokes);
                    const sGained = strokes.map(t=>t.strokesGained )
                           console.log("sgained: ", sGained)
-                          setsgApproach(
-                          calculateAverage(sGained))
+                          //sgApproach = calculateAverage(sGained)
+
+                          setsgApproach([calculateAverage(sGained).toFixed(2),55, 1337])
+
+
                           console.log('sgApproach',sgApproach)
                })
                .catch((error) => {
                console.error('Error fetching strokes:', error);
                });
-
+                */
+        const strokeTables = generateStatTables();
+            setsgApproach([
+                calculateAverage(strokeTables[0].map(t=>t.strokesGained )).toFixed(2),
+                calculateAverage(strokeTables[1].map(t=>t.strokesGained )).toFixed(2),
+                calculateAverage(strokeTables[2].map(t=>t.strokesGained )).toFixed(2),
+                calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2)
+                ])
        }, []);
 
+
+
       return (
-        <SafeAreaProvider>
-          <SafeAreaView style={{height: '50%', backgroundColor: "black" ,flexDirection: 'row'}}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#f6f6f6' }}>
+              <View style={styles.container}>
+                  <Text style={styles.title}>Your Stats</Text>
 
-                        <View style={styles.view1}>
-                         <ThemedText style={{  textAlign: 'center', color: 'green'}} type="title">
-                                 Tee
-                                  a
-                          </ThemedText>
-                         <ThemedText style={{  textAlign: 'center', color: 'magenta'}} type="title">
-                            Avg -0.77, {sgApproach}
+                  <View style={styles.stats}>
+                    {items.map(({ label, value }, index) => (
+                      <View
+                        key={index}
+                        style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}>
+                        <Text style={styles.title}>{label}</Text>
 
-                         </ThemedText>
+                        <Text style={styles.statsItemLabel}>Average</Text>
 
+                        {sgApproach && <Text style={styles.statsItemValue}>{sgApproach[index]}</Text>  }
+                      {!sgApproach && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                        <Text style={styles.statsItemLabel}>Median</Text>
+
+                       {sgApproach[index] && <Text style={styles.statsItemValue}>{sgApproach[index]}</Text>  }
+                      {!sgApproach[index] && <Text style={styles.statsItemValue}>'N/A'</Text>}
+
+                      </View>
+                    ))}
+                  </View>
+                </View>
+                <View style={styles.container}>
+
+                    <View style={styles.stats}>
+                      {items2.map(({ label, value }, index) => (
+                        <View
+                          key={index}
+                          style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}>
+                          <Text style={styles.title}>{label}</Text>
+
+                          <Text style={styles.statsItemLabel}>Average</Text>
+
+                          {sgApproach && <Text style={styles.statsItemValue}>{sgApproach[index+2]}</Text>  }
+                        {!sgApproach && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                          <Text style={styles.statsItemLabel}>Median</Text>
+
+                          {sgApproach && <Text style={styles.statsItemValue}>{sgApproach[index+2]}</Text>  }
+                        {!sgApproach && <Text style={styles.statsItemValue}>'N/A'</Text>}
 
                         </View>
+                      ))}
+                    </View>
+                  </View>
+
+            </SafeAreaView>
 
 
 
-
-
-                        <View style={styles.view2}>
-                          <Text style={styles.text}
-
-                                  >
-                                <Text style={styles.titleText}>Approach
-
-
-
-                                  </Text>
-
-                            <Text style={styles.largeText}><Text style={styles.more}>{"\n"}Avg{"\n"}+3.3{"\n"}</Text></Text>
-                            <Text style={styles}>{"\n"}Med{"\n"}+33</Text>
-                          </Text>
-
-                          <Text> +34</Text>
-                        </View>
-
-
-
-        </SafeAreaView><SafeAreaView style={{height: '50%', backgroundColor:'pink', flexDirection: 'row'}}>
-
-             <View style={styles.view2}>
-               <Text>Hello World!</Text>
-             </View>
-
-
-
-
-
-             <View style={styles.view1}>
-               <Text>+33</Text>
-
-             </View>
-
-
-
-         </SafeAreaView>
-
-        </SafeAreaProvider>
       );
   //return <Redirect href="/map" />;
 };
 
+ const getAverage = (): number => {
+    if (sgApproach) return sgApproach
+    return 0
+    };
 
+//var sgApproach = 0;
+
+let items = [
+  {
+    label: 'Tee',
+
+
+    value: '2',
+  },
+  {
+    label: 'Approach',
+    value: '243',
+  },
+];
+let items2 = [
+  {
+    label: 'Chip',
+
+
+    value: '2',
+  },
+  {
+    label: 'Putt',
+    value: '243',
+  },
+];
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    padding: 24,
   },
-  view1: {
-        backgroundColor: 'blue', flex: 1,
-      margin: 10,
-    },
-view2: {
-      backgroundColor: 'red', flex: 1,
-    margin: 10,
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#1d1d1d',
+    marginBottom: 12,
   },
-  text: {
-    textAlign: 'center',
-    padding: 5,
-
+  /** Stats */
+  stats: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-    more: {
-      marginVertical: 20,
-    },
-  baseText: {
-    fontFamily: 'Cochin',
+  statsItem: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 6,
+    borderLeftWidth: 1,
+    borderColor: '#e1e1e1',
   },
-  titleText: {
-    fontSize: 35,
-    fontWeight: 'bold',
+  statsItemLabel: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#000',
+    marginBottom: 4,
   },
-  largeText: {
-    fontSize: 30,
+  statsItemValue: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#000',
   },
-
 });
 
 

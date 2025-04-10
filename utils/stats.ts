@@ -1,4 +1,5 @@
-import {calculateBearing, calculateDistance} from '@/utils';
+import {calculateBearing, calculateDistance, getHole} from '@/utils';
+import db from '../app/db/db';
 
 export 
   const calculateStrokesGained = (StartSlag:Stroke , slutSlag:Stroke, latitude:number , longitude:number) =>{
@@ -105,3 +106,40 @@ export
     return sum / array.length;
 };
 
+export const generateStatTables = (): strokes[][]=>{
+    var strokeTables= [1,2,3];
+
+     db.getStrokes()
+       .then((strokes) => {
+       console.log('All strokes: ', strokes);
+       strokes.forEach((stroke, index) => {
+               console.log('Stroke: ', stroke);
+               const hole = getHole(db.getRoundById(stroke.roundId).courseId, stroke.holeId);
+               const distance = calculateDistance(stroke.startLatitude, stroke.startLongitude, hole.latitude, hole.longitude );
+
+               if (stroke.golfClubId == 0){
+                   strokeTables[3].append(stroke);
+               } // Club 0 will always be putter.
+
+               else if (distance < 50){
+                   strokeTables[2].append(stroke);
+               }
+               else if (stroke.lie = 0 && hole.par >= 4){
+                   strokeTables[0].append(stroke);
+               }
+               else{
+                   strokeTables[1].append(stroke);
+               }
+
+             });
+           //strokeTables[1] = strokes; //ALL strokes are put in table as approach.
+
+       })
+       .catch((error) => {
+       console.error('Error fetching strokes:', error);
+       });
+
+
+    return strokeTables
+
+};
