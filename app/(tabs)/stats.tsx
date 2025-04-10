@@ -10,9 +10,14 @@ import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 //const { theme } = useTheme();
 const Stats = () => {
    useEffect(() => {
-         const allStrokes = db.getStrokes()
-         const onlySG = allStrokes.map(t=>t.StrokesGained)
-         console.log('All SG Values', onlySG)
+         db.getStrokes()
+               .then((strokes) => {
+               console.log('All strokes: ', strokes);
+
+               })
+               .catch((error) => {
+               console.error('Error fetching strokes:', error);
+               });
        }, []);
 
       return (
