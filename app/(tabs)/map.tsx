@@ -149,7 +149,12 @@ export default function HomeScreen() {
         console.log('Distance: ', distance);
         console.log('Lie: ', previousStroke.lie);
         previousStroke.distance = distance;
-        previousStroke.strokesGained = calculateStrokesGained(previousStroke,thisStroke, holeCoords.latitude,holeCoords.longitude)
+        if (distance < 9) {
+            previousStroke.golfClubId = 0;
+            previousStroke.lie = 4;
+        }
+        console.log('bait');
+        previousStroke.strokesGained = calculateStrokesGained(previousStroke, thisStroke, holeCoords.latitude,holeCoords.longitude)
         console.log('Updated previous stroke: ', previousStroke);
         console.log('=======================================');
         db.createStroke(previousStroke); // Save the previous stroke to the database
