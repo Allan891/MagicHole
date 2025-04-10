@@ -51,7 +51,7 @@ export default function History() {
 
 
   const getCourseTime = (timestamp) => {
-    const date = new Date(timestamp);
+    const date = new Date(parseInt(timestamp));
 
     return date.toLocaleDateString();  
   };
