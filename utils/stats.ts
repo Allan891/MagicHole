@@ -102,6 +102,8 @@ export
   }
 
   export const calculateAverage = (array: number[]): number => {
+    //console.log('array.length: ', array.length);
+    if (!array.length) return 0;
     const sum = array.reduce((a: number, b: number): number => a + b);
     return sum / array.length;
 };
@@ -142,7 +144,7 @@ export const generateStatTables = async (): stroke[][] =>{
         else{
           console.log('adding approach');
           strokesApproach.push(stroke);
-          console.log('stroketables1: ',strokesApproach);
+          //console.log('stroketables1: ',strokesApproach);
         }
         //stroke.category = ....
     }
@@ -153,7 +155,7 @@ export const generateStatTables = async (): stroke[][] =>{
     returnValue.push(strokesApproach);
     returnValue.push(strokesChip);
     returnValue.push(strokesPutt);
-    console.log('returnValue: ', returnValue);
+    //console.log('returnValue: ', strokesApproach);
     return returnValue;
      /*db.getStrokes()
        .then((strokes) => {
