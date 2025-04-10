@@ -30,8 +30,8 @@ type GolfClub = {
 };
 
 type Round = {
-  id?: number;
-  time: number;
+  id: number;
+  time: string;
   playerId: number;
   courseId: number;
   handicap: number;
