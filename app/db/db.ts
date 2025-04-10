@@ -22,13 +22,13 @@ class Database {
     if (this.isInitialized) return;
     console.log('Database opened');
     this.db.execSync(`
-    DROP TABLE IF EXISTS Course;
-    DROP TABLE IF EXISTS Hole;
-    DROP TABLE IF EXISTS Player;
-    DROP TABLE IF EXISTS GolfClub;
-    DROP TABLE IF EXISTS Round;
-    DROP TABLE IF EXISTS Stroke;
-    DROP TABLE IF EXISTS TeeSlope;
+    -- DROP TABLE IF EXISTS Course;
+    -- DROP TABLE IF EXISTS Hole;
+    -- DROP TABLE IF EXISTS Player;
+    -- DROP TABLE IF EXISTS GolfClub;
+    -- DROP TABLE IF EXISTS Round;
+    -- DROP TABLE IF EXISTS Stroke;
+    -- DROP TABLE IF EXISTS TeeSlope;
 
     CREATE TABLE IF NOT EXISTS Course (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -61,7 +61,7 @@ class Database {
 
     CREATE TABLE IF NOT EXISTS Round (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-      time TEXT NOT NULL,
+      time INTEGER NOT NULL,
       playerId INTEGER NOT NULL,
       courseId INTEGER NOT NULL,
       handicap INTEGER NOT NULL,
@@ -243,8 +243,8 @@ class Database {
     if (!this.db) return [];
     try {
       const allRows: Hole[] = await this.db.getAllAsync(
-        `SELECT Hole.* FROM Round 
-        INNER JOIN Hole ON  Hole.courseId = Round.courseId 
+        `SELECT * FROM Round 
+        LEFT JOIN Hole ON  Hole.courseId = Round.courseId 
         WHERE Round.id = ?;`, roundId);
       return allRows;
     } catch (error) {
@@ -629,6 +629,22 @@ async getRoundById(id: number): Promise<Round | null> {
     } catch (error) {
       console.error('Error fetching strokes by strokes gained:', error);
       return null;
+    }
+  }
+
+  // READ: Count strokes per hole in a round
+  async StrokeCountByRound (roundId: number): Promise<[]> {
+    if (!this.db) return [];
+    try {
+      const allRows: [] = await this.db.getAllAsync(
+        `SELECT holeId, COUNT(*) AS strokeCount
+          FROM Stroke
+          WHERE roundId = ?
+          GROUP BY holeId;`, roundId);
+      return allRows;
+    } catch (error) {
+      console.error('Error fetching holes:', error);
+      return [];
     }
   }
 //#endregion

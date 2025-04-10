@@ -5,9 +5,12 @@ import { globalStateVar } from '../state/globalStateVar';
 import courses from '@/constants/courses';
 import { HoleOverview } from '@/components/HoleOverview';
 import {getPar} from '@/utils';
+import db from '../db/dbParameterCalls';
+import { useEffect, useState } from 'react';
+
 
 export default function History() {
-  const rounds = [
+  const roundsexample = [
     {id:1,courseid:1, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9]},
     {id:2,courseid:2, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9]},
     {id:3,courseid:3, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9]},
@@ -18,8 +21,24 @@ export default function History() {
     {id:8,courseid:3, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9,2,5,4,6,3,5,6,8,9]},
     {id:9,courseid:4, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9,2,5,4,6,3,5,6,8,9]},
     {id:10,courseid:5, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9,2,5,4,6,3,5,6,8,9]}
-    
   ];
+
+  const [rounds, setRounds] = useState<Object[]>([]);
+
+  
+  useEffect(() => {
+
+    async function updateRounds() {
+      const rounds2 = await db.getLatestRoundsData(999, 25);
+      console.log('db rounds: ', rounds2);
+      setRounds(rounds2);
+    }
+    
+    updateRounds();
+    
+
+    }, []);
+
   const onChooseRound= (id) => (
     console.log("click")
   );
