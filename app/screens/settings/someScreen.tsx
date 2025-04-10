@@ -1,12 +1,10 @@
 // import { StyleSheet, View, ScrollView, SafeAreaView, Text,TouchableOpacity,Switch,Image } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import { globalStateVar,MODE, someNumericValue,someTextValue } from '../state/globalStateVar';
-import db from '../db/db';
-import coursesJson  from "../../constants/courses";
+import { globalStateVar,MODE, someNumericValue,someTextValue } from '../../state/globalStateVar';
+import db from '../../db/db';
 import React, { useState } from 'react';
-import DropdownMenu, { MenuOption } from '../../components/DropdownMenu'; // Adjust the import path based on your project structure
-import { useRouter } from 'expo-router';
+// import { useRouter } from 'expo-router';
 
 import {
   StyleSheet,
@@ -29,11 +27,10 @@ interface FormState {
   textValue:string;
 }
 
-export default function Example() {
+export default function LanguageScreen() {
   // Set the state type to FormState
-  const router = useRouter();
+  // const router = useRouter();  
   const [form, setForm] = useState<FormState>({
-  
     emailNotifications: true,
     pushNotifications: false,
     test: MODE.test,
@@ -128,7 +125,8 @@ export default function Example() {
                 size={22} />
             </TouchableOpacity>
           </View>
-        </View>
+        </View>        
+
         {/* Text Fields */}
         <View style={styles.section}></View>
           <Text style={styles.sectionTitle}>Text Fields</Text>
@@ -201,7 +199,7 @@ export default function Example() {
             <View style={[styles.rowWrapper, styles.rowFirst]}>
               <TouchableOpacity
                 onPress={() => {
-                  router.push({pathname: "../screens/settings/LanguageScreen"});
+                  // do something
                 }}
                 style={styles.row}>
                 <Text style={styles.rowLabel}>Language</Text>
