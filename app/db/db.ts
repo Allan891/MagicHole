@@ -510,7 +510,7 @@ async getLatestRoundsByPlayer(playerId: number, numberOfRounds: number): Promise
 async getRoundById(id: number): Promise<Round | null> {
   if (!this.db) return null;
   try {
-    return await this.db.getAllAsync('SELECT * FROM Round WHERE id = ?;', id);
+    return await this.db.getFirstAsync('SELECT * FROM Round WHERE id = ?;', id);
   } catch (error) {
     console.error('Error fetching round:', error);
     return null;
