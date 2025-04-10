@@ -6,6 +6,6 @@ const Index = () => {
     useEffect(() => {
     db.initDb();
   }, []);
-  return <Redirect href="/map" />;
+  return <Redirect href="/stats" />;
 };
 export default Index;

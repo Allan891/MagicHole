@@ -32,12 +32,12 @@ export const Stats = () => {
                });
                 */
         const strokeTables = generateStatTables();
-            setsgApproach([
+            /*setsgApproach([
                 calculateAverage(strokeTables[0].map(t=>t.strokesGained )).toFixed(2),
                 calculateAverage(strokeTables[1].map(t=>t.strokesGained )).toFixed(2),
                 calculateAverage(strokeTables[2].map(t=>t.strokesGained )).toFixed(2),
                 calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2)
-                ])
+                ])*/
        }, []);
 
 

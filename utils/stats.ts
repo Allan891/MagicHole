@@ -106,21 +106,52 @@ export
     return sum / array.length;
 };
 
-export const generateStatTables = async (): strokes[][]=>{
-    let strokeTables= [1,2,3];
+export const generateStatTables = async (): Promise<[strokesTee: stroke[], strokesApproach: stroke[], strokesChip: stroke[], strokesPutt: stroke[]]>=>{
+    let strokesTee: stroke[] = [];
+    let strokesApproach: stroke[] = [];
+    let strokesChip: stroke[] = [];
+    let strokesPutt: stroke[] = [];
+    console.log('strokesApproach: ', strokesApproach);
     const strokes = await db.getStrokes();
     //console.log('All strokes: ', strokes);
     for (const stroke of strokes) {
-        console.log('Stroke: ', stroke.roundId);
-        let myRound = await db.getRoundById(stroke.roundId);
+        console.log('Stroke: ', stroke);
+        const myRound = await db.getRoundById(stroke.roundId);
         console.log('myRound:' , myRound.courseId);
         const hole = getHole(myRound.courseId, stroke.holeId)
         console.log('hole: ', hole);
         //const dbhole = async db.getHole
         const distance = calculateDistance(stroke.startLatitude, stroke.startLongitude, hole.greenMiddle.latitude, hole.greenMiddle.longitude );
+        stroke.distance = distance;
+        //let category = 0;
         console.log('distance: ', distance);
+        if (stroke.golfClubId == 0){
+          console.log('adding putt');
+          strokesPutt.push(stroke);
+        } // Club 0 will always be putter.
+
+        else if (distance < 50){
+          console.log('adding chip');
+          strokesChip.push(stroke);
+        }
+        else if (stroke.lie = 0 && hole.par >= 4){
+          console.log('adding tee');
+          strokesTee.push(stroke);
+        }
+        else{
+          console.log('adding approach');
+          strokesApproach.push(stroke);
+          console.log('stroketables1: ',strokesApproach);
+        }
+        //stroke.category = ....
     }
-     /*db.getStrokes()
+    console.log('ALL STROKES CATEGORIEZED');
+    const returnValue: stroke[][] = [];
+    returnValue.push(strokesTee);
+    returnValue.push(strokesApproach);
+    returnValue.push(strokesChip);
+    returnValue.push(strokesPutt);
+                     /*db.getStrokes()
        .then((strokes) => {
        console.log('All strokes: ', strokes);
        strokes.forEach((stroke, index) => {
@@ -161,6 +192,6 @@ export const generateStatTables = async (): strokes[][]=>{
        });
 */
 
-    return strokeTables
+    return returnValue
 
 };
