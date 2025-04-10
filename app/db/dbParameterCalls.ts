@@ -3,7 +3,6 @@ import db from "./db";
 class FetchInfo{
     async getRoundData(roundId:number): Promise<[roundId: (number | undefined), courseId: (number | undefined), timeStamp: (number | undefined), strokesEachHole: ((number | null)[])]> {
         let round = await db.getRoundById(roundId);
-        round = round[0];
         const holes = await db.StrokeCountByRound(roundId);
         const strokes: (number | null)[] = [];
         for (const hole of holes) {
@@ -11,6 +10,15 @@ class FetchInfo{
         }
   
         return {roundId, courseid: round?.courseId, timestamp: round?.time, strokes};
+    }
+
+    async getRoundDetails(roundId){
+        console.log('roundId', roundId);
+        let round = await db.getRoundById(roundId);
+        let strokes = await db.getStrokesByRoundId(roundId);
+        console.log('round:', round);
+        console.log('strokes:', strokes);
+        return {round, strokes};
     }
 
     async getLatestRoundsData(playerId: number, latestRoundsNr:number): Promise<([roundId: (number | undefined),courseId: (number | undefined), timeStamp: (number | undefined), strokesEachHole: ((number | null)[])])[]> {
