@@ -1,7 +1,9 @@
 import courses from '@/constants/courses';
 
 export const getPar = (courseid) =>{
-    const dis = courses.find(a => a.id === courseid)?.par;
-    console.log("desto", dis);
-    return dis;
+    return courses.find(a => a.id === courseid)?.par;
   }
+
+export const getHole = (courseid, i) =>{
+  return courses.find(a => a.id === courseid)?.holes[i];
+}
