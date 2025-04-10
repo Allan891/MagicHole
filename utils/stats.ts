@@ -117,6 +117,22 @@ export
     return sum / array.length;
 };
 
+export const getMedian = (arr: stroke[]): number => {
+  // 1. Extract values and sort numerically
+  console.log('1')
+  const values = arr
+    .map(obj => obj.strokesGained)
+    .sort((a, b) => a - b);
+  console.log('2')
+  // 2. Calculate median
+  const mid = Math.floor(values.length / 2);
+console.log('3')
+
+  return values.length % 2 !== 0
+    ? values[mid]                 // Odd length: middle element
+    : (values[mid - 1] + values[mid]) / 2; // Even length: average of two middle elements
+};
+
 //export const generateStatTables = async (): Promise<[strokesTee: stroke[], strokesApproach: stroke[], strokesChip: stroke[], strokesPutt: stroke[]]>=>{
 export const generateStatTables = async (): stroke[][] =>{
     let strokesTee: stroke[] = [];
@@ -212,3 +228,5 @@ export const generateStatTables = async (): stroke[][] =>{
     return returnValue
 
 };
+
+

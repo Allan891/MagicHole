@@ -6,14 +6,14 @@ import {View, Text,  StyleSheet} from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { calculateDistance } from "@/utils";
-import {calculateAverage, generateStatTables} from "@/utils";
+import {calculateAverage, generateStatTables, getMedian} from "@/utils";
 //import { Text, useTheme } from '@rneui/themed';
 
 
 //const { theme } = useTheme();
 export const Stats = () => {
-   const [sgApproach, setsgApproach] = useState<number[]>(1);
-
+   const [sGAverage, setsGAverage] = useState<number[]>(1);
+   const [sGMedian, setsGMedian] = useState<number[]>(1);
    useEffect(() => {
         /* db.getStrokes()
                .then((strokes) => {
@@ -37,12 +37,20 @@ export const Stats = () => {
                     console.log('WE ALMST DIT IT');
                     console.log(' ');
                     console.log('asdf ',calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2));
-                    setsgApproach([
+                    setsGAverage([
                         calculateAverage(strokeTables[0].map(t=>t.strokesGained )).toFixed(2),
                         calculateAverage(strokeTables[1].map(t=>t.strokesGained )).toFixed(2),
                         calculateAverage(strokeTables[2].map(t=>t.strokesGained )).toFixed(2),
                         calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2)
                         ]);
+
+                    setsGMedian([
+                        getMedian(strokeTables[0]).toFixed(2),
+                        getMedian(strokeTables[1]).toFixed(2),
+                        getMedian(strokeTables[2]).toFixed(2),
+                        getMedian(strokeTables[3]).toFixed(2)
+                    ]);
+                    console.log('median: ',sGMedian);
                     console.log('WE DIT IT');
         }
 
@@ -66,12 +74,12 @@ export const Stats = () => {
 
                         <Text style={styles.statsItemLabel}>Average</Text>
 
-                        {sgApproach && <Text style={styles.statsItemValue}>{sgApproach[index]}</Text>  }
-                      {!sgApproach && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                        {sGAverage && <Text style={styles.statsItemValue}>{sGAverage[index]}</Text>  }
+                      {!sGAverage && <Text style={styles.statsItemValue}>'N/A'</Text>}
                         <Text style={styles.statsItemLabel}>Median</Text>
 
-                       {sgApproach[index] && <Text style={styles.statsItemValue}>{sgApproach[index]}</Text>  }
-                      {!sgApproach[index] && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                       {sGMedian[index] && <Text style={styles.statsItemValue}>{sGMedian[index]}</Text>  }
+                      {!sGMedian[index] && <Text style={styles.statsItemValue}>'N/A'</Text>}
 
                       </View>
                     ))}
@@ -88,12 +96,12 @@ export const Stats = () => {
 
                           <Text style={styles.statsItemLabel}>Average</Text>
 
-                          {sgApproach && <Text style={styles.statsItemValue}>{sgApproach[index+2]}</Text>  }
-                        {!sgApproach && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                          {sGAverage && <Text style={styles.statsItemValue}>{sGAverage[index+2]}</Text>  }
+                        {!sGAverage && <Text style={styles.statsItemValue}>'N/A'</Text>}
                           <Text style={styles.statsItemLabel}>Median</Text>
 
-                          {sgApproach && <Text style={styles.statsItemValue}>{sgApproach[index+2]}</Text>  }
-                        {!sgApproach && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                          {sGMedian && <Text style={styles.statsItemValue}>{sGMedian[index+2]}</Text>  }
+                        {!sGMedian && <Text style={styles.statsItemValue}>'N/A'</Text>}
 
                         </View>
                       ))}
@@ -109,7 +117,7 @@ export const Stats = () => {
 };
 
  const getAverage = (): number => {
-    if (sgApproach) return sgApproach
+    if (sGAverage) return sGAverage
     return 0
     };
 
