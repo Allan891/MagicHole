@@ -31,13 +31,16 @@ export const Stats = () => {
                console.error('Error fetching strokes:', error);
                });
                 */
-        const strokeTables = generateStatTables();
-            /*setsgApproach([
+        const strokeTables: stroke[][]  = generateStatTables();
+        console.log(strokeTables);
+        console.log('WE ALMST DIT IT');
+            setsgApproach([
                 calculateAverage(strokeTables[0].map(t=>t.strokesGained )).toFixed(2),
                 calculateAverage(strokeTables[1].map(t=>t.strokesGained )).toFixed(2),
                 calculateAverage(strokeTables[2].map(t=>t.strokesGained )).toFixed(2),
                 calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2)
-                ])*/
+                ]);
+            console.log('WE DIT IT');
        }, []);
 
 

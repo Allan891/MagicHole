@@ -106,7 +106,8 @@ export
     return sum / array.length;
 };
 
-export const generateStatTables = async (): Promise<[strokesTee: stroke[], strokesApproach: stroke[], strokesChip: stroke[], strokesPutt: stroke[]]>=>{
+//export const generateStatTables = async (): Promise<[strokesTee: stroke[], strokesApproach: stroke[], strokesChip: stroke[], strokesPutt: stroke[]]>=>{
+export const generateStatTables = async (): stroke[][] =>{
     let strokesTee: stroke[] = [];
     let strokesApproach: stroke[] = [];
     let strokesChip: stroke[] = [];
@@ -145,13 +146,16 @@ export const generateStatTables = async (): Promise<[strokesTee: stroke[], strok
         }
         //stroke.category = ....
     }
-    console.log('ALL STROKES CATEGORIEZED');
-    const returnValue: stroke[][] = [];
+    console.log('ALL STROKES CATEGORIZED');
+    let returnValue: stroke[][] = [];
     returnValue.push(strokesTee);
+
     returnValue.push(strokesApproach);
     returnValue.push(strokesChip);
     returnValue.push(strokesPutt);
-                     /*db.getStrokes()
+    console.log('returnValue: ', returnValue);
+    return returnValue;
+     /*db.getStrokes()
        .then((strokes) => {
        console.log('All strokes: ', strokes);
        strokes.forEach((stroke, index) => {
