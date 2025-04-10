@@ -95,6 +95,12 @@ class Database {
       courseRatingFemale REAL NOT NULL,
       PRIMARY KEY (id, courseId),
       FOREIGN KEY (courseId) REFERENCES Course (id));
+
+    CREATE TABLE IF NOT EXISTS Settings (
+      setting TEXT NOT NULL,
+      value TEXT NOT NULL,
+      PRIMARY KEY (setting));
+
     `);
     this.isInitialized = true;
     console.log('Database created');
@@ -132,6 +138,36 @@ class Database {
       console.error('Error updating course:', error);
     }
   }
+
+    // Settings
+    async setSetting(setting: string, value: string) {
+      if (!this.db) return;
+      try {
+        await this.db.runAsync(
+          'REPLACE INTO Settings (setting, value) VALUES (?, ?);',
+          setting, value);
+        console.log('Setting updated');
+      } catch (error) {
+        console.error('Error updating setting:', error);
+      }
+    }
+
+    async getSettings(): Promise<[]> {
+      if (!this.db) return [];
+      try {
+        const settings = await this.db.getAllAsync(
+          'SELECT * FROM Settings;');
+          const output = settings.reduce((acc, { setting, value }) => {
+            acc[setting] = value
+            return acc;
+          }, {});          
+          return output;
+        
+      } catch (error) {
+        console.error('Error getting settings:', error);
+        return [];
+      }
+    }
 
   // DELETE: Delete a course
   async deleteCourse(course: Course) {
