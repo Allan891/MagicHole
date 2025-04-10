@@ -105,14 +105,12 @@ view2: {
   largeText: {
     fontSize: 30,
   },
+  useEffect(() => {
+      const allStrokes = db.getStrokes()
+      const onlySG = allStrokes.map(t=>t.StrokesGained)
+      console.log('All SG Values', onlySG)
+    }, []);
 });
 
-const Stats = () => {
-    useEffect(() => {
-    const allStrokes = db.getStrokes()
-    const onlySG = allStrokes.map(t=>t.StrokesGained)
-    console.log('All SG Values', onlySG)
-  }, []);
-};
 
 export default Stats;
