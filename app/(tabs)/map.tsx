@@ -219,6 +219,7 @@ export default function HomeScreen() {
         console.log(`  Start Latitude: ${stroke.startLatitude}`);
         console.log(`  Start Longitude: ${stroke.startLongitude}`);
         console.log(`  Distance: ${stroke.distance}`);
+        console.log(`  Lie: ${stroke.lie}`);
         console.log(`  Golf Club ID: ${stroke.golfClubId}`);
         console.log(`  Player ID: ${stroke.playerId}`);
         console.log('-----------------------------');
