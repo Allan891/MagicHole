@@ -22,6 +22,7 @@ export const globalStateVar = create<Stroke>((set) => ({
   reset: () => set({ strokes: Array(18).fill(undefined) }),
 }));
 
+
 export const MODE = {
   test:false,
 };
@@ -33,4 +34,8 @@ export const HANDICAP = {
 
 export const someTextValue = {
   value : '',
+};
+
+export const settingsList = async (): Promise<[]> => {
+   return await db.getSettings();
 };

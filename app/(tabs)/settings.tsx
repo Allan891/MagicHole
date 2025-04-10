@@ -1,10 +1,10 @@
 // import { StyleSheet, View, ScrollView, SafeAreaView, Text,TouchableOpacity,Switch,Image } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import { globalStateVar,MODE, HANDICAP,someTextValue } from '../state/globalStateVar';
+import { globalStateVar,MODE, HANDICAP,someTextValue,settingsList } from '../state/globalStateVar';
 import db from '../db/db';
 import coursesJson  from "../../constants/courses";
-import React, { useState,useCallback } from 'react';
+import React, { useState,useCallback,useEffect } from 'react';
 import DropdownMenu, { MenuOption } from '../../components/DropdownMenu'; // Adjust the import path based on your project structure
 import { useRouter } from 'expo-router';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -22,6 +22,7 @@ import {
   Alert, 
   Button, 
   Linking,
+  Settings,
 } from 'react-native';
 // Define the type for the state
 interface FormState {
@@ -35,6 +36,24 @@ interface FormState {
 
 export default function Example() {
   // Set the state type to FormState
+  useEffect(() => {
+    const loadSettings = async () => {
+      const settings = await settingsList(); // this should return an array or an object
+      console.log('Settings', settings);
+      // Example: assuming `settings` is an object like
+      // { emailNotifications: true, pushNotifications: false, numericValue: "42", ... }
+      if (settings && typeof settings === 'object') {
+        setForm(prevForm => ({
+          ...prevForm,
+          ...settings,
+        }));
+      }
+    };
+
+    loadSettings();
+    
+  }, []);
+  
   const router = useRouter();
   const [form, setForm] = useState<FormState>({
   
@@ -50,7 +69,7 @@ export default function Example() {
   // GetSettings
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f8f8f8' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f8f8f8',marginTop: 25 }}>
       <View style={styles.header}>
         <View style={styles.headerAction}>
           <TouchableOpacity
@@ -78,7 +97,7 @@ export default function Example() {
             }}>
             <FeatherIcon
               color="#000"
-              name="check"
+              name="save"
               size={24} />
           </TouchableOpacity>
         </View>

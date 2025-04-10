@@ -157,8 +157,10 @@ class Database {
       try {
         const settings = await this.db.getAllAsync(
           'SELECT * FROM Settings;');
+          console.log('Settings fetched:', settings);
           const output = settings.reduce((acc, { setting, value }) => {
             acc[setting] = value
+            console.log('Acc', acc);
             return acc;
           }, {});          
           return output;
