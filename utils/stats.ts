@@ -106,30 +106,46 @@ export
     return sum / array.length;
 };
 
-export const generateStatTables = (): strokes[][]=>{
-    var strokeTables= [1,2,3];
-
-     db.getStrokes()
+export const generateStatTables = async (): strokes[][]=>{
+    let strokeTables= [1,2,3];
+    const strokes = await db.getStrokes();
+    //console.log('All strokes: ', strokes);
+    for (const stroke of strokes) {
+        console.log('Stroke: ', stroke.roundId);
+        let myRound = await db.getRoundById(stroke.roundId);
+        console.log('myRound:' , myRound);
+    }
+     /*db.getStrokes()
        .then((strokes) => {
        console.log('All strokes: ', strokes);
        strokes.forEach((stroke, index) => {
                console.log('Stroke: ', stroke);
-               const hole = getHole(db.getRoundById(stroke.roundId).courseId, stroke.holeId);
-               const distance = calculateDistance(stroke.startLatitude, stroke.startLongitude, hole.latitude, hole.longitude );
+               var myround;
+               db.getRoundById(stroke.roundId).then((round) => {
+                   console.log('round:' , round);
+                   myround = round;
+                   console.log('myround:' , myround);
+                      console.log('Getting Hole from course Id:',round.courseId,' and hole:', stroke.holeId);
+                      const hole = getHole(round.courseId, stroke.holeId);
+                      console.log('hole: ', hole)
+                      const distance = calculateDistance(stroke.startLatitude, stroke.startLongitude, hole.latitude, hole.longitude );
 
-               if (stroke.golfClubId == 0){
-                   strokeTables[3].append(stroke);
-               } // Club 0 will always be putter.
+                      if (stroke.golfClubId == 0){
+                          strokeTables[3].append(stroke);
+                      } // Club 0 will always be putter.
 
-               else if (distance < 50){
-                   strokeTables[2].append(stroke);
-               }
-               else if (stroke.lie = 0 && hole.par >= 4){
-                   strokeTables[0].append(stroke);
-               }
-               else{
-                   strokeTables[1].append(stroke);
-               }
+                      else if (distance < 50){
+                          strokeTables[2].append(stroke);
+                      }
+                      else if (stroke.lie = 0 && hole.par >= 4){
+                          strokeTables[0].append(stroke);
+                      }
+                      else{
+                          strokeTables[1].append(stroke);
+                      }
+               })
+               //const aaaa = db.getRoundById(stroke.roundId);
+
 
              });
            //strokeTables[1] = strokes; //ALL strokes are put in table as approach.
@@ -138,7 +154,7 @@ export const generateStatTables = (): strokes[][]=>{
        .catch((error) => {
        console.error('Error fetching strokes:', error);
        });
-
+*/
 
     return strokeTables
 
