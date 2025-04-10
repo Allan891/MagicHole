@@ -22,8 +22,10 @@ import { LocationObject } from 'expo-location';
 import { CoursePicker } from '@/components/CoursePicker';
 import courses from '@/constants/courses';
 import {calculateBearing, calculateDistance} from '@/utils';
+import {calculateStrokesGained,calculateRawSG} from '@/utils';
 import db from '../db/db';
 import { globalStateVar } from '../state/globalStateVar';
+import { setBackgroundColorAsync } from 'expo-system-ui';
 
 
 
@@ -39,6 +41,7 @@ export default function HomeScreen() {
   const [bearing, setBearing] = useState(0);
   const [currentHole, setCurrentHole] = useState<number>(0);
   const [currentStroke, setCurrentStroke] = useState<number>(0);
+  const [roundId, setRoundId] = useState<number | null>(null);
   const [strokeCoordinates, setStrokeCoordinates] = useState<LatLng[]>([]);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
   
@@ -66,7 +69,16 @@ export default function HomeScreen() {
 
 
 
-  const handleCourseChosen = (id) => {
+  const handleCourseChosen = async (id) => {
+    const newRound: Round = {
+      time: Date.now(), // Example time in ISO 8601 format
+      playerId: 999,      // Example player ID
+      courseId: id,      // Example course ID
+      handicap: 36         // Example handicap
+    };
+    const newRoundId = await db.createRound(newRound);
+    setRoundId(newRoundId);
+    console.log("New round id: ", newRoundId);
     const thisCourse = courses.find(a => a.id === id);
     setCourseObject(thisCourse);
     setSelectedCourse(thisCourse);
@@ -114,29 +126,36 @@ export default function HomeScreen() {
       // Get the previous stroke if it exists
       const previousStrokes = mapStrokes[currentHole];
       const previousStroke: Stroke = previousStrokes?.length > 0 ? previousStrokes[previousStrokes.length - 1] : null;
-
-      // Calculate distance if there's a previous stroke
-      if (previousStroke) {
-        console.log('=======================================');
-        console.log('Previous stroke: ', previousStroke);
-        const distance = previousStroke ? calculateDistance(previousStroke.startLatitude, previousStroke.startLongitude, latitude, longitude): 0;
-        console.log('Distance: ', distance);
-        previousStroke.distance = distance;
-        console.log('Updated previous stroke: ', previousStroke);
-        console.log('=======================================');
-        db.createStroke(previousStroke); // Save the previous stroke to the database
-        console.log('Saved previous stroke to database',);
-      }
       const thisStroke: Stroke = {
         holeId: currentHole,
-        roundId: 1,
+        roundId: roundId || 0,
         strokeNr: currentStroke,
         startLatitude: latitude,
         startLongitude: longitude,
         distance: 0, // Placeholder, calculate if needed
         golfClubId: 69, // Placeholder, update with actual golf club ID
         playerId: 999,
+        lie: 1, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.
+        strokesGained: 0
       };
+      // Calculate distance if there's a previous stroke
+      if (previousStroke) {
+        console.log('=======================================');
+        console.log('Previous stroke: ', previousStroke);
+        const distance = previousStroke ? Math.round(calculateDistance(previousStroke.startLatitude, previousStroke.startLongitude, latitude, longitude)): 0;
+        console.log('Distance: ', distance);
+        previousStroke.distance = distance;
+        previousStroke.strokesGained = calculateStrokesGained(previousStroke,thisStroke, holeCoords.latitude,holeCoords.longitude)
+        console.log('Updated previous stroke: ', previousStroke);
+        console.log('=======================================');
+        db.createStroke(previousStroke); // Save the previous stroke to the database
+        console.log('Saved previous stroke to database',);
+
+
+      }
+
+
+
       const updatedMapStrokes = [...mapStrokes];
         console.log(updatedMapStrokes);
         console.log('current hole: ',currentHole);

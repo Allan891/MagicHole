@@ -1,5 +1,5 @@
 
-export default courses = 
+const courses = 
 [
 {
   id: 0,
@@ -605,3 +605,5 @@ export default courses =
   },
   ]
 }]
+
+export default courses;
