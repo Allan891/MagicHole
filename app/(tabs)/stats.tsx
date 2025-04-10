@@ -13,13 +13,13 @@ const Stats = () => {
          db.getStrokes()
                .then((strokes) => {
                console.log('All strokes: ', strokes);
-
+                   const sGained = strokes.map(t=>t.strokesGained )
+                          console.log("sgained: ", sGained)
                })
                .catch((error) => {
                console.error('Error fetching strokes:', error);
                });
-       const sGained = strokes.map(t=>t.strokesGained )
-       console.log("sgained: ", sGained)
+
        }, []);
 
       return (
