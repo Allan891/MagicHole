@@ -107,12 +107,28 @@ export default function HistoryMap() {
           altitude: 0.02
         }}
       >
-        <Marker coordinate={teeCoords}>
+        {/* <Marker coordinate={teeCoords}>
           <MaterialIcons name="sports-golf" size={28} color="white" />
-        </Marker>
+        </Marker> */}
         <Marker coordinate={holeCoords}>
           <MaterialIcons name="golf-course" size={28} color="red" />
         </Marker>
+
+        {strokeCoordinates.slice(0,-1).map((coord, index) => (
+          <Marker 
+            key={`stroke-${index}`} 
+            coordinate={coord}
+          >
+            <MaterialIcons 
+              name="sports-golf" 
+              size={24} 
+              color={index === 0 ? "white" : "yellow"} // Customize colors
+            />
+              <ThemedText style={{ color: 'white', fontSize: 10 }}>
+                {index+1} {/* Optional: Show stroke number */}
+              </ThemedText>
+          </Marker>
+        ))}
 
         <Polyline
             coordinates={strokeCoordinates}
