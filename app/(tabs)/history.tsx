@@ -43,9 +43,9 @@ export default function History() {
     console.log("click")
   );
 
-
+  
   const getCourseTime = (timestamp) => {
-    const date = new Date(timestamp);
+    const date = new Date(parseInt(timestamp));
 
     return date.toLocaleDateString();  
   };

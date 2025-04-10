@@ -4,6 +4,7 @@ class FetchInfo{
     async getRoundData(roundId:number): Promise<[roundId: (number | undefined), courseId: (number | undefined), timeStamp: (number | undefined), strokesEachHole: ((number | null)[])]> {
         let round = await db.getRoundById(roundId);
         round = round[0];
+        console.log(round);
         const holes = await db.StrokeCountByRound(roundId);
         const strokes: (number | null)[] = [];
         for (const hole of holes) {

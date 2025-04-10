@@ -41,7 +41,6 @@ export default function HomeScreen() {
   const [bearing, setBearing] = useState(0);
   const [currentHole, setCurrentHole] = useState<number>(0);
   const [currentStroke, setCurrentStroke] = useState<number>(0);
-  const [roundId, setRoundId] = useState<number | null>(null);
   const [strokeCoordinates, setStrokeCoordinates] = useState<LatLng[]>([]);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
   
@@ -69,22 +68,14 @@ export default function HomeScreen() {
 
 
 
-  const handleCourseChosen = async (id) => {
-    const newRound: Round = {
-      time: Date.now(), // Example time in ISO 8601 format
-      playerId: 999,      // Example player ID
-      courseId: id,      // Example course ID
-      handicap: 36         // Example handicap
-    };
-    const newRoundId = await db.createRound(newRound);
-    setRoundId(newRoundId);
-    console.log("New round id: ", newRoundId);
+  const handleCourseChosen = (id) => {
     const thisCourse = courses.find(a => a.id === id);
     setCourseObject(thisCourse);
     setSelectedCourse(thisCourse);
     setCourseChosen(true);
     //setCurrentHole(1);
     console.log('thisCourse', thisCourse);
+    
     if (thisCourse){
       setBearing(  //set bearing for hole 0, since we dont switch holes here it doesnt happen automatically.
         calculateBearing(
@@ -128,7 +119,7 @@ export default function HomeScreen() {
       const previousStroke: Stroke = previousStrokes?.length > 0 ? previousStrokes[previousStrokes.length - 1] : null;
       const thisStroke: Stroke = {
         holeId: currentHole,
-        roundId: roundId || 0,
+        roundId: 1,
         strokeNr: currentStroke,
         startLatitude: latitude,
         startLongitude: longitude,
