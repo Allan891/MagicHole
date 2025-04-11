@@ -32,6 +32,7 @@ export const Stats = () => {
                });
                 */
         const fetchData = async () => {
+            console.log('Start Fetch Data');
             const strokeTables: stroke[][]  = await generateStatTables();
                     console.log(strokeTables);
                     console.log('WE ALMST DIT IT');
@@ -54,7 +55,7 @@ export const Stats = () => {
                     console.log('median: ',sGMedian);
                     console.log('WE DIT IT');
         }
-
+            console.log('Start Stats');
             fetchData();
             //.catch(console.error());
        }, []);
@@ -75,8 +76,8 @@ export const Stats = () => {
 
                         <Text style={styles.statsItemLabel}>Average</Text>
 
-                        {sGAverage && <Text style={styles.statsItemValue}>{sGAverage[index]}</Text>  }
-                      {!sGAverage && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                        {(sGAverage[index] && sGAverage[index]>-10) && <Text style={styles.statsItemValue}>{sGAverage[index]}</Text>  }
+                      {(!sGAverage[index] || sGAverage[index]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
                         <Text style={styles.statsItemLabel}>Median</Text>
 
                        {(sGMedian[index] && sGMedian[index]>-10) && <Text style={styles.statsItemValue}>{sGMedian[index]}</Text>  }
@@ -97,9 +98,9 @@ export const Stats = () => {
 
                           <Text style={styles.statsItemLabel}>Average</Text>
 
-                          {sGAverage && <Text style={styles.statsItemValue}>{sGAverage[index+2]}</Text>  }
-                        {!sGAverage && <Text style={styles.statsItemValue}>'N/A'</Text>}
-                          <Text style={styles.statsItemLabel}>Median</Text>
+                          {(sGAverage[index+2] && sGAverage[index]>-10) && <Text style={styles.statsItemValue}>{sGAverage[index +2]}</Text>  }
+                         {(!sGAverage[index+2] || sGAverage[index]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                               <Text style={styles.statsItemLabel}>Median</Text>
 
                         {(sGMedian[index+2] && sGMedian[index+2]>-10) && <Text style={styles.statsItemValue}>{sGMedian[index+2]}</Text>  }
                       {(!sGMedian[index+2] || sGMedian[index+2]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}

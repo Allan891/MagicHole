@@ -10,7 +10,7 @@ export
     return rvalue
   }
 
-  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number) => {
+export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number) => {
     if (slag.lie != 0 && slag.lie != 1 && slag.lie != 2 && slag.lie != 3 && slag.lie != 4){
       slag.lie = 1 //lie = 1 Equals "Fairway"
     }
@@ -68,7 +68,8 @@ export
 
 
         rvalue = firstSG + (DLeft - firstDistance)  / (secondDistance - firstDistance) * (secondSG - firstSG)
-        //console.log('Raw Strokes Gained: ', rvalue)
+
+        console.log('Distance: ', DLeft, ' Lie: ', slag.lie ,' Raw Strokes Gained: ', rvalue)
         return rvalue
     }
     console.log('sGDistanceGreen');
@@ -143,22 +144,23 @@ export const generateStatTables = async (): stroke[][] =>{
     let strokesApproach: stroke[] = [];
     let strokesChip: stroke[] = [];
     let strokesPutt: stroke[] = [];
-    console.log('strokesApproach: ', strokesApproach);
+    console.log('StrokeArrays Created');
     const strokes = await db.getStrokes();
-    //console.log('All strokes: ', strokes);
+    console.log('DB Data Loaded');
+    console.log('All strokes: ', strokes);
     for (const stroke of strokes) {
-        console.log('Stroke: ', stroke);
+        //console.log('Stroke: ', stroke);
         const myRound = await db.getRoundById(stroke.roundId);
         console.log('myRound:' , myRound.courseId);
         const hole = getHole(myRound.courseId, stroke.holeId)
         const par = getPar(myRound.courseId);
-        console.log('par: ', par);
+        //console.log('par: ', par);
         //const dbhole = async db.getHole
         const distance = calculateDistance(stroke.startLatitude, stroke.startLongitude, hole.greenMiddle.latitude, hole.greenMiddle.longitude );
         stroke.distance = distance;
         //let category = 0;
-        console.log('distance: ', distance);
-        console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
+        //console.log('distance: ', distance);
+        //console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
         if (stroke.golfClubId == 0){
           console.log('adding putt');
           strokesPutt.push(stroke);

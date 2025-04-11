@@ -29,9 +29,6 @@ export default function TabLayout() {
         <Tabs.Screen name="stats" options={{ title: 'Stats', tabBarIcon: ({ color }) => <MaterialIcons size={28} name="query-stats" color={color} />, // Change from "paperplane.fill"
               }} />
 
-         <Tabs.Screen name="summary" options={{ title: 'SummARY', headerShown: false,
-                                                                                        tabBarItemStyle: { title: 'no' ,display: "none" },tabBarIcon: ({ color }) => <MaterialIcons size={28} name="sports-score" color={color} />, // Change from "paperplane.fill"
-          }} />
         </Tabs>
     </ThemeProvider>
     
