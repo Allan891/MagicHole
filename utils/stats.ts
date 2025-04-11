@@ -117,16 +117,20 @@ export
     return sum / array.length;
 };
 
-export const getMedian = (arr: stroke[]): number => {
+export const getMedian = (arr: stroke[] | null): number => {
+  if (!arr || arr.length === 0 || arr[0].strokesGained == null) {
+    return -10; // Return a default value or handle the error as needed
+  }
   // 1. Extract values and sort numerically
-  console.log('1')
+  console.log('1');
   const values = arr
     .map(obj => obj.strokesGained)
     .sort((a, b) => a - b);
-  console.log('2')
+  console.log('2');
   // 2. Calculate median
   const mid = Math.floor(values.length / 2);
-console.log('3')
+  console.log('3');
+  console.log('values: ', values);
 
   return values.length % 2 !== 0
     ? values[mid]                 // Odd length: middle element
