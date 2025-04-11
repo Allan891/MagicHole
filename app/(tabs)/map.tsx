@@ -31,6 +31,15 @@ import { setBackgroundColorAsync } from 'expo-system-ui';
 
 export default function HomeScreen() {
 
+  const initialCourse = {
+    holes: [
+      {
+        greenMiddle: {latitude: 33.499457, longitude: -82.023461}, 
+        teeBack: {latitude: 33.499457, longitude: -82.023461}
+      }
+    ]
+  }
+
   const strokes = globalStateVar((state) => state.strokes);
   const setStroke = globalStateVar((state) => state.setStroke);
   const [mapStrokes, setMapStrokes] = useState<any[][]>([[]]);
@@ -50,7 +59,7 @@ export default function HomeScreen() {
   const [lon2, setLon2] = useState<number>(0);
 
 
-  const [courseObject, setCourseObject] = useState<Object>(courses[0]);
+  const [courseObject, setCourseObject] = useState<Object>(initialCourse);
   const [courseChosen, setCourseChosen] = useState<boolean>(false);
 
   const teeCoords = courseObject?.holes[currentHole].teeBack;
@@ -374,6 +383,8 @@ export default function HomeScreen() {
 
       }
 
+      {courseChosen &&
+
       <View style={{ width: '80%', height: 120, position: 'absolute', top: '10%', left: '10%', zIndex: 999999 }}>
       {currentHole == 0 && currentStroke == 0 &&
         <ThemedText style={{ textAlign: 'center', color: 'white'}} type="title">
@@ -398,6 +409,7 @@ export default function HomeScreen() {
          }
       </View>
 
+        }
       <MapView
 
         onUserLocationChange={updateLocation}
@@ -420,12 +432,17 @@ export default function HomeScreen() {
           zoom: zoomLevel,
         }}
       >
-        <Marker coordinate={teeCoords}>
-          <MaterialIcons name="sports-golf" size={28} color="white" />
-        </Marker>
-        <Marker coordinate={holeCoords}>
-          <MaterialIcons name="golf-course" size={28} color="red" />
-        </Marker>
+
+        {courseChosen &&
+        <>
+          <Marker coordinate={teeCoords}>
+            <MaterialIcons name="sports-golf" size={28} color="white" />
+          </Marker>
+          <Marker coordinate={holeCoords}>
+            <MaterialIcons name="golf-course" size={28} color="red" />
+          </Marker>
+        </>
+        }
 
         <Polyline
             coordinates={strokeCoordinates}
