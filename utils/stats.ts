@@ -3,10 +3,10 @@ import db from '../app/db/db';
 
 export
   const calculateStrokesGained = (StartSlag:Stroke , slutSlag:Stroke, latitude:number , longitude:number): number=>{
-    console.log('calc strokes gained start');
+    //console.log('calc strokes gained start');
     const rvalue = calculateRawSG(StartSlag,latitude,longitude) - 1 - calculateRawSG(slutSlag,latitude,longitude)
     //console.log("Strokes Gained: ", rvalue)
-    console.log('calc strokes gained end');
+    //console.log('calc strokes gained end');
     return rvalue
   }
 
@@ -71,30 +71,30 @@ export
         //console.log('Raw Strokes Gained: ', rvalue)
         return rvalue
     }
-    console.log('sGDistanceGreen');
+    //console.log('sGDistanceGreen');
     const sGDistanceGreen = sGdata.green.map(t=>t.Distance )
-    console.log('1');
+    //console.log('1');
     const DLeftGreen = calculateDistance(slag.startLatitude, slag.startLongitude,latitude,longitude)
 
-    console.log('2');
+    //console.log('2');
 
     const firstSGGreen = sGValues[indices[0]]
     const secondSGGreen = sGValues[indices[1]]
     //const firstSGGreen = sGdata.green["Green"][indices[0]]
     //const secondSGGreen = sGdata.green["Green"][indices[1]]
-    console.log('3');
+    //console.log('3');
     const firstDistanceGreen = sGDistanceGreen[indices[0]]
     const secondDistanceGreen = sGDistanceGreen[indices[1]]
-    console.log('4');
+    //console.log('4');
     //TODO:
     //Lägg till manuell inmatning där man pekar mot flaggan istället för GPS koordinater
 
     console.log('All Green Data Loaded');
     if (slag.lie = 4) // lie = 4 Equals "Green"
-            console.log('Green SG Calculation Started');
+            //console.log('Green SG Calculation Started');
             rvalue = firstSGGreen + (DLeftGreen - firstDistanceGreen)  / (secondDistanceGreen - firstDistanceGreen) * (secondSGGreen - firstSGGreen)
             //console.log('Raw Strokes Gained: ', rvalue)
-            console.log('Green SG Calculation Done');
+            //console.log('Green SG Calculation Done');
             return rvalue
 
  }
@@ -119,14 +119,14 @@ export
 
 export const getMedian = (arr: stroke[]): number => {
   // 1. Extract values and sort numerically
-  console.log('1')
+  //console.log('1')
   const values = arr
     .map(obj => obj.strokesGained)
     .sort((a, b) => a - b);
-  console.log('2')
+  //console.log('2')
   // 2. Calculate median
   const mid = Math.floor(values.length / 2);
-console.log('3')
+//console.log('3')
 
   return values.length % 2 !== 0
     ? values[mid]                 // Odd length: middle element
@@ -139,43 +139,43 @@ export const generateStatTables = async (): stroke[][] =>{
     let strokesApproach: stroke[] = [];
     let strokesChip: stroke[] = [];
     let strokesPutt: stroke[] = [];
-    console.log('strokesApproach: ', strokesApproach);
+    //console.log('strokesApproach: ', strokesApproach);
     const strokes = await db.getStrokes();
     //console.log('All strokes: ', strokes);
     for (const stroke of strokes) {
-        console.log('Stroke: ', stroke);
+        //console.log('Stroke: ', stroke);
         const myRound = await db.getRoundById(stroke.roundId);
-        console.log('myRound:' , myRound.courseId);
+        //console.log('myRound:' , myRound.courseId);
         const hole = getHole(myRound.courseId, stroke.holeId)
         const par = getPar(myRound.courseId);
-        console.log('par: ', par);
+        //console.log('par: ', par);
         //const dbhole = async db.getHole
         const distance = calculateDistance(stroke.startLatitude, stroke.startLongitude, hole.greenMiddle.latitude, hole.greenMiddle.longitude );
         stroke.distance = distance;
         //let category = 0;
-        console.log('distance: ', distance);
-        console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
+        //console.log('distance: ', distance);
+        //console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
         if (stroke.golfClubId == 0){
-          console.log('adding putt');
+          //console.log('adding putt');
           strokesPutt.push(stroke);
         } // Club 0 will always be putter.
 
         else if (distance < 50){
-          console.log('adding chip');
+          //console.log('adding chip');
           strokesChip.push(stroke);
         }
         else if (stroke.lie == 0 && par[stroke.holeId] >= 4){
-          console.log('adding tee');
+          //console.log('adding tee');
           strokesTee.push(stroke);
         }
         else{
-          console.log('adding approach');
+          //console.log('adding approach');
           strokesApproach.push(stroke);
           //console.log('stroketables1: ',strokesApproach);
         }
         //stroke.category = ....
     }
-    console.log('ALL STROKES CATEGORIZED');
+    //console.log('ALL STROKES CATEGORIZED');
     let returnValue: stroke[][] = [];
     returnValue.push(strokesTee);
 
