@@ -75,7 +75,19 @@ export default function HomeScreen() {
     longitudeDelta: 1 / 1000,
   };
 
+  const goToRegion = () => {
 
+    const newRegion = {
+      latitude: 33.497021,
+      longitude: -82.025367,
+      latitudeDelta: 1 / 1000,
+      longitudeDelta: 1 / 1000,
+    }
+
+    if (mapRef.current) {
+      mapRef.current.animateToRegion(newRegion, 100000); // 1000 ms = 1 second
+    }
+  };
 
 
   const handleCourseChosen = async (id) => {
@@ -411,7 +423,7 @@ export default function HomeScreen() {
 
         }
       <MapView
-
+        ref={mapRef}
         onUserLocationChange={updateLocation}
         scrollEnabled={!(LockedView)}
         rotateEnabled={!(LockedView)}
@@ -458,7 +470,7 @@ export default function HomeScreen() {
             strokeWidth={3}
           />
 
-        {test && location &&
+        {test && location && courseChosen &&
 
         <Marker coordinate={location}>
           <MaterialIcons name="person" size={28} color="white" />
