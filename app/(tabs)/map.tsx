@@ -246,6 +246,20 @@ export default function HomeScreen() {
     setCurrentStroke(current - 1);
   };
 
+  const updateMapStrokes = (hole: number) => {
+    const holeStrokes = mapStrokes[hole];
+    if (!holeStrokes) {
+      setStrokeCoordinates([]);
+      return;
+    }
+    
+    const newCoordinates = holeStrokes.map(item => ({
+      latitude: item.startLatitude,
+      longitude: item.startLongitude
+    }));
+    setStrokeCoordinates(newCoordinates);
+  }
+
   const nextHole = () => {
 
     if (currentHole + 1 >= courseObject.holes.length) {
@@ -537,25 +551,38 @@ export default function HomeScreen() {
 >
 
 
-  <View style={styles.strokeAdjusterRow}>
-  {/* <TouchableOpacity onPress={removeStroke}>
-  <MaterialIcons name="remove-circle-outline" size={36} color="black" />
-</TouchableOpacity> */}
+
+<View style={styles.strokeAdjusterRow}>
+<TouchableOpacity style={{opacity: currentHole == 0 ? 0.5 : 1}} 
+onPress={() => { 
+  currentHole === 0 ? setCurrentHole(0) : setCurrentHole(currentHole - 1);
+  updateMapStrokes(currentHole === 0 ? 0 : currentHole - 1);
+}
+  }
+>
+    <MaterialIcons name="remove-circle-outline" size={36} color="black" />
+</TouchableOpacity>
 
 
   <ThemedText style={styles.strokeCount}>
-    {(strokes[currentHole] ?? 0).toString()}
+    {(currentHole + 1).toString()}
   </ThemedText>
-{/* 
+
   <TouchableOpacity
+    style={{opacity: currentHole + 1 >= courseObject.holes.length ? 0.5 : 1}}
     onPress= {() => {
-      addStroke();
+      currentHole + 1 >= courseObject.holes.length ?
+      setCurrentHole(currentHole) :
+      setCurrentHole(currentHole + 1);
+
+      updateMapStrokes(currentHole + 1 >= courseObject.holes.length ? currentHole : currentHole + 1);
     }}
   >
     <MaterialIcons name="add-circle-outline" size={36} color="black" />
   </TouchableOpacity>
 </View>
 
+{/* 
 <View style={[styles.buttonRow, {flexDirection: 'column'}]}>
 {  location && currentStroke > 0 &&
          <ThemedText>Previous shot length:
@@ -586,8 +613,8 @@ export default function HomeScreen() {
       <ThemedText style={styles.holeOutText}>Next Hole</ThemedText>
     </View>)
   }
-  */}
-</View> 
+   */}
+{/* </View>  */}
 
 <View style={styles.buttonRow}>
   <ThemedText type="subtitle">{courseObject?.name}</ThemedText>
