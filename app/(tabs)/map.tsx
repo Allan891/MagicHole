@@ -44,11 +44,11 @@ export default function HomeScreen() {
   const [roundId, setRoundId] = useState<number | null>(null);
   const [strokeCoordinates, setStrokeCoordinates] = useState<LatLng[]>([]);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
-  
+
   const [LockedView, setLockedView] = useState<boolean>(false);
   const [lat2, setLat2] = useState<number>(0);
   const [lon2, setLon2] = useState<number>(0);
-  
+
 
   const [courseObject, setCourseObject] = useState<Object>(courses[0]);
   const [courseChosen, setCourseChosen] = useState<boolean>(false);
@@ -135,7 +135,7 @@ export default function HomeScreen() {
         lie: 1, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.
         strokesGained: 0
       };
-      if (currentStroke == 0){
+      if (currentStroke == 0){ //AUTO SETS LIE TO 0 = TEE IF FIRST STROKE OF HOLE, CAN PROBABLY STAY
         thisStroke.lie = 0
       }
       // Calculate distance if there's a previous stroke
@@ -146,10 +146,12 @@ export default function HomeScreen() {
         console.log('Distance: ', distance);
         console.log('Lie: ', previousStroke.lie);
         previousStroke.distance = distance;
+        // PLACEHOLDER TO CHANGE CLUB = Putter and Lie = Green if distance is short. Should be done by manual input when implemented instead.
         if (distance < 9) {
             previousStroke.golfClubId = 0;
             previousStroke.lie = 4;
         }
+        // END OF PLACEHOLDER
         console.log('bait');
         previousStroke.strokesGained = calculateStrokesGained(previousStroke, thisStroke, holeCoords.latitude,holeCoords.longitude)
         console.log('Updated previous stroke: ', previousStroke);
@@ -173,12 +175,12 @@ export default function HomeScreen() {
       const newArr = [...strokeCoordinates, { latitude, longitude }];
       console.log('newArr', newArr);
       setStrokeCoordinates(newArr);
-      
+
       const updatedStrokes = [...strokes];
-      
+
       setCurrentStroke(currentStroke + 1);
 
-      
+
       const currentScore = strokes[currentHole] || 0;
       setStroke(currentHole, currentScore + 1);
       if (test) updateTestLocation();
@@ -190,11 +192,11 @@ export default function HomeScreen() {
 
   const removeStroke = () => {
     const current = strokes[currentHole] || 0;
-    if (current === 0) return;     
+    if (current === 0) return;
     setStroke(currentHole, current - 1);
     const updated = [...mapStrokes];
     updated[currentHole] = updated[currentHole].slice(0, -1);
-    setMapStrokes(updated);    
+    setMapStrokes(updated);
     setCurrentStroke(current - 1);
   };
 
@@ -281,7 +283,7 @@ export default function HomeScreen() {
   if (test && !location) {
 
     updateTestLocation(teeCoords);
-    
+
   }
 
   const updateLocation = (event) => {
@@ -314,12 +316,12 @@ export default function HomeScreen() {
     //   if (!mapStrokes[currentHole]) return; // Ensure the array exists
 
     //   console.log('Strokes for this hole:', mapStrokes[currentHole])
-    
+
     //   const newStrokeCoordinates = mapStrokes[currentHole].map((stroke) => ({
     //     latitude: stroke.startLatitude,
     //     longitude: stroke.startLongitude,
     //   }));
-    
+
     //   console.log('newStrokeCoordinates', newStrokeCoordinates); // Debugging output
     //   setStrokeCoordinates(newStrokeCoordinates);
     // }, [mapStrokes, currentHole]);
@@ -367,7 +369,7 @@ export default function HomeScreen() {
     <View style={{ flex: 1 }}>
 
       {!courseChosen &&
-      
+
       <CoursePicker onChooseCourse={handleCourseChosen} />
 
       }
@@ -440,7 +442,7 @@ export default function HomeScreen() {
           />
 
         {test && location &&
-        
+
         <Marker coordinate={location}>
           <MaterialIcons name="person" size={28} color="white" />
         </Marker>
@@ -525,10 +527,10 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     paddingHorizontal: 16,
-    paddingTop: 30, 
+    paddingTop: 30,
     zIndex: 999,
   },
-  
+
   sheetHandle: {
     width: 50,
     height: 5,
@@ -538,7 +540,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 8,
   },
-  
+
   sheetTitle: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -556,9 +558,9 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'center', 
-    alignItems: 'center',     
-    gap: 12,                  
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 12,
     // marginTop: 12,
     // marginBottom: 44,
   },
@@ -567,15 +569,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
-    gap: 4, 
+    gap: 4,
   },
   strokeCount: {
     fontSize: 32,
     fontWeight: 'bold',
     color: 'black',
-    lineHeight: 38, 
+    lineHeight: 38,
     marginHorizontal: 24,
-    textAlignVertical: 'center', 
+    textAlignVertical: 'center',
     textAlign: 'center',
   },
   holeOutText: {
