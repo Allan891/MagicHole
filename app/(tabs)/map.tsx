@@ -138,7 +138,7 @@ export default function HomeScreen() {
       if (currentStroke == 0){ //AUTO SETS LIE TO 0 = TEE IF FIRST STROKE OF HOLE, CAN PROBABLY STAY
         thisStroke.lie = 0
       }
-      const distanceToFlag = previousStroke ? Math.round(calculateDistance(thisStroke.startLatitude, thisStroke.startLongitude, holeCoords.latitude, holeCoords.longitude)): 0;
+      const distanceToFlag = Math.round(calculateDistance(thisStroke.startLatitude, thisStroke.startLongitude, holeCoords.latitude, holeCoords.longitude));
       // PLACEHOLDER TO CHANGE CLUB = Putter and Lie = Green if distance is short. Should be done by manual input when implemented instead.
       if (distanceToFlag < 9) {
           thisStroke.golfClubId = 0;
