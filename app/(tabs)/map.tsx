@@ -45,6 +45,7 @@ export default function HomeScreen() {
   const strokes = globalStateVar((state) => state.strokes);
   const currentGlobalHole = globalStateVar((state) => state.currentHole);
   const setStroke = globalStateVar((state) => state.setStroke);
+  const resetScore = globalStateVar((state) => state.reset);
   const [mapStrokes, setMapStrokes] = useState<any[][]>([[]]);
   const mapRef = useRef<MapView | null>(null);
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
@@ -116,6 +117,9 @@ export default function HomeScreen() {
   }
 
   const handleCourseChosen = async (id) => {
+
+    resetScore();
+
     const newRound: Round = {
       time: Date.now(), // Example time in ISO 8601 format
       playerId: 999,      // Example player ID
