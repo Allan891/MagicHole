@@ -26,6 +26,8 @@ import {calculateStrokesGained,calculateRawSG} from '@/utils';
 import db from '../db/db';
 import { globalStateVar } from '../state/globalStateVar';
 import { setBackgroundColorAsync } from 'expo-system-ui';
+import { CircleButton } from '@/components/CircleButton';
+import { useRouter } from 'expo-router';
 
 
 
@@ -52,6 +54,7 @@ export default function HomeScreen() {
   const [currentStroke, setCurrentStroke] = useState<number>(0);
   const [roundId, setRoundId] = useState<number | null>(null);
   const [strokeCoordinates, setStrokeCoordinates] = useState<LatLng[]>([]);
+  const [holeFinished, setHoleFinished] = useState<boolean>(false);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
 
   const [LockedView, setLockedView] = useState<boolean>(false);
@@ -89,6 +92,13 @@ export default function HomeScreen() {
     }
   };
 
+  const router = useRouter();
+
+  const goToScorecard = () => {
+    router.push({
+      pathname: '/screens/score'
+    });
+  }
 
   const handleCourseChosen = async (id) => {
     const newRound: Round = {
@@ -240,9 +250,14 @@ export default function HomeScreen() {
   };
   const finishRound = () => {
     addStroke(true);
+    router.push({
+      pathname: '/screens/roundsummary',
+      params: { roundChosenId: roundId },
+    });
   }
   const finishHole = () => {
     addStroke(true);
+    setHoleFinished(true);
   }
 
   const ToggleLock = () => {
@@ -365,7 +380,7 @@ export default function HomeScreen() {
   if (Platform.OS == 'ios') {
     handleHeight = screenHeight * 0.12;
   } else {
-    handleHeight = screenHeight * 0.09;
+    handleHeight = screenHeight * 0.04;
   }
   const collapsedY = screenHeight - handleHeight;
 
@@ -445,16 +460,13 @@ export default function HomeScreen() {
         }}
       >
 
-        {courseChosen &&
-        <>
-          <Marker coordinate={teeCoords}>
+          <Marker coordinate={courseChosen ? teeCoords : {latitude: 0, longitude: 0}}>
             <MaterialIcons name="sports-golf" size={28} color="white" />
           </Marker>
-          <Marker coordinate={holeCoords}>
+          <Marker coordinate={courseChosen ? holeCoords : {latitude: 0, longitude: 0}}>
             <MaterialIcons name="golf-course" size={28} color="red" />
           </Marker>
-        </>
-        }
+        
 
         <Polyline
             coordinates={strokeCoordinates}
@@ -480,21 +492,40 @@ export default function HomeScreen() {
 
       </MapView>
 
-      <Animated.View
+        {courseChosen && 
+      <View style={styles.floatingButtonContainer}>
+      <CircleButton onPress={() => {addStroke()}} icon={"add-circle-outline"} label={"Add stroke"} ></CircleButton>
+      <CircleButton onPress={goToScorecard} icon={"sports-score"} label={"Scorecard"} ></CircleButton>
+      { currentHole + 1 >= courseObject.holes.length ? (
+        <CircleButton onPress={finishRound} icon={"check-circle-outline"} label={"Finish round"} ></CircleButton>
+      ) : (
+        <CircleButton onPress={nextHole} icon={"golf-course"} label={"Finish hole"} ></CircleButton>
+      )}
+      
+      </View>
+    }
+
+    
+<Animated.View
   {...panResponder.panHandlers}
-  style={[styles.bottomSheet, { transform: [{ translateY: sheetAnim }] }]}
+  style={[
+    styles.bottomSheet,
+    { transform: [{ translateY: sheetAnim }] },
+    !courseChosen && { display: 'none' }
+  ]}
 >
 
+
   <View style={styles.strokeAdjusterRow}>
-  <TouchableOpacity onPress={removeStroke}>
+  {/* <TouchableOpacity onPress={removeStroke}>
   <MaterialIcons name="remove-circle-outline" size={36} color="black" />
-</TouchableOpacity>
+</TouchableOpacity> */}
 
 
   <ThemedText style={styles.strokeCount}>
-    {strokes[currentHole] ?? 0}
+    {(strokes[currentHole] ?? 0).toString()}
   </ThemedText>
-
+{/* 
   <TouchableOpacity
     onPress= {() => {
       addStroke();
@@ -534,7 +565,8 @@ export default function HomeScreen() {
       <ThemedText style={styles.holeOutText}>Next Hole</ThemedText>
     </View>)
   }
-</View>
+  */}
+</View> 
 
 <View style={styles.buttonRow}>
   <ThemedText type="subtitle">{courseObject?.name}</ThemedText>
@@ -547,6 +579,17 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  floatingButtonContainer: {
+    position: 'absolute',
+    bottom: 40,
+    left: '10%',
+    width: '80%',
+    height: 50,
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
   bottomSheet: {
     position: 'absolute',
     left: 0,
