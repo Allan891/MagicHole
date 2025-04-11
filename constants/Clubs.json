@@ -1,0 +1,20 @@
+{
+  "clubs": [
+    { "Id": 0, "Label": "Putter"},
+    { "Id": 69, "Label": "Driver"},
+    { "Id": 1, "Label": "LW" },
+    { "Id": 2, "Label": "SW" },
+    { "Id": 3, "Label": "GW" },
+    { "Id": 4, "Label": "PW" },
+    { "Id": 5, "Label": "9i" },
+    { "Id": 6, "Label": "8i" },
+    { "Id": 7, "Label": "7i" },
+    { "Id": 8, "Label": "6i" },
+    { "Id": 9, "Label": "5i" },
+    { "Id": 10, "Label": "4i" },
+    { "Id": 11, "Label": "3h" },
+    { "Id": 12, "Label": "3w" }
+  ]
+
+}
+  

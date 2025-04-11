@@ -22,21 +22,11 @@ export default function TabLayout() {
                       tabBarItemStyle: {display: "none" },
                     }}
                   />
-<<<<<<< Updated upstream
-        <Tabs.Screen name="map" options={{headerShown: false, title: 'Map',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="golf-course" color={color} />, }} />
-        <Tabs.Screen name="score" options={{ title: 'Scorecard', tabBarIcon: ({ color }) => <MaterialIcons size={28} name="sports-score" color={color} />, // Change from "paperplane.fill"
-=======
-        <Tabs.Screen name="map" options={{headerShown: false, title: 'Play',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="golf-course" color={color} />, }} />
-        <Tabs.Screen name="score" options={{tabBarItemStyle: {display: "none" }, title: 'Scorecard', tabBarIcon: ({ color }) => <MaterialIcons size={28} name="sports-score" color={color} />, // Change from "paperplane.fill"
->>>>>>> Stashed changes
- }} />
-        <Tabs.Screen name="history" options={{headerShown: false, title: 'History',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="list" color={color} />, }} />
-        <Tabs.Screen name="stats" options={{ title: 'Stats', tabBarIcon: ({ color }) => <MaterialIcons size={28} name="query-stats" color={color} />, // Change from "paperplane.fill"
-              }} />
 
-         <Tabs.Screen name="summary" options={{ title: 'SummARY', headerShown: false,
-                                                                                        tabBarItemStyle: { title: 'no' ,display: "none" },tabBarIcon: ({ color }) => <MaterialIcons size={28} name="sports-score" color={color} />, // Change from "paperplane.fill"
-          }} />
+        <Tabs.Screen name="map" options={{headerShown: false, title: 'Play',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="golf-course" color={color} />, }} />
+        <Tabs.Screen name="history" options={{headerShown: false, title: 'History',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="list" color={color} />, }} />
+        <Tabs.Screen name="stats" options={{ title: 'Stats', tabBarIcon: ({ color }) => <MaterialIcons size={28} name="query-stats" color={color} />, }} />
+        <Tabs.Screen name="summary" options={{ title: 'SummARY', headerShown: false, tabBarItemStyle: { title: 'no' ,display: "none" },tabBarIcon: ({ color }) => <MaterialIcons size={28} name="sports-score" color={color} />, }} />
         </Tabs>
     </ThemeProvider>
     
