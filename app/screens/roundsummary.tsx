@@ -4,61 +4,60 @@ import { ThemedText } from '@/components/ThemedText';
 import { globalStateVar } from '../state/globalStateVar';
 import courses from '@/constants/courses';
 import { HoleOverview } from '@/components/HoleOverview';
-import {getPar} from '@/utils';
+import {getCourse} from '@/utils';
 import db from '../db/dbParameterCalls';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Scorecard } from '@/components/Scorecard';
 
 
 
-export default function History() {
-  const roundsexample = [
-    {id:1,courseid:1, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9]},
-    {id:2,courseid:2, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9]},
-    {id:3,courseid:3, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9]},
-    {id:4,courseid:4, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9]},
-    {id:5,courseid:5, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9]},
-    {id:6,courseid:1, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9]},
-    {id:7,courseid:2, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9,4,5,6,6,9]},
-    {id:8,courseid:3, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9,2,5,4,6,3,5,6,8,9]},
-    {id:9,courseid:4, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9,2,5,4,6,3,5,6,8,9]},
-    {id:10,courseid:5, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9,2,5,4,6,3,5,6,8,9]}
-  ];
+export default function RoundSummary() {
 
-  const [rounds, setRounds] = useState<Object[]>([]);
+  const { roundChosenId } = useLocalSearchParams();
+
+  const [roundData, setRoundData] = useState<Object | undefined>(undefined);
+  const [simpleRoundData, setSimpleRoundData] = useState<Object | undefined>(undefined);
+  const [course, setCourse] = useState<Object | undefined>(undefined);
 
   const router = useRouter();
   
   useEffect(() => {
-
-    async function updateRounds() {
-      const rounds2 = await db.getLatestRoundsData(999, 25);
-      console.log('db rounds: ', rounds2);
-      setRounds(rounds2);
+    async function updateRoundData() {
+      const thisRoundData = await db.getRoundDetails(roundChosenId);
+      setRoundData(thisRoundData);
+      console.log('thisRoundData', thisRoundData)
+      const thisCourse = getCourse(thisRoundData.round?.courseId);
+      setCourse(thisCourse);
+      const thisSimpleRoundData = await db.getRoundData(roundChosenId);
+      setSimpleRoundData(thisSimpleRoundData);
     }
     
-    updateRounds();
+    updateRoundData();
     
-
     }, []);
 
-  const onChooseRound = async (id) => {
+  const onChooseHole = async (index) => {
+
+    console.log('Strokes?', roundData?.strokes.filter(a => a.holeId == index))
+
+    let holeData = {
+      userStrokes: roundData?.strokes.filter(a => a.holeId == index), 
+      hole: course?.holes[index]
+    }
+
+    holeData = JSON.stringify(holeData);
+
     router.push({
-      pathname: '/screens/roundsummary',
-      params: { roundChosenId: id },
+      pathname: '/screens/historymap',
+      params: { holeData, courseId: course?.id, holeIndex: index },
     });
   };
 
-
   const getCourseTime = (timestamp) => {
-    const date = new Date(parseInt(timestamp));
+    const date = new Date(timestamp);
 
     return date.toLocaleDateString();  
-  };
-
-
-  const getCourseName = (courseId) => {
-    return courses.find(a => a.id === courseId)?.name;
   };
 
   const getCourseTotal = (par, strokes) => {
@@ -69,17 +68,13 @@ export default function History() {
     return diff;
   };  
 
-    const renderRound = ({ item }) => (
+    const renderHole = ({ item, index }) => (
       console.log(item.name),
-      <View style={styles.courseItem}>
-        <TouchableOpacity onPress={() => onChooseRound(item.roundId)}>
-          <ThemedText style={styles.courseTotal}>{getCourseTotal(getPar(item.courseid),item.strokes)}</ThemedText>
-          <ThemedText style={styles.courseText}>{getCourseName(item.courseid)}</ThemedText>
-          <ThemedText>{getCourseTime(item.timestamp)}</ThemedText>
-          <View style={{flex: 1}}>
-            <HoleOverview holeData={item.strokes} courseId={item.courseid}/>
-          </View>
-
+      <View style={styles.holeItem}>
+        <TouchableOpacity style={styles.holeItemInner} onPress={() => onChooseHole(index)}>
+          <ThemedText style={{fontWeight: 'bold'}}>Hole {index + 1}:</ThemedText>
+          <ThemedText>{simpleRoundData?.strokes[index]}</ThemedText>
+          <ThemedText>{course?.par[index]} (par)</ThemedText>
         </TouchableOpacity>
       </View>
 
@@ -89,12 +84,9 @@ export default function History() {
 
     <ThemedView style={styles.container}>
             <ThemedText style={styles.title}>History</ThemedText>
-
-      <FlatList
-              data={rounds}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={renderRound}
-            />
+            {simpleRoundData?.strokes?.length && 
+              <Scorecard handlePress={onChooseHole} strokes={simpleRoundData?.strokes} courseId={course?.id} />
+            }
     </ThemedView>
   );
 }
@@ -151,10 +143,14 @@ const styles = StyleSheet.create({
     color: 'black',
     borderRadius: 4,
   },
-  courseItem: {
+  holeItem: {
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#ddd'
+  },
+  holeItemInner: {
+    flexDirection: 'row',
+    gap: 10
   },
   courseText: {
     fontSize: 18,

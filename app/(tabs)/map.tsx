@@ -83,7 +83,6 @@ export default function HomeScreen() {
     setCourseObject(thisCourse);
     setSelectedCourse(thisCourse);
     setCourseChosen(true);
-    //setCurrentHole(1);
     console.log('thisCourse', thisCourse);
     if (thisCourse){
       setBearing(  //set bearing for hole 0, since we dont switch holes here it doesnt happen automatically.
@@ -118,12 +117,10 @@ export default function HomeScreen() {
 
   };
 
-  const addStroke = () => {
+  const addStroke = (lastHole = false) => {
     if (location) {
 
-      const { latitude, longitude } = location;
-      // const thisStroke = { latitude, longitude, strokeNumber: currentStroke };
-      // Get the previous stroke if it exists
+      const { latitude, longitude } = lastHole? courseObject.holes[currentHole].greenMiddle : location;
       const previousStrokes = mapStrokes[currentHole];
       const previousStroke: Stroke = previousStrokes?.length > 0 ? previousStrokes[previousStrokes.length - 1] : null;
       let thisStroke: Stroke = {
@@ -162,9 +159,7 @@ export default function HomeScreen() {
 
 
       }
-
-
-
+      if(lastHole) return;
       const updatedMapStrokes = [...mapStrokes];
         console.log(updatedMapStrokes);
         console.log('current hole: ',currentHole);
@@ -188,8 +183,6 @@ export default function HomeScreen() {
       setStroke(currentHole, currentScore + 1);
       if (test) updateTestLocation();
 
-      //console.log(updatedMapStrokes);
-      //console.log(mapStrokes[currentHole][currentStroke-1]);
     } else {
       Alert.alert('Error: No location data');
     }
@@ -197,71 +190,24 @@ export default function HomeScreen() {
 
   const removeStroke = () => {
     const current = strokes[currentHole] || 0;
-    if (current === 0) return; 
-
-    
+    if (current === 0) return;     
     setStroke(currentHole, current - 1);
-
-    
     const updated = [...mapStrokes];
     updated[currentHole] = updated[currentHole].slice(0, -1);
-    setMapStrokes(updated);
-
-    
+    setMapStrokes(updated);    
     setCurrentStroke(current - 1);
   };
 
   const nextHole = () => {
-    if (test){
-      db.getStrokes()
-      .then((strokes) => {
-      console.log('All strokes:');
-      strokes.forEach((stroke, index) => {
-        console.log(`Stroke ${index + 1}:`);
-        console.log(`  Hole ID: ${stroke.holeId}`);
-        console.log(`  Round ID: ${stroke.roundId}`);
-        console.log(`  Stroke Number: ${stroke.strokeNr}`);
-        console.log(`  Start Latitude: ${stroke.startLatitude}`);
-        console.log(`  Start Longitude: ${stroke.startLongitude}`);
-        console.log(`  Distance: ${stroke.distance}`);
-        console.log(`  Lie: ${stroke.lie}`);
-        console.log(`  Golf Club ID: ${stroke.golfClubId}`);
-        console.log(`  Player ID: ${stroke.playerId}`);
-        console.log('-----------------------------');
-      });
-      })
-      .catch((error) => {
-      console.error('Error fetching strokes:', error);
-      });
-    } 
+
     if (currentHole + 1 >= courseObject.holes.length) {
-      //alert(`Round complete! Total strokes: ${playerScores.reduce((a, b) => a + b, 0)}`);
       return;
     }
+    finishHole();
     setCurrentHole(currentHole + 1);
     setCurrentStroke(0); // This will make the first stroke for the new hole be 1
     setStrokeCoordinates([]); // Reset map strokes
 
-    // // Add a stroke 0 for the new hole
-    // const newStroke: Stroke = {
-    //   holeId: currentHole + 1, // New hole ID
-    //   roundId: 1, // Assuming round ID is 1
-    //   strokeNr: 0, // Stroke number 0
-    //   startLatitude: courseObject.holes[currentHole + 1].teeBack.latitude,
-    //   startLongitude: courseObject.holes[currentHole + 1].teeBack.longitude,
-    //   distance: 0, // Placeholder for distance
-    //   golfClubId: 69, // Placeholder, update with actual golf club ID
-    //   playerId: 999, // Placeholder, update with actual player ID
-    // };
-    
-    // // Update mapStrokes with the new stroke
-    // const updatedMapStrokes = [...mapStrokes];
-
-    // // updatedMapStrokes[currentHole + 1] = []; // Create new array for the new hole
-    
-    // setMapStrokes(updatedMapStrokes);
-
-    
     if (test) {
       setLocation(null);
       updateTestLocation(courseObject.holes[currentHole + 1].teeBack, courseObject.holes[currentHole + 1].greenMiddle);
@@ -269,6 +215,12 @@ export default function HomeScreen() {
     const distance = calculateDistance(courseObject.holes[currentHole + 1].teeBack.latitude,courseObject.holes[currentHole + 1].teeBack.longitude, courseObject.holes[currentHole + 1].greenMiddle.latitude, courseObject.holes[currentHole + 1].greenMiddle.longitude)
     adjustZoom(distance);
   };
+  const finishRound = () => {
+    addStroke(true);
+  }
+  const finishHole = () => {
+    addStroke(true);
+  }
 
   const ToggleLock = () => {
         setLockedView (!(LockedView));
@@ -535,12 +487,22 @@ export default function HomeScreen() {
          }</View>
 
 <View style={styles.buttonRow}>
+  {
+    currentHole + 1 >= courseObject.holes.length ? (
+    <View style={{ alignItems: 'center' }}>
+      <TouchableOpacity onPress={finishRound}>
+        <MaterialIcons name="check-circle-outline" size={30} color="black" />
+      </TouchableOpacity>
+      <ThemedText style={styles.holeOutText}>Finish Round</ThemedText>
+    </View>
+  ) : (
   <View style={{ alignItems: 'center' }}>
-    <TouchableOpacity onPress={nextHole}>
-      <MaterialIcons name="golf-course" size={30} color="black" />
-    </TouchableOpacity>
-    <ThemedText style={styles.holeOutText}>Next Hole</ThemedText>
-  </View>
+      <TouchableOpacity onPress={nextHole}>
+        <MaterialIcons name="golf-course" size={30} color="black" />
+      </TouchableOpacity>
+      <ThemedText style={styles.holeOutText}>Next Hole</ThemedText>
+    </View>)
+  }
 </View>
 
 <View style={styles.buttonRow}>
