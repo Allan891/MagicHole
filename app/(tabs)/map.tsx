@@ -407,9 +407,11 @@ export default function HomeScreen() {
   // Update bearing when hole changes
 
   useEffect(() => {
+    if(!courseChosen) return;
     changeHole(currentGlobalHole);
     router.back();
   }, [currentGlobalHole]);
+  
 
   useEffect(() => {
     setBearing(
