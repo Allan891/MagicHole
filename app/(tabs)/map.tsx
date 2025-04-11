@@ -221,14 +221,14 @@ export default function HomeScreen() {
       console.log('newArr', newArr);
       setStrokeCoordinates(newArr);
 
-      const updatedStrokes = [...strokes];
+      
 
+      if(lastStroke) return;
       setCurrentStroke(currentStroke + 1);
 
 
       const currentScore = strokes[currentHole] || 0;
       setStroke(currentHole, currentScore + 1);
-      if(lastStroke) return;
       if (test) updateTestLocation();
 
     } else {
