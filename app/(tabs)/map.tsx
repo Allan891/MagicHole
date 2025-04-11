@@ -43,6 +43,7 @@ export default function HomeScreen() {
   }
 
   const strokes = globalStateVar((state) => state.strokes);
+  const currentGlobalHole = globalStateVar((state) => state.currentHole);
   const setStroke = globalStateVar((state) => state.setStroke);
   const [mapStrokes, setMapStrokes] = useState<any[][]>([[]]);
   const mapRef = useRef<MapView | null>(null);
@@ -246,6 +247,29 @@ export default function HomeScreen() {
     setCurrentStroke(current - 1);
   };
 
+  const changeHole = (hole: number) => {
+
+    if (hole < 0 ) return;
+    if (hole >= courseObject.holes.length) return;
+
+    setCurrentHole(hole);
+    updateMapStrokes(hole);
+
+  }
+
+  const updateMapStrokes = (hole: number) => {
+    const holeStrokes = mapStrokes[hole];
+    if (!holeStrokes) {
+      setStrokeCoordinates([]);
+      return;
+    }
+    const newCoordinates = holeStrokes.map(item => ({
+      latitude: item.startLatitude,
+      longitude: item.startLongitude
+    }));
+    setStrokeCoordinates(newCoordinates);
+  }
+
   const nextHole = () => {
 
     if (currentHole + 1 >= courseObject.holes.length) {
@@ -381,6 +405,12 @@ export default function HomeScreen() {
     // }, [mapStrokes, currentHole]);
 
   // Update bearing when hole changes
+
+  useEffect(() => {
+    changeHole(currentGlobalHole);
+    router.back();
+  }, [currentGlobalHole]);
+
   useEffect(() => {
     setBearing(
       calculateBearing(
@@ -537,25 +567,33 @@ export default function HomeScreen() {
 >
 
 
-  <View style={styles.strokeAdjusterRow}>
-  {/* <TouchableOpacity onPress={removeStroke}>
-  <MaterialIcons name="remove-circle-outline" size={36} color="black" />
-</TouchableOpacity> */}
+
+<View style={styles.strokeAdjusterRow}>
+<TouchableOpacity style={{opacity: currentHole == 0 ? 0.5 : 1}} 
+onPress={() => { 
+  changeHole(currentHole - 1);
+}
+  }
+>
+    <MaterialIcons name="remove-circle-outline" size={36} color="black" />
+</TouchableOpacity>
 
 
   <ThemedText style={styles.strokeCount}>
-    {(strokes[currentHole] ?? 0).toString()}
+    {(currentHole + 1).toString()}
   </ThemedText>
-{/* 
+
   <TouchableOpacity
+    style={{opacity: currentHole + 1 >= courseObject.holes.length ? 0.5 : 1}}
     onPress= {() => {
-      addStroke();
+      changeHole(currentHole + 1);
     }}
   >
     <MaterialIcons name="add-circle-outline" size={36} color="black" />
   </TouchableOpacity>
 </View>
 
+{/* 
 <View style={[styles.buttonRow, {flexDirection: 'column'}]}>
 {  location && currentStroke > 0 &&
          <ThemedText>Previous shot length:
@@ -586,8 +624,8 @@ export default function HomeScreen() {
       <ThemedText style={styles.holeOutText}>Next Hole</ThemedText>
     </View>)
   }
-  */}
-</View> 
+   */}
+{/* </View>  */}
 
 <View style={styles.buttonRow}>
   <ThemedText type="subtitle">{courseObject?.name}</ThemedText>
