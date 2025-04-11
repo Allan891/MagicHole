@@ -5,10 +5,14 @@ type Stroke = {
   setSelectedCourse: (course: any) => void;
   strokes: number[];
   setStroke: (holeIndex: number, value: number) => void;
+  currentHole: number;
+  setCurrentHole: (hole: number) => void;
   reset: () => void;
 };
 
 export const globalStateVar = create<Stroke>((set) => ({
+  currentHole: 0,
+  setCurrentHole: (hole) => set({ currentHole: hole }),
   selectedCourse: null,
   setSelectedCourse: (course) => set({ selectedCourse: course }),
   strokes: Array(18).fill(undefined),

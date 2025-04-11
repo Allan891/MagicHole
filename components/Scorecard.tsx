@@ -70,8 +70,9 @@ export function Scorecard({strokes, courseId, handlePress}) {
 
         <ThemedText style={styles.section}>Front 9</ThemedText>
         {courseObject.holes.slice(0, 9).map((_, i) => renderRow(i))}
-
-        <ThemedText style={styles.section}>Back 9</ThemedText>
+        {courseObject.holes.length > 9 &&
+          <ThemedText style={styles.section}>Back 9</ThemedText>
+        }
         {courseObject.holes.slice(9, 18).map((_, i) => renderRow(i + 9))}
 
         <View style={[styles.row, { marginTop: 16 }]}>

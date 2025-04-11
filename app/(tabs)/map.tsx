@@ -43,6 +43,7 @@ export default function HomeScreen() {
   }
 
   const strokes = globalStateVar((state) => state.strokes);
+  const currentGlobalHole = globalStateVar((state) => state.currentHole);
   const setStroke = globalStateVar((state) => state.setStroke);
   const [mapStrokes, setMapStrokes] = useState<any[][]>([[]]);
   const mapRef = useRef<MapView | null>(null);
@@ -246,13 +247,22 @@ export default function HomeScreen() {
     setCurrentStroke(current - 1);
   };
 
+  const changeHole = (hole: number) => {
+
+    if (hole < 0 ) return;
+    if (hole >= courseObject.holes.length) return;
+
+    setCurrentHole(hole);
+    updateMapStrokes(hole);
+
+  }
+
   const updateMapStrokes = (hole: number) => {
     const holeStrokes = mapStrokes[hole];
     if (!holeStrokes) {
       setStrokeCoordinates([]);
       return;
     }
-    
     const newCoordinates = holeStrokes.map(item => ({
       latitude: item.startLatitude,
       longitude: item.startLongitude
@@ -395,6 +405,12 @@ export default function HomeScreen() {
     // }, [mapStrokes, currentHole]);
 
   // Update bearing when hole changes
+
+  useEffect(() => {
+    changeHole(currentGlobalHole);
+    router.back();
+  }, [currentGlobalHole]);
+
   useEffect(() => {
     setBearing(
       calculateBearing(
@@ -555,8 +571,7 @@ export default function HomeScreen() {
 <View style={styles.strokeAdjusterRow}>
 <TouchableOpacity style={{opacity: currentHole == 0 ? 0.5 : 1}} 
 onPress={() => { 
-  currentHole === 0 ? setCurrentHole(0) : setCurrentHole(currentHole - 1);
-  updateMapStrokes(currentHole === 0 ? 0 : currentHole - 1);
+  changeHole(currentHole - 1);
 }
   }
 >
@@ -571,11 +586,7 @@ onPress={() => {
   <TouchableOpacity
     style={{opacity: currentHole + 1 >= courseObject.holes.length ? 0.5 : 1}}
     onPress= {() => {
-      currentHole + 1 >= courseObject.holes.length ?
-      setCurrentHole(currentHole) :
-      setCurrentHole(currentHole + 1);
-
-      updateMapStrokes(currentHole + 1 >= courseObject.holes.length ? currentHole : currentHole + 1);
+      changeHole(currentHole + 1);
     }}
   >
     <MaterialIcons name="add-circle-outline" size={36} color="black" />
