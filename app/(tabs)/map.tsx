@@ -123,7 +123,7 @@ export default function HomeScreen() {
       const { latitude, longitude } = lastHole? courseObject.holes[currentHole].greenMiddle : location;
       const previousStrokes = mapStrokes[currentHole];
       const previousStroke: Stroke = previousStrokes?.length > 0 ? previousStrokes[previousStrokes.length - 1] : null;
-      const thisStroke: Stroke = {
+      let thisStroke: Stroke = {
         holeId: currentHole,
         roundId: roundId || 0,
         strokeNr: currentStroke,
@@ -135,14 +135,23 @@ export default function HomeScreen() {
         lie: 1, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.
         strokesGained: 0
       };
+      if (currentStroke == 0){
+        thisStroke.lie = 0
+      }
       // Calculate distance if there's a previous stroke
       if (previousStroke) {
         console.log('=======================================');
         console.log('Previous stroke: ', previousStroke);
         const distance = previousStroke ? Math.round(calculateDistance(previousStroke.startLatitude, previousStroke.startLongitude, latitude, longitude)): 0;
         console.log('Distance: ', distance);
+        console.log('Lie: ', previousStroke.lie);
         previousStroke.distance = distance;
-        previousStroke.strokesGained = calculateStrokesGained(previousStroke,thisStroke, holeCoords.latitude,holeCoords.longitude)
+        if (distance < 9) {
+            previousStroke.golfClubId = 0;
+            previousStroke.lie = 4;
+        }
+        console.log('bait');
+        previousStroke.strokesGained = calculateStrokesGained(previousStroke, thisStroke, holeCoords.latitude,holeCoords.longitude)
         console.log('Updated previous stroke: ', previousStroke);
         console.log('=======================================');
         db.createStroke(previousStroke); // Save the previous stroke to the database
@@ -190,7 +199,7 @@ export default function HomeScreen() {
   };
 
   const nextHole = () => {
-    
+
     if (currentHole + 1 >= courseObject.holes.length) {
       return;
     }
