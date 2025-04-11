@@ -71,6 +71,20 @@ export default function HomeScreen() {
   const latitude = (teeCoords.latitude + holeCoords.latitude) / 2;
   const longitude = (teeCoords.longitude + holeCoords.longitude) / 2;
 
+  const resetState = () => {
+    setCurrentHole(0);
+    setCurrentStroke(0);
+    setMapStrokes([[]]);
+    setStrokeCoordinates([]);
+    setCourseChosen(false);
+    setLocation(null);
+    setDistanceLeft(null);
+    setZoomLevel(18);
+    setBearing(0);
+    setRoundId(null);
+    setCourseObject(initialCourse);
+  };
+
   const initialRegion = {
     latitude,
     longitude,
@@ -148,10 +162,10 @@ export default function HomeScreen() {
 
   };
 
-  const addStroke = (lastHole = false) => {
+  const addStroke = (lastStroke = false) => {
     if (location) {
 
-      const { latitude, longitude } = lastHole? courseObject.holes[currentHole].greenMiddle : location;
+      const { latitude, longitude } = lastStroke ? courseObject.holes[currentHole].greenMiddle : location;
       const previousStrokes = mapStrokes[currentHole];
       const previousStroke: Stroke = previousStrokes?.length > 0 ? previousStrokes[previousStrokes.length - 1] : null;
       let thisStroke: Stroke = {
@@ -192,7 +206,7 @@ export default function HomeScreen() {
 
 
       }
-      if(lastHole) return;
+      
       const updatedMapStrokes = [...mapStrokes];
         console.log(updatedMapStrokes);
         console.log('current hole: ',currentHole);
@@ -214,6 +228,7 @@ export default function HomeScreen() {
 
       const currentScore = strokes[currentHole] || 0;
       setStroke(currentHole, currentScore + 1);
+      if(lastStroke) return;
       if (test) updateTestLocation();
 
     } else {
@@ -236,10 +251,11 @@ export default function HomeScreen() {
     if (currentHole + 1 >= courseObject.holes.length) {
       return;
     }
-    finishHole();
+    
     setCurrentHole(currentHole + 1);
     setCurrentStroke(0); // This will make the first stroke for the new hole be 1
     setStrokeCoordinates([]); // Reset map strokes
+    setHoleFinished(false);
 
     if (test) {
       setLocation(null);
@@ -248,12 +264,14 @@ export default function HomeScreen() {
     const distance = calculateDistance(courseObject.holes[currentHole + 1].teeBack.latitude,courseObject.holes[currentHole + 1].teeBack.longitude, courseObject.holes[currentHole + 1].greenMiddle.latitude, courseObject.holes[currentHole + 1].greenMiddle.longitude)
     adjustZoom(distance);
   };
+  
   const finishRound = () => {
     addStroke(true);
     router.push({
       pathname: '/screens/roundsummary',
       params: { roundChosenId: roundId },
     });
+    resetState();
   }
   const finishHole = () => {
     addStroke(true);
@@ -494,12 +512,15 @@ export default function HomeScreen() {
 
         {courseChosen && 
       <View style={styles.floatingButtonContainer}>
-      <CircleButton onPress={() => {addStroke()}} icon={"add-circle-outline"} label={"Add stroke"} ></CircleButton>
+      <CircleButton disabled={holeFinished} onPress={() => {addStroke()}} icon={"add-circle-outline"} label={"Add stroke"} ></CircleButton>
       <CircleButton onPress={goToScorecard} icon={"sports-score"} label={"Scorecard"} ></CircleButton>
       { currentHole + 1 >= courseObject.holes.length ? (
         <CircleButton onPress={finishRound} icon={"check-circle-outline"} label={"Finish round"} ></CircleButton>
       ) : (
-        <CircleButton onPress={nextHole} icon={"golf-course"} label={"Finish hole"} ></CircleButton>
+        holeFinished ? 
+          <CircleButton onPress={nextHole} icon={"navigate-next"} label={"Next hole"} ></CircleButton>
+        :
+          <CircleButton disabled={currentStroke == 0} onPress={finishHole} icon={"golf-course"} label={"Finish hole"} ></CircleButton>
       )}
       
       </View>
