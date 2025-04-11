@@ -71,6 +71,20 @@ export default function HomeScreen() {
   const latitude = (teeCoords.latitude + holeCoords.latitude) / 2;
   const longitude = (teeCoords.longitude + holeCoords.longitude) / 2;
 
+  const resetState = () => {
+    setCurrentHole(0);
+    setCurrentStroke(0);
+    setMapStrokes([[]]);
+    setStrokeCoordinates([]);
+    setCourseChosen(false);
+    setLocation(null);
+    setDistanceLeft(null);
+    setZoomLevel(18);
+    setBearing(0);
+    setRoundId(null);
+    setCourseObject(initialCourse);
+  };
+
   const initialRegion = {
     latitude,
     longitude,
@@ -257,6 +271,7 @@ export default function HomeScreen() {
       pathname: '/screens/roundsummary',
       params: { roundChosenId: roundId },
     });
+    resetState();
   }
   const finishHole = () => {
     addStroke(true);
@@ -497,7 +512,7 @@ export default function HomeScreen() {
 
         {courseChosen && 
       <View style={styles.floatingButtonContainer}>
-      <CircleButton onPress={() => {addStroke()}} icon={"add-circle-outline"} label={"Add stroke"} ></CircleButton>
+      <CircleButton disabled={holeFinished} onPress={() => {addStroke()}} icon={"add-circle-outline"} label={"Add stroke"} ></CircleButton>
       <CircleButton onPress={goToScorecard} icon={"sports-score"} label={"Scorecard"} ></CircleButton>
       { currentHole + 1 >= courseObject.holes.length ? (
         <CircleButton onPress={finishRound} icon={"check-circle-outline"} label={"Finish round"} ></CircleButton>
@@ -505,7 +520,7 @@ export default function HomeScreen() {
         holeFinished ? 
           <CircleButton onPress={nextHole} icon={"navigate-next"} label={"Next hole"} ></CircleButton>
         :
-          <CircleButton onPress={finishHole} icon={"golf-course"} label={"Finish hole"} ></CircleButton>
+          <CircleButton disabled={currentStroke == 0} onPress={finishHole} icon={"golf-course"} label={"Finish hole"} ></CircleButton>
       )}
       
       </View>
