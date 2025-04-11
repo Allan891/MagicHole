@@ -1,11 +1,10 @@
 // import { StyleSheet, View, ScrollView, SafeAreaView, Text,TouchableOpacity,Switch,Image } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import { globalStateVar,MODE, HANDICAP,someTextValue,settingsList } from '../state/globalStateVar';
+import { SETTINGS, settingsList } from '../state/globalStateVar';
 import db from '../db/db';
 import coursesJson  from "../../constants/courses";
-import React, { useState,useCallback,useEffect } from 'react';
-import DropdownMenu, { MenuOption } from '../../components/DropdownMenu'; // Adjust the import path based on your project structure
+import React, { useState,useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
@@ -19,22 +18,24 @@ import {
   Switch,
   Image,
   TextInput,
-  Alert, 
-  Button, 
-  Linking,
-  Settings,
 } from 'react-native';
 // Define the type for the state
 interface FormState {
   toggleButton: boolean;
   textValue:string;
   handicap:number;
-  language:string;
   location:string;
-
 }
 
-export default function Example() {
+
+export default function SettingsTab() {
+  const router = useRouter();
+  const [form, setForm] = useState<FormState>({
+    toggleButton: SETTINGS.TEST,
+    textValue: SETTINGS.LANGUAGE,
+    handicap: SETTINGS.HANDICAP,
+    location: SETTINGS.LOCATION,
+  });
   // Set the state type to FormState
   useEffect(() => {
     const loadSettings = async () => {
@@ -49,22 +50,8 @@ export default function Example() {
         }));
       }
     };
-
     loadSettings();
-    
   }, []);
-  
-  const router = useRouter();
-  const [form, setForm] = useState<FormState>({
-  
-
-    toggleButton: MODE.test,
-    textValue:'',
-    handicap: 36,
-    language: 'English',
-    location:'Stockholm',
-  });
-
   // SetSettings
   // GetSettings
 
@@ -117,10 +104,10 @@ export default function Example() {
                 <Switch
                   onValueChange={(toggleButton: boolean) =>{
                     setForm({ ...form, toggleButton });
-                    MODE.test = toggleButton;
-                    if(MODE.test){
+                    SETTINGS.TEST = toggleButton;
+                    if(SETTINGS.TEST){
                       console.log('Form', toggleButton);
-                      console.log('Global', MODE.test);
+                      console.log('Global', SETTINGS.TEST);
                     }
                   }}
                   style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
@@ -169,10 +156,10 @@ export default function Example() {
                   value={form.textValue.toString()}
                   onChangeText={(text: string) => {
                     setForm({ ...form, textValue: text });
-                    someTextValue.value = form.textValue; 
-                    if (MODE.test) {
+                    SETTINGS.LANGUAGE = form.textValue; 
+                    if (SETTINGS.TEST) {
                       console.log('Form', form.textValue);
-                      console.log('Global', someTextValue.value);
+                      console.log('Global', SETTINGS.LANGUAGE);
                     }}}
                   keyboardType="default" // This will bring up the numeric keyboard on mobile
                   placeholder="Enter a text"
@@ -180,7 +167,6 @@ export default function Example() {
                   style={{
                     height: 40,
                     marginTop: 5,
-                    marginBottom: 10,
                     borderBottomWidth: 1,
                     borderRadius: 12,
                     paddingLeft: 10,                    
@@ -198,10 +184,10 @@ export default function Example() {
                   onChangeText={(text: string) => {
                     let handicap: number = parseInt(text);
                     setForm({ ...form, handicap });
-                    HANDICAP.value = handicap; 
-                    if (MODE.test) {
+                    SETTINGS.HANDICAP = handicap; 
+                    if (SETTINGS.TEST) {
                       console.log('Form', form.handicap);
-                      console.log('Global', HANDICAP.value);
+                      console.log('Global', SETTINGS.TEST);
                     }
 
                   }
@@ -212,7 +198,7 @@ export default function Example() {
                   style={{
                     height: 40,
                     marginTop: 5,
-                    marginBottom: 10,
+                    marginBottom: 2,
                     borderBottomWidth: 1,
                     borderRadius: 12,
                     paddingLeft: 10,                    
