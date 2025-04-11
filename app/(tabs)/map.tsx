@@ -44,6 +44,7 @@ export default function HomeScreen() {
 
   const strokes = globalStateVar((state) => state.strokes);
   const currentGlobalHole = globalStateVar((state) => state.currentHole);
+  const setLocationCoursePicker = globalStateVar((state) => state.setLocation);
   const setStroke = globalStateVar((state) => state.setStroke);
   const [mapStrokes, setMapStrokes] = useState<any[][]>([[]]);
   const mapRef = useRef<MapView | null>(null);
@@ -345,6 +346,9 @@ export default function HomeScreen() {
       timestamp: Date.now(),
     };
       setLocation(testLocation)
+      const asdf: Location = {latitude: updatedLatitude, longitude: updatedLongitude};
+      setLocationCoursePicker(asdf)
+      console.log('eeeeeeeee',asdf)
       const distance = calculateDistance(
         testLocation.latitude,
         testLocation.longitude,
@@ -366,11 +370,14 @@ export default function HomeScreen() {
 
   const updateLocation = (event) => {
     //console.log(event);
-
+    const { coordinate } = event?.nativeEvent;
+    console.log('CTRLF HÄR',coordinate);
+    const asdf: Location = {latitude: coordinate.latitude, longitude: coordinate.longitude};
+    setLocationCoursePicker(asdf)
+    console.log('ffffff',asdf)
     if (test) return;
 
-    const { coordinate } = event?.nativeEvent;
-    console.log(coordinate);
+    
 
     setLat2 ( coordinate.latitude);
     setLon2 ( coordinate.longitude); // Saves lat & lon of user position in "lat2" and "lon2" for use elsewhere.
