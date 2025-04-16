@@ -3,10 +3,10 @@ import db from '../app/db/db';
 
 export
   const calculateStrokesGained = (StartSlag:Stroke , slutSlag:Stroke, latitude:number , longitude:number): number=>{
-    console.log('calc strokes gained start');
+    //console.log('calc strokes gained start');
     const rvalue = calculateRawSG(StartSlag,latitude,longitude) - 1 - calculateRawSG(slutSlag,latitude,longitude)
     //console.log("Strokes Gained: ", rvalue)
-    console.log('calc strokes gained end');
+    //console.log('calc strokes gained end');
     return rvalue
   }
 
@@ -72,30 +72,30 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
         console.log('Distance: ', DLeft, ' Lie: ', slag.lie ,' Raw Strokes Gained: ', rvalue)
         return rvalue
     }
-    console.log('sGDistanceGreen');
+    //console.log('sGDistanceGreen');
     const sGDistanceGreen = sGdata.green.map(t=>t.Distance )
-    console.log('1');
+    //console.log('1');
     const DLeftGreen = calculateDistance(slag.startLatitude, slag.startLongitude,latitude,longitude)
 
-    console.log('2');
+    //console.log('2');
 
     const firstSGGreen = sGValues[indices[0]]
     const secondSGGreen = sGValues[indices[1]]
     //const firstSGGreen = sGdata.green["Green"][indices[0]]
     //const secondSGGreen = sGdata.green["Green"][indices[1]]
-    console.log('3');
+    //console.log('3');
     const firstDistanceGreen = sGDistanceGreen[indices[0]]
     const secondDistanceGreen = sGDistanceGreen[indices[1]]
-    console.log('4');
+    //console.log('4');
     //TODO:
     //Lägg till manuell inmatning där man pekar mot flaggan istället för GPS koordinater
 
     console.log('All Green Data Loaded');
     if (slag.lie = 4) // lie = 4 Equals "Green"
-            console.log('Green SG Calculation Started');
+            //console.log('Green SG Calculation Started');
             rvalue = firstSGGreen + (DLeftGreen - firstDistanceGreen)  / (secondDistanceGreen - firstDistanceGreen) * (secondSGGreen - firstSGGreen)
             //console.log('Raw Strokes Gained: ', rvalue)
-            console.log('Green SG Calculation Done');
+            //console.log('Green SG Calculation Done');
             return rvalue
 
  }
@@ -143,11 +143,6 @@ export const generateStatTables = async (): stroke[][] =>{
     const strokes = await db.getStrokes();
     for (const stroke of strokes) {
         //console.log('Stroke: ', stroke);
-        // const myRound = await db.getRoundById(stroke.roundId);
-        // console.log('myRound:' , myRound);
-        // if (!myRound?.courseId) continue;
-        // const hole = getHole(myRound.courseId, stroke.holeId)
-        // const par = getPar(myRound.courseId);
         //console.log('par: ', par);
         //const dbhole = async db.getHole
         // const distance = calculateDistance(stroke.startLatitude, stroke.startLongitude, hole.greenMiddle.latitude, hole.greenMiddle.longitude );
@@ -156,6 +151,7 @@ export const generateStatTables = async (): stroke[][] =>{
         //console.log('distance: ', distance);
         //console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
         if (stroke.golfClubId == 0){
+
           strokesPutt.push(stroke);
         } // Club 0 will always be putter.
 
@@ -171,7 +167,7 @@ export const generateStatTables = async (): stroke[][] =>{
         }
         //stroke.category = ....
     }
-    console.log('ALL STROKES CATEGORIZED');
+    //console.log('ALL STROKES CATEGORIZED');
     let returnValue: stroke[][] = [];
     returnValue.push(strokesTee);
 
