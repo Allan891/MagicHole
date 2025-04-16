@@ -130,6 +130,7 @@ export default function HomeScreen() {
         startLatitude: latitude,
         startLongitude: longitude,
         distance: 0, // Placeholder, calculate if needed
+        distanceLeft: distanceLeft || -1,
         golfClubId: 69, // Placeholder, update with actual golf club ID
         playerId: 999,
         lie: 1, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.

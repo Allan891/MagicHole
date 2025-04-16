@@ -7,6 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { calculateDistance } from "@/utils";
 import {calculateAverage, generateStatTables, getMedian} from "@/utils";
+import { globalStateVar } from "../state/globalStateVar";
 //import { Text, useTheme } from '@rneui/themed';
 
 
@@ -14,6 +15,8 @@ import {calculateAverage, generateStatTables, getMedian} from "@/utils";
 export const Stats = () => {
    const [sGAverage, setsGAverage] = useState<number[]>(1);
    const [sGMedian, setsGMedian] = useState<number[]>(1);
+   const strokes = globalStateVar((state) => state.strokes);
+   
    useEffect(() => {
         /* db.getStrokes()
                .then((strokes) => {
@@ -58,7 +61,7 @@ export const Stats = () => {
             console.log('Start Stats');
             fetchData();
             //.catch(console.error());
-       }, []);
+       }, [strokes]);
 
 
 
