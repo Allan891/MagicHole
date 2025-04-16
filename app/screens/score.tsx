@@ -14,9 +14,9 @@ export default function ScoreOverview() {
   
 
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Scorecard handlePress={setCurrentHole} strokes={strokes} courseId={courseId} />
-      </View>
+      </ScrollView>
     );
   };
 
