@@ -58,7 +58,7 @@ export function Scorecard({strokes, courseId, handlePress}) {
   return (
 
       <ThemedView style={styles.container}>
-        <ThemedText style={styles.title}>{courseObject.namn} – Scorecard</ThemedText>
+        <ThemedText style={styles.title}>{courseObject.namn}Scorecard</ThemedText>
 
         <View style={styles.row}>
           <ThemedText style={styles.header}>Hole</ThemedText>
