@@ -101,8 +101,8 @@ export const Stats = () => {
 
                           <Text style={styles.statsItemLabel}>Average</Text>
 
-                          {(sGAverage[index+2] && sGAverage[index]>-10) && <Text style={styles.statsItemValue}>{sGAverage[index +2]}</Text>  }
-                         {(!sGAverage[index+2] || sGAverage[index]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                          {(sGAverage[index+2] && sGAverage[index+2]>-10) && <Text style={styles.statsItemValue}>{sGAverage[index +2]}</Text>  }
+                         {(!sGAverage[index+2] || sGAverage[index+2]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
                                <Text style={styles.statsItemLabel}>Median</Text>
 
                         {(sGMedian[index+2] && sGMedian[index+2]>-10) && <Text style={styles.statsItemValue}>{sGMedian[index+2]}</Text>  }

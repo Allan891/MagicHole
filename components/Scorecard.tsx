@@ -56,7 +56,7 @@ export function Scorecard({strokes, courseId, handlePress}) {
   };
 
   return (
-    <ScrollView style={{ backgroundColor: 'white' }}>
+
       <ThemedView style={styles.container}>
         <ThemedText style={styles.title}>{courseObject.namn} – Scorecard</ThemedText>
 
@@ -85,7 +85,7 @@ export function Scorecard({strokes, courseId, handlePress}) {
           <ThemedText style={styles.cell}>–</ThemedText>
         </View>
       </ThemedView>
-    </ScrollView>
+
   );
 }
 

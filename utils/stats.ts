@@ -113,7 +113,7 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
 
   export const calculateAverage = (array: number[]): (number | undefined) => {
     //console.log('array.length: ', array.length);
-    if (!array.length) return -10;
+    if (!array.length || array.length == 0 || !array) return -10;
     const sum = array.reduce((a: number, b: number): number => a + b);
     return sum / array.length;
 };
@@ -133,6 +133,49 @@ export const getMedian = (arr: stroke[] | null): number => {
     ? values[mid]                 // Odd length: middle element
     : (values[mid - 1] + values[mid]) / 2; // Even length: average of two middle elements
 };
+
+export const categorizeStrokes =  (strokes: stroke[]): stroke[][] =>{
+    let strokesTee: stroke[] = [];
+    let strokesApproach: stroke[] = [];
+    let strokesChip: stroke[] = [];
+    let strokesPutt: stroke[] = [];
+    for (const stroke of strokes) {
+        //console.log('Stroke: ', stroke);
+        //console.log('par: ', par);
+        //const dbhole = async db.getHole
+        // const distance = calculateDistance(stroke.startLatitude, stroke.startLongitude, hole.greenMiddle.latitude, hole.greenMiddle.longitude );
+        // stroke.distance = distance;
+        //let category = 0;
+        //console.log('distance: ', distance);
+        //console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
+        if (stroke.golfClubId == 0){
+
+          strokesPutt.push(stroke);
+        } // Club 0 will always be putter.
+
+        else if (stroke.distanceLeft < 50){
+          strokesChip.push(stroke);
+        }
+        else if (stroke.lie == 0 && stroke.distanceLeft > 200){
+          strokesTee.push(stroke);
+        }
+        else{
+          strokesApproach.push(stroke);
+          //console.log('stroketables1: ',strokesApproach);
+        }
+        //stroke.category = ....
+    }
+    //console.log('ALL STROKES CATEGORIZED');
+    let returnValue: stroke[][] = [];
+    returnValue.push(strokesTee);
+
+    returnValue.push(strokesApproach);
+    returnValue.push(strokesChip);
+    returnValue.push(strokesPutt);
+
+    return returnValue;
+}
+
 
 //export const generateStatTables = async (): Promise<[strokesTee: stroke[], strokesApproach: stroke[], strokesChip: stroke[], strokesPutt: stroke[]]>=>{
 export const generateStatTables = async (): stroke[][] =>{
