@@ -19,6 +19,8 @@ export default function RoundSummary() {
   const [roundData, setRoundData] = useState<Object | undefined>(undefined);
   const [simpleRoundData, setSimpleRoundData] = useState<Object | undefined>(undefined);
   const [course, setCourse] = useState<Object | undefined>(undefined);
+  const [bestStrokes, setBestStrokes] = useState<Object | undefined>(undefined);
+  const [worstStrokes, setWorstStrokes] = useState<Object | undefined>(undefined);
 
   const router = useRouter();
   
@@ -40,6 +42,20 @@ export default function RoundSummary() {
           calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2)
       ]);
       console.log('History avg: ', sGAverage);
+
+      const sortedStrokes = thisRoundData.strokes.sort((a,b) => {return b.strokesGained - a.strokesGained});
+
+      console.log('sortedStrokes', sortedStrokes)
+
+      // Filter out best strokes
+      const thisBestStrokes = sortedStrokes.slice(0,3);
+
+      // Filter out worst strokes
+      const thisWorstStrokes = sortedStrokes.reverse().slice(0,3);
+
+      setBestStrokes(thisBestStrokes);
+      setWorstStrokes(thisWorstStrokes);
+
     }
     
     updateRoundData();
@@ -77,13 +93,13 @@ export default function RoundSummary() {
     return diff;
   };  
 
-    const renderHole = ({ item, index }) => (
-      //console.log(item.name),
+    const renderStroke = ({ item, index }) => (
+      console.log(item),
       <View style={styles.holeItem}>
-        <TouchableOpacity style={styles.holeItemInner} onPress={() => onChooseHole(index)}>
-          <ThemedText style={{fontWeight: 'bold'}}>Hole {index + 1}:</ThemedText>
-          <ThemedText>{simpleRoundData?.strokes[index]}</ThemedText>
-          <ThemedText>{course?.par[index]} (par)</ThemedText>
+        <TouchableOpacity style={styles.holeItemInner} onPress={() => onChooseHole(item.holeId)}>
+          <ThemedText style={{fontWeight: 'bold'}}>Hole {item.holeId + 1}, stroke {item.strokeNr + 1}:</ThemedText>
+          <ThemedText>{item.strokesGained.toFixed(2)}</ThemedText>
+          {/* <ThemedText>{course?.par[index]} (par)</ThemedText> */}
         </TouchableOpacity>
       </View>
 
@@ -92,11 +108,10 @@ export default function RoundSummary() {
   return (
 <ScrollView style={{ backgroundColor: 'white' }}>
     <ThemedView style={styles.container}>
-        <ThemedText style={styles.title}>History</ThemedText>
+        {/* <ThemedText style={styles.title}>History</ThemedText> */}
 
-      <View style={styles.StatsContainer}>
-
-                        <View style={styles.stats}>
+        <View style={styles.StatsContainer}>
+        <View style={styles.stats}>
                           {items.map(({ label, value }, index) => (
                             <View
                               key={index}
@@ -127,13 +142,37 @@ export default function RoundSummary() {
                               </View>
                             ))}
                           </View>
-                      </View>
-
+                          </View>
 
 
             {simpleRoundData?.strokes?.length && 
               <Scorecard handlePress={onChooseHole} strokes={simpleRoundData?.strokes} courseId={course?.id} />
             }
+
+        <View style={styles.StatsContainer}>
+        
+
+                          <ThemedText style={styles.title}>Best strokes</ThemedText>
+
+                          <FlatList
+                            data={bestStrokes}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={renderStroke}
+                            // contentContainerStyle={styles.listStyle}
+                          />
+
+                          <ThemedText style={[styles.title, {marginTop: 20}]}>Worst strokes</ThemedText>
+
+                          <FlatList
+                            data={worstStrokes}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={renderStroke}
+                            // contentContainerStyle={styles.listStyle}
+                          />
+
+                      </View>
+
+
     </ThemedView>
     </ScrollView>
   );
