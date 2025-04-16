@@ -86,6 +86,9 @@ export default function HistoryMap() {
     );
   }, []);
 
+  useEffect(() => {
+    adjustZoom(distanceLeft);
+  }, [distanceLeft]);
 
   return (
     <View style={{ flex: 1 }}>
