@@ -1,4 +1,8 @@
 import { create } from 'zustand';
+type Location = {
+  latitude : number;
+  longitude : number;
+};
 
 type Stroke = {
   selectedCourse: any;
@@ -8,6 +12,8 @@ type Stroke = {
   currentHole: number;
   setCurrentHole: (hole: number) => void;
   reset: () => void;
+  location: Location | null;
+  setLocation: (loc: Location) => void;
 };
 
 export const globalStateVar = create<Stroke>((set) => ({
@@ -23,4 +29,6 @@ export const globalStateVar = create<Stroke>((set) => ({
       return { strokes: updated };
     }),
   reset: () => set({ strokes: Array(18).fill(undefined) }),
+  location: null,
+  setLocation: (loc) => set({ location : loc})
 }));

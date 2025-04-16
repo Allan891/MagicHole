@@ -3,24 +3,69 @@ import { TextInput, FlatList, StyleSheet, View, Text, TouchableOpacity, Image } 
 import { ThemedText } from '@/components/ThemedText';
 import courses from '@/constants/courses';
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
+import { calculateDistance, search } from "@/utils";
+import { globalStateVar } from '../app/state/globalStateVar';
+import * as Location from 'expo-location';
+
+
 
 export function CoursePicker({ onChooseCourse }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCourses, setFilteredCourses] = useState(courses);
+  const location = globalStateVar((state) => state.location);
+  
+  useEffect(() => {
+    
+    console.log('use effect here!! Bang ! ',location)
+    if (!location) return;
+    
+    
+    for (const course of courses){
+      console.log('location', location)
+      
+      const ourdistance = Math.round(
+        calculateDistance(
+          location.latitude,location.longitude,
+        //latitude,latitude,
+        course.holes[0].teeBack.latitude,
+        course.holes[0].teeBack.longitude)/1000)
+        course.distance = ourdistance
+        console.log('ourdistance:', ourdistance)
+      }
+      courses.sort((a, b) => {
+        return a.distance - b.distance;
+      });    
+      setFilteredCourses(courses)
+  },[location])
 
   useEffect(() => {
-    const lowercaseSearchTerm = searchTerm.toLowerCase();
-    const updatedCourses = courses.filter(course => {
-      const words = course.name.toLowerCase().split(' ');
-      return words.some(word => word.startsWith(lowercaseSearchTerm));
-    });
-    setFilteredCourses(updatedCourses);
+    if(searchTerm.length < 1 ) return
+    const searchresults = search(courses,searchTerm)
+    const newResults = searchresults.map(a=> a.item)
+    console.log('searcherm:', newResults)
+    setFilteredCourses(newResults)
+    // const lowercaseSearchTerm = searchTerm.toLowerCase();
+    // const updatedCourses = courses.filter(course => {
+    //   const words = course.name.toLowerCase().split(' ');
+    //   return words.some(word => word.startsWith(lowercaseSearchTerm));
+    // });
+    // if (lowercaseSearchTerm == '') {
+    //   setFilteredCourses(updatedCourses)
+    // }
+    // else{
+    //   setFilteredCourses(updatedCourses);
+    // };
+    
   }, [searchTerm]);
-
+  
   const renderCourse = ({ item }) => (
     <View style={styles.courseItem}>
       <TouchableOpacity onPress={() => onChooseCourse(item.id)}>
         <Text style={styles.courseText}>{item.name}</Text>
+        <Text style={styles.courseDistanceText}>{item.distance}
+          km
+          </Text>
+        {/* calculateDistance(Location.latitude,Location.longitude,item.holes[0].teeBack.latitude,item.holes[0].teeBack.longitude) */}
       </TouchableOpacity>
     </View>
   );
@@ -35,8 +80,9 @@ export function CoursePicker({ onChooseCourse }) {
         onChangeText={setSearchTerm}
       />
 
-      {searchTerm.length > 0 && (
+      {(
         filteredCourses.length > 0 ? (
+          
           <FlatList
             data={filteredCourses}
             keyExtractor={(item) => item.id.toString()}
@@ -59,7 +105,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     maxHeight: '80%',
     width: '80%',
-    left: '10%',
+    left: '8%',
     top: '10%',
     backgroundColor: 'white',
     zIndex: 99999999,
@@ -78,6 +124,11 @@ const styles = StyleSheet.create({
   },
   courseText: {
     fontSize: 20,
+  },
+  courseDistanceText:{
+    position: 'absolute',
+    left: '92%',
+    fontSize: 15
   },
   searchInput: {
     height: 40,

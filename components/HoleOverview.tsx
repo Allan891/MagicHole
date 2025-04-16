@@ -36,7 +36,7 @@ export function HoleOverview({ holeData, courseId}) {
     }else if (diff == -2){
       color = "blue";
     }
-    console.log('What color', color)
+    //console.log('What color', color)
     return color;
 
   }

@@ -37,6 +37,7 @@ export default function HomeScreen() {
 
   const strokes = globalStateVar((state) => state.strokes);
   const currentGlobalHole = globalStateVar((state) => state.currentHole);
+  const setLocationGlobal = globalStateVar((state) => state.setLocation);
   const setStroke = globalStateVar((state) => state.setStroke);
   const resetScore = globalStateVar((state) => state.reset);
   const [mapStrokes, setMapStrokes] = useState<any[][]>([[]]);
@@ -300,6 +301,10 @@ export default function HomeScreen() {
       setLocation(null);
       updateTestLocation(courseObject.holes[currentHole + 1].teeBack, courseObject.holes[currentHole + 1].greenMiddle);
     }
+    else {
+      setLocation(location);
+    };
+
     const distance = calculateDistance(courseObject.holes[currentHole + 1].teeBack.latitude,courseObject.holes[currentHole + 1].teeBack.longitude, courseObject.holes[currentHole + 1].greenMiddle.latitude, courseObject.holes[currentHole + 1].greenMiddle.longitude)
     adjustZoom(distance);
   };
@@ -343,6 +348,8 @@ export default function HomeScreen() {
           updatedLatitude = location.latitude - (location.latitude - holeCoords.latitude)* (Math.random()*0.5 + 0.5);
           updatedLongitude = location.longitude - (location.longitude - holeCoords.longitude)* (Math.random()*0.5 + 0.5);
       }
+
+
     }
 
     console.log('Update to: ', updatedLatitude, updatedLongitude);
@@ -359,7 +366,16 @@ export default function HomeScreen() {
 
       timestamp: Date.now(),
     };
-      setLocation(testLocation)
+      const asdf: Location = {latitude: updatedLatitude, longitude: updatedLongitude};
+
+      if (test) {
+        setLocation(testLocation)
+        setLocationGlobal(asdf)
+      }
+      else {
+        setLocation(location)
+        setLocationGlobal(asdf)
+      };
       const distance = calculateDistance(
         testLocation.latitude,
         testLocation.longitude,
@@ -374,18 +390,20 @@ export default function HomeScreen() {
   const test = true; // Auto generate GPS locations to test
 
   if (test && !location) {
-
     updateTestLocation(teeCoords);
-
+    setLocationGlobal(teeCoords);
   }
 
   const updateLocation = (event) => {
-    //console.log(event);
-
+    console.log(event);
+    const { coordinate } = event?.nativeEvent;
+    console.log('CTRLF HÄR',coordinate);
+    const asdf: Location = {latitude: coordinate.latitude, longitude: coordinate.longitude};
+    setLocationGlobal(event)
+    console.log('ffffff',asdf)
     if (test) return;
 
-    const { coordinate } = event?.nativeEvent;
-    console.log(coordinate);
+    
 
     setLat2 ( coordinate.latitude);
     setLon2 ( coordinate.longitude); // Saves lat & lon of user position in "lat2" and "lon2" for use elsewhere.
