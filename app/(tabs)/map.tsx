@@ -180,6 +180,7 @@ export default function HomeScreen() {
         startLatitude: latitude,
         startLongitude: longitude,
         distance: 0, // Placeholder, calculate if needed
+        distanceLeft: distanceLeft || -1,
         golfClubId: 69, // Placeholder, update with actual golf club ID
         playerId: 999,
         lie: 1, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.
@@ -188,22 +189,32 @@ export default function HomeScreen() {
       if (currentStroke == 0){ //AUTO SETS LIE TO 0 = TEE IF FIRST STROKE OF HOLE, CAN PROBABLY STAY
         thisStroke.lie = 0
       }
+      const distanceToFlag = Math.round(calculateDistance(thisStroke.startLatitude, thisStroke.startLongitude, holeCoords.latitude, holeCoords.longitude));
+      // PLACEHOLDER TO CHANGE CLUB = Putter and Lie = Green if distance is short. Should be done by manual input when implemented instead.
+      if (distanceToFlag < 9) {
+          thisStroke.golfClubId = 0;
+          thisStroke.lie = 4;
+      }
+      // END OF PLACEHOLDER
+
       // Calculate distance if there's a previous stroke
       if (previousStroke) {
         console.log('=======================================');
         console.log('Previous stroke: ', previousStroke);
         const distance = previousStroke ? Math.round(calculateDistance(previousStroke.startLatitude, previousStroke.startLongitude, latitude, longitude)): 0;
+
         console.log('Distance: ', distance);
         console.log('Lie: ', previousStroke.lie);
         previousStroke.distance = distance;
-        // PLACEHOLDER TO CHANGE CLUB = Putter and Lie = Green if distance is short. Should be done by manual input when implemented instead.
-        if (distance < 9) {
-            previousStroke.golfClubId = 0;
-            previousStroke.lie = 4;
-        }
-        // END OF PLACEHOLDER
         console.log('bait');
-        previousStroke.strokesGained = calculateStrokesGained(previousStroke, thisStroke, holeCoords.latitude,holeCoords.longitude)
+        if (lastHole){
+            previousStroke.strokesGained = calculateRawSG(previousStroke, holeCoords.latitude,holeCoords.longitude) -1;
+            }
+        else{
+            previousStroke.strokesGained = calculateStrokesGained(previousStroke, thisStroke, holeCoords.latitude,holeCoords.longitude)
+        }
+
+        //previousStroke.strokesGained = calculateStrokesGained(previousStroke, thisStroke, holeCoords.latitude,holeCoords.longitude)
         console.log('Updated previous stroke: ', previousStroke);
         console.log('=======================================');
         db.createStroke(previousStroke); // Save the previous stroke to the database
@@ -211,7 +222,7 @@ export default function HomeScreen() {
 
 
       }
-      
+
       const updatedMapStrokes = [...mapStrokes];
         console.log(updatedMapStrokes);
         console.log('current hole: ',currentHole);

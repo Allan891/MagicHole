@@ -7,6 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { calculateDistance } from "@/utils";
 import {calculateAverage, generateStatTables, getMedian} from "@/utils";
+import { globalStateVar } from "../state/globalStateVar";
 //import { Text, useTheme } from '@rneui/themed';
 
 
@@ -14,6 +15,8 @@ import {calculateAverage, generateStatTables, getMedian} from "@/utils";
 export const Stats = () => {
    const [sGAverage, setsGAverage] = useState<number[]>(1);
    const [sGMedian, setsGMedian] = useState<number[]>(1);
+   const strokes = globalStateVar((state) => state.strokes);
+   
    useEffect(() => {
         /* db.getStrokes()
                .then((strokes) => {
@@ -32,6 +35,7 @@ export const Stats = () => {
                });
                 */
         const fetchData = async () => {
+            console.log('Start Fetch Data');
             const strokeTables: stroke[][]  = await generateStatTables();
                     console.log(strokeTables);
                     console.log('WE ALMST DIT IT');
@@ -43,20 +47,21 @@ export const Stats = () => {
                         calculateAverage(strokeTables[2].map(t=>t.strokesGained )).toFixed(2),
                         calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2)
                         ]);
-
+                    console.log('went through average');
                     setsGMedian([
                         getMedian(strokeTables[0]).toFixed(2),
                         getMedian(strokeTables[1]).toFixed(2),
                         getMedian(strokeTables[2]).toFixed(2),
                         getMedian(strokeTables[3]).toFixed(2)
                     ]);
+                    console.log('went through median');
                     console.log('median: ',sGMedian);
                     console.log('WE DIT IT');
         }
-
+            console.log('Start Stats');
             fetchData();
             //.catch(console.error());
-       }, []);
+       }, [strokes]);
 
 
 
@@ -74,12 +79,12 @@ export const Stats = () => {
 
                         <Text style={styles.statsItemLabel}>Average</Text>
 
-                        {sGAverage && <Text style={styles.statsItemValue}>{sGAverage[index]}</Text>  }
-                      {!sGAverage && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                        {(sGAverage[index] && sGAverage[index]>-10) && <Text style={styles.statsItemValue}>{sGAverage[index]}</Text>  }
+                      {(!sGAverage[index] || sGAverage[index]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
                         <Text style={styles.statsItemLabel}>Median</Text>
 
-                       {sGMedian[index] && <Text style={styles.statsItemValue}>{sGMedian[index]}</Text>  }
-                      {!sGMedian[index] && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                       {(sGMedian[index] && sGMedian[index]>-10) && <Text style={styles.statsItemValue}>{sGMedian[index]}</Text>  }
+                      {(!sGMedian[index] || sGMedian[index]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
 
                       </View>
                     ))}
@@ -96,12 +101,12 @@ export const Stats = () => {
 
                           <Text style={styles.statsItemLabel}>Average</Text>
 
-                          {sGAverage && <Text style={styles.statsItemValue}>{sGAverage[index+2]}</Text>  }
-                        {!sGAverage && <Text style={styles.statsItemValue}>'N/A'</Text>}
-                          <Text style={styles.statsItemLabel}>Median</Text>
+                          {(sGAverage[index+2] && sGAverage[index]>-10) && <Text style={styles.statsItemValue}>{sGAverage[index +2]}</Text>  }
+                         {(!sGAverage[index+2] || sGAverage[index]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                               <Text style={styles.statsItemLabel}>Median</Text>
 
-                          {sGMedian && <Text style={styles.statsItemValue}>{sGMedian[index+2]}</Text>  }
-                        {!sGMedian && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                        {(sGMedian[index+2] && sGMedian[index+2]>-10) && <Text style={styles.statsItemValue}>{sGMedian[index+2]}</Text>  }
+                      {(!sGMedian[index+2] || sGMedian[index+2]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
 
                         </View>
                       ))}

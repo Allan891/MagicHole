@@ -75,6 +75,7 @@ class Database {
       startLatitude REAL,
       startLongitude REAL,
       distance INTEGER,
+      distanceLeft INTEGER,
       strokesGained REAL,
       lie INTEGER,
       golfClubId INTEGER NOT NULL,
@@ -531,8 +532,8 @@ async getRoundById(id: number): Promise<Round | null> {
     if (!this.db) return -1;
     try {
       await this.db.runAsync(
-        'INSERT INTO Stroke (holeId, roundId, strokeNr, startLatitude, startLongitude, distance, strokesGained, lie, golfClubId, playerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-        stroke.holeId, stroke.roundId, stroke.strokeNr, stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.strokesGained, stroke.lie, stroke.golfClubId, stroke.playerId);
+        'INSERT INTO Stroke (holeId, roundId, strokeNr, startLatitude, startLongitude, distance, distanceLeft, strokesGained, lie, golfClubId, playerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+        stroke.holeId, stroke.roundId, stroke.strokeNr, stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.distanceLeft, stroke.strokesGained, stroke.lie, stroke.golfClubId, stroke.playerId);
       const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
       console.log('Stroke created with ID', result?.id);
       return result?.id ?? -2;
