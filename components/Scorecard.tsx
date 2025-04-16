@@ -41,8 +41,8 @@ export function Scorecard({strokes, courseId, handlePress}) {
     }
 
     return (
-        <TouchableOpacity onPress={() => handlePress(holeIndex)}>
-            <View key={holeIndex} style={styles.row}>
+        <TouchableOpacity key={holeIndex} onPress={() => handlePress(holeIndex)}>
+            <View style={styles.row}>
                 <ThemedText style={styles.cell}>{holeIndex + 1}</ThemedText>
                 <ThemedText style={styles.cell}>{par}</ThemedText>
                 <ThemedText style={scoreStyle}>{score ?? '-'}</ThemedText>

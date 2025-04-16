@@ -48,7 +48,8 @@ export function HoleOverview({ holeData, courseId}) {
     <View 
     style={[styles.hole, 
       {
-        backgroundColor: getColor(getPar(courseId)[index] , item)
+        backgroundColor: getColor(getPar(courseId)[index] , item),
+        opacity: item == null ? 0.1 : 1
       } ]}>
     </View>
 

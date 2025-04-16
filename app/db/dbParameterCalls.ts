@@ -1,12 +1,15 @@
+import { getHoles } from "@/utils";
 import db from "./db";
 
 class FetchInfo{
     async getRoundData(roundId:number): Promise<[roundId: (number | undefined), courseId: (number | undefined), timeStamp: (number | undefined), strokesEachHole: ((number | null)[])]> {
         let round = await db.getRoundById(roundId);
         const holes = await db.StrokeCountByRound(roundId);
-        const strokes: (number | null)[] = [];
+        const holesCount = getHoles(round?.courseId)?.length;
+        const strokes: (number | null)[] = Array(holesCount).fill(null);
         for (const hole of holes) {
-            strokes.push(hole.strokeCount);
+            const i = hole.holeId;
+            strokes[i] = hole?.strokeCount;
         }
   
         return {roundId, courseid: round?.courseId, timestamp: round?.time, strokes};
