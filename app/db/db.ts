@@ -474,10 +474,10 @@ async updateRound(round: Round) {
 }
 
 // DELETE: Delete a round
-async deleteRound(round: Round) {
+async deleteRound(id: number) {
   if (!this.db) return;
   try {
-    await this.db.runAsync('DELETE FROM Round WHERE id = ?;', round.id);
+    await this.db.runAsync('DELETE FROM Round WHERE id = ?;', id);
     console.log('Round deleted');
   } catch (error) {
     console.error('Error deleting round:', error);

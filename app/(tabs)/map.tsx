@@ -33,19 +33,13 @@ import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
 
-  const initialCourse = {
-    holes: [
-      {
-        greenMiddle: {latitude: 33.499457, longitude: -82.023461}, 
-        teeBack: {latitude: 33.499457, longitude: -82.023461}
-      }
-    ]
-  }
+  const initialCourse = courses[Math.floor(Math.random() * courses.length)];
 
   const strokes = globalStateVar((state) => state.strokes);
   const currentGlobalHole = globalStateVar((state) => state.currentHole);
   const setLocationCoursePicker = globalStateVar((state) => state.setLocation);
   const setStroke = globalStateVar((state) => state.setStroke);
+  const resetScore = globalStateVar((state) => state.reset);
   const [mapStrokes, setMapStrokes] = useState<any[][]>([[]]);
   const mapRef = useRef<MapView | null>(null);
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
@@ -90,22 +84,21 @@ export default function HomeScreen() {
   const initialRegion = {
     latitude,
     longitude,
-    latitudeDelta: 1 / 1000,
-    longitudeDelta: 1 / 1000,
+    latitudeDelta: 1 / 800,
+    longitudeDelta: 1 / 800,
   };
 
-  const goToRegion = () => {
+  const goToRegion = async () => {
 
     const newRegion = {
-      latitude: 33.497021,
-      longitude: -82.025367,
+      latitude: courseObject.holes.at(-1).greenMiddle.latitude,
+      longitude: courseObject.holes.at(-1).greenMiddle.longitude,
       latitudeDelta: 1 / 1000,
       longitudeDelta: 1 / 1000,
     }
 
-    if (mapRef.current) {
-      mapRef.current.animateToRegion(newRegion, 100000); // 1000 ms = 1 second
-    }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    mapRef.current?.animateToRegion(newRegion, 80000);
   };
 
   const router = useRouter();
@@ -117,6 +110,9 @@ export default function HomeScreen() {
   }
 
   const handleCourseChosen = async (id) => {
+
+    resetScore();
+
     const newRound: Round = {
       time: Date.now(), // Example time in ISO 8601 format
       playerId: 999,      // Example player ID
@@ -127,6 +123,13 @@ export default function HomeScreen() {
     setRoundId(newRoundId);
     console.log("New round id: ", newRoundId);
     const thisCourse = courses.find(a => a.id === id);
+    const newRegion = {
+      latitude: thisCourse.holes[0].teeBack.latitude,
+      longitude: thisCourse.holes[0].teeBack.longitude,
+      latitudeDelta: 1 / 1000,
+      longitudeDelta: 1 / 1000,
+    }
+    mapRef.current?.animateToRegion(newRegion);
     setCourseObject(thisCourse);
     setSelectedCourse(thisCourse);
     setCourseChosen(true);
@@ -165,6 +168,7 @@ export default function HomeScreen() {
   };
 
   const addStroke = (lastStroke = false) => {
+
     if (location) {
 
       const { latitude, longitude } = lastStroke ? courseObject.holes[currentHole].greenMiddle : location;
@@ -223,14 +227,14 @@ export default function HomeScreen() {
       console.log('newArr', newArr);
       setStrokeCoordinates(newArr);
 
-      const updatedStrokes = [...strokes];
+      
 
+      if(lastStroke) return;
       setCurrentStroke(currentStroke + 1);
 
 
       const currentScore = strokes[currentHole] || 0;
       setStroke(currentHole, currentScore + 1);
-      if(lastStroke) return;
       if (test) updateTestLocation();
 
     } else {
@@ -496,6 +500,7 @@ export default function HomeScreen() {
         }
       <MapView
         ref={mapRef}
+        onMapReady={goToRegion}
         onUserLocationChange={updateLocation}
         scrollEnabled={!(LockedView)}
         rotateEnabled={!(LockedView)}
