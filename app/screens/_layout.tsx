@@ -7,12 +7,14 @@
    import { useColorScheme } from "@/hooks/useColorScheme";
    import { useClientOnlyValue } from "@/hooks/useClientOnlyValue";
    import { Stack } from 'expo-router';
+   import {Platform} from 'react-native';
 
 export default function ScreenLayout() {
   return (
     <Stack>
-      <Stack.Screen name="roundsummary" options={{title: 'Round Summary'}} />
-      <Stack.Screen name="historymap" options={{title: 'Historical Map'}}/>
+      <Stack.Screen name="roundsummary" options={{title: 'Round Summary', headerShown: true}} />
+      <Stack.Screen name="historymap" options={{title: 'Historical Map', headerShown: Platform.OS == 'ios' ? true : false}}/>
+
       <Stack.Screen name="score" options={{title: 'Scorecard'}} />
     </Stack>
 
