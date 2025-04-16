@@ -24,7 +24,7 @@ export default function HistoryMap() {
   const mapRef = useRef<MapView | null>(null);
   const [zoomLevel, setZoomLevel] = useState<number>(18);
   const [bearing, setBearing] = useState(0);
-
+  const [altitudeLevel, setAltitudeLevel] = useState<number>(0.009);
   const courseObject = getCourse(courseId);
 
   const strokes = parsedHoleData?.userStrokes;
@@ -53,12 +53,26 @@ export default function HistoryMap() {
 
   const adjustZoom = (distance: number) => {
     //console.log(distance);
-    if (distance <= 200) setZoomLevel(19);
-    else {
-        if (distance <= 320) setZoomLevel(18);
-        else setZoomLevel(17);
+    
+    if (distance <= 70){
+      setZoomLevel(19);
+      setAltitudeLevel(0.008)
+    }else if (70 < distance && distance <= 180){ 
+      setZoomLevel(19);
+      setAltitudeLevel(0.0085);
     }
-
+    else if (180  < distance && distance <= 250){ 
+      setZoomLevel(19);
+      setAltitudeLevel(0.009);
+    }
+    else if (250  < distance && distance <= 320){
+      setZoomLevel(18);
+      setAltitudeLevel(0.011);
+    }
+    else {
+      setZoomLevel(17);
+      setAltitudeLevel(0.009);
+    }
   };
 
   useEffect(() => {
