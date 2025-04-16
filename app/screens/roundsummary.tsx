@@ -94,14 +94,14 @@ export default function RoundSummary() {
   };  
 
     const renderStroke = ({ item, index }) => (
-      console.log(item),
+      (item.strokesGained &&
       <View style={styles.holeItem}>
         <TouchableOpacity style={styles.holeItemInner} onPress={() => onChooseHole(item.holeId)}>
           <ThemedText style={{fontWeight: 'bold'}}>Hole {item.holeId + 1}, stroke {item.strokeNr + 1}:</ThemedText>
-          <ThemedText>{item.strokesGained.toFixed(2)}</ThemedText>
+          <ThemedText>{item.strokesGained?.toFixed(2)}</ThemedText>
           {/* <ThemedText>{course?.par[index]} (par)</ThemedText> */}
         </TouchableOpacity>
-      </View>
+      </View>)
 
     );
 
