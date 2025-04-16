@@ -13,6 +13,9 @@ import { useRouter } from 'expo-router';
 
 
 export default function History() {
+
+  const strokes = globalStateVar((state) => state.strokes);
+
   const roundsexample = [
     {id:1,courseid:1, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9]},
     {id:2,courseid:2, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9]},
@@ -39,7 +42,7 @@ export default function History() {
     
     updateRounds();
     
-    }, []);
+    }, [strokes]);
 
   const onChooseRound = async (id) => {
     router.push({
