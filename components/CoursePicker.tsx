@@ -18,12 +18,12 @@ export function CoursePicker({ onChooseCourse }) {
 
     if (searchTerm != "") return;
     
-    console.log('use effect here!! Bang ! ',location)
+    //console.log('use effect here!! Bang ! ',location)
     if (!location) return;
     
     
     for (const course of courses){
-      console.log('location', location)
+      //console.log('location', location)
       
       const ourdistance = Math.round(
         calculateDistance(
@@ -32,7 +32,7 @@ export function CoursePicker({ onChooseCourse }) {
         course.holes[0].teeBack.latitude,
         course.holes[0].teeBack.longitude)/1000)
         course.distance = ourdistance
-        console.log('ourdistance:', ourdistance)
+        //console.log('ourdistance:', ourdistance)
       }
       courses.sort((a, b) => {
         return a.distance - b.distance;
@@ -44,7 +44,7 @@ export function CoursePicker({ onChooseCourse }) {
     if(searchTerm.length < 1 ) return
     const searchresults = search(courses,searchTerm)
     const newResults = searchresults.map(a=> a.item)
-    console.log('searcherm:', newResults)
+    //console.log('searcherm:', newResults)
     setFilteredCourses(newResults)
     // const lowercaseSearchTerm = searchTerm.toLowerCase();
     // const updatedCourses = courses.filter(course => {

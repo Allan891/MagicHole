@@ -91,7 +91,7 @@ export default function History() {
   };
 
     const renderRound = ({ item }) => (
-      console.log(item),
+      //console.log(item),
       <View style={styles.courseItem}>
         <TouchableOpacity onLongPress={() => {showConfirmation(item.roundId)}} onPress={() => onChooseRound(item.roundId)}>
           <ThemedText style={styles.courseTotal}>{getCourseTotal(getPar(item.courseid),item.strokes)}</ThemedText>

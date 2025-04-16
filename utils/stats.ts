@@ -69,7 +69,7 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
 
         rvalue = firstSG + (DLeft - firstDistance)  / (secondDistance - firstDistance) * (secondSG - firstSG)
 
-        console.log('Distance: ', DLeft, ' Lie: ', slag.lie ,' Raw Strokes Gained: ', rvalue)
+        //console.log('Distance: ', DLeft, ' Lie: ', slag.lie ,' Raw Strokes Gained: ', rvalue)
         return rvalue
     }
     //console.log('sGDistanceGreen');
@@ -90,7 +90,7 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
     //TODO:
     //Lägg till manuell inmatning där man pekar mot flaggan istället för GPS koordinater
 
-    console.log('All Green Data Loaded');
+    //console.log('All Green Data Loaded');
     if (slag.lie = 4) // lie = 4 Equals "Green"
             //console.log('Green SG Calculation Started');
             rvalue = firstSGGreen + (DLeftGreen - firstDistanceGreen)  / (secondDistanceGreen - firstDistanceGreen) * (secondSGGreen - firstSGGreen)

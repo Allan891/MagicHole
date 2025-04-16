@@ -26,7 +26,7 @@ export default function RoundSummary() {
     async function updateRoundData() {
       const thisRoundData = await db.getRoundDetails(roundChosenId);
       setRoundData(thisRoundData);
-      console.log('thisRoundData', thisRoundData)
+      //console.log('thisRoundData', thisRoundData)
       const thisCourse = getCourse(thisRoundData.round?.courseId);
       setCourse(thisCourse);
       const thisSimpleRoundData = await db.getRoundData(roundChosenId);
@@ -39,7 +39,7 @@ export default function RoundSummary() {
 
   const onChooseHole = async (index) => {
 
-    console.log('Strokes?', roundData?.strokes.filter(a => a.holeId == index))
+    //console.log('Strokes?', roundData?.strokes.filter(a => a.holeId == index))
 
     let holeData = {
       userStrokes: roundData?.strokes.filter(a => a.holeId == index), 
@@ -69,7 +69,7 @@ export default function RoundSummary() {
   };  
 
     const renderHole = ({ item, index }) => (
-      console.log(item.name),
+      //console.log(item.name),
       <View style={styles.holeItem}>
         <TouchableOpacity style={styles.holeItemInner} onPress={() => onChooseHole(index)}>
           <ThemedText style={{fontWeight: 'bold'}}>Hole {index + 1}:</ThemedText>

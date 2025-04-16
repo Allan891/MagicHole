@@ -13,7 +13,7 @@ import { ThemedText } from '@/components/ThemedText';
 
 export function HoleOverview({ holeData, courseId}) {
 
-  console.log('holedata', holeData)
+  //console.log('holedata', holeData)
   
 
 

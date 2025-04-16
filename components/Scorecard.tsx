@@ -8,7 +8,7 @@ import { getCourse } from '@/utils';
 export function Scorecard({strokes, courseId, handlePress}) {
 //   const strokes = globalStateVar((state) => state.strokes);
 //   const courseObject = globalStateVar((state) => state.selectedCourse);
-    console.log('scorie:', strokes, courseId)
+    //console.log('scorie:', strokes, courseId)
   const courseObject = getCourse(courseId);
   if (!courseObject) {
     return <ThemedText>Loading course...</ThemedText>;

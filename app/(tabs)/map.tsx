@@ -45,6 +45,7 @@ export default function HomeScreen() {
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [distanceLeft, setDistanceLeft] = useState<number | null>(null);
   const [zoomLevel, setZoomLevel] = useState<number>(18);
+  const [altitudeLevel, setAltitudeLevel] = useState<number>(0.009);
   const [bearing, setBearing] = useState(0);
   const [currentHole, setCurrentHole] = useState<number>(0);
   const [currentStroke, setCurrentStroke] = useState<number>(0);
@@ -121,7 +122,7 @@ export default function HomeScreen() {
     };
     const newRoundId = await db.createRound(newRound);
     setRoundId(newRoundId);
-    console.log("New round id: ", newRoundId);
+    //console.log("New round id: ", newRoundId);
     const thisCourse = courses.find(a => a.id === id);
     const newRegion = {
       latitude: thisCourse.holes[0].teeBack.latitude,
@@ -133,7 +134,7 @@ export default function HomeScreen() {
     setCourseObject(thisCourse);
     setSelectedCourse(thisCourse);
     setCourseChosen(true);
-    console.log('thisCourse', thisCourse);
+    //console.log('thisCourse', thisCourse);
     if (thisCourse){
       setBearing(  //set bearing for hole 0, since we dont switch holes here it doesnt happen automatically.
         calculateBearing(
@@ -158,13 +159,27 @@ export default function HomeScreen() {
   }
 
   const adjustZoom = (distance: number) => {
-    console.log(distance);
-    if (distance <= 200) setZoomLevel(19);
-    else {
-        if (distance <= 320) setZoomLevel(18);
-        else setZoomLevel(17);
+    //console.log(distance);
+    
+    if (distance <= 70){
+      setZoomLevel(19);
+      setAltitudeLevel(0.008)
+    }else if (70 < distance && distance <= 180){ 
+      setZoomLevel(19);
+      setAltitudeLevel(0.0085);
     }
-
+    else if (180  < distance && distance <= 250){ 
+      setZoomLevel(19);
+      setAltitudeLevel(0.009);
+    }
+    else if (250  < distance && distance <= 320){
+      setZoomLevel(18);
+      setAltitudeLevel(0.011);
+    }
+    else {
+      setZoomLevel(17);
+      setAltitudeLevel(0.009);
+    }
   };
 
   const addStroke = (lastStroke = false) => {
@@ -200,14 +215,14 @@ export default function HomeScreen() {
 
       // Calculate distance if there's a previous stroke
       if (previousStroke) {
-        console.log('=======================================');
-        console.log('Previous stroke: ', previousStroke);
+        //console.log('=======================================');
+        //console.log('Previous stroke: ', previousStroke);
         const distance = previousStroke ? Math.round(calculateDistance(previousStroke.startLatitude, previousStroke.startLongitude, latitude, longitude)): 0;
 
-        console.log('Distance: ', distance);
-        console.log('Lie: ', previousStroke.lie);
+        //console.log('Distance: ', distance);
+        //console.log('Lie: ', previousStroke.lie);
         previousStroke.distance = distance;
-        console.log('bait');
+        //console.log('bait');
         if (lastStroke){
             previousStroke.strokesGained = calculateRawSG(previousStroke, holeCoords.latitude,holeCoords.longitude) -1;
             }
@@ -216,17 +231,17 @@ export default function HomeScreen() {
         }
 
         //previousStroke.strokesGained = calculateStrokesGained(previousStroke, thisStroke, holeCoords.latitude,holeCoords.longitude)
-        console.log('Updated previous stroke: ', previousStroke);
-        console.log('=======================================');
+        //console.log('Updated previous stroke: ', previousStroke);
+        //console.log('=======================================');
         db.createStroke(previousStroke); // Save the previous stroke to the database
-        console.log('Saved previous stroke to database',);
+        //console.log('Saved previous stroke to database',);
 
 
       }
 
       const updatedMapStrokes = [...mapStrokes];
-        console.log(updatedMapStrokes);
-        console.log('current hole: ',currentHole);
+        //console.log(updatedMapStrokes);
+        //console.log('current hole: ',currentHole);
         if (updatedMapStrokes[currentHole])
             updatedMapStrokes[currentHole] = [...updatedMapStrokes[currentHole], thisStroke];
         else
@@ -235,7 +250,7 @@ export default function HomeScreen() {
       setMapStrokes(updatedMapStrokes);
 
       const newArr = [...strokeCoordinates, { latitude, longitude }];
-      console.log('newArr', newArr);
+      //console.log('newArr', newArr);
       setStrokeCoordinates(newArr);
 
       
@@ -328,7 +343,7 @@ export default function HomeScreen() {
 
   const updateTestLocation = (forcedLocation = {}, nextHole = {}) => {
 
-    console.log('Updating test location');
+    //console.log('Updating test location');
 
     let updatedLatitude;
     let updatedLongitude;
@@ -352,7 +367,7 @@ export default function HomeScreen() {
 
     }
 
-    console.log('Update to: ', updatedLatitude, updatedLongitude);
+    //console.log('Update to: ', updatedLatitude, updatedLongitude);
 
     const testLocation: LocationObject = {
 
@@ -395,12 +410,12 @@ export default function HomeScreen() {
   }
 
   const updateLocation = (event) => {
-    console.log(event);
+    //console.log(event);
     const { coordinate } = event?.nativeEvent;
-    console.log('CTRLF HÄR',coordinate);
+    //console.log('CTRLF HÄR',coordinate);
     const asdf: Location = {latitude: coordinate.latitude, longitude: coordinate.longitude};
     setLocationGlobal(event)
-    console.log('ffffff',asdf)
+    //console.log('ffffff',asdf)
     if (test) return;
 
     
@@ -410,7 +425,7 @@ export default function HomeScreen() {
     //return;
     if (coordinate){
       setLocation(coordinate);
-      console.log('location: ', location)
+      //console.log('location: ', location)
       //return;
       const distance = calculateDistance(
         coordinate.latitude,
@@ -541,6 +556,7 @@ export default function HomeScreen() {
           heading: bearing,
           pitch: 90,
           zoom: zoomLevel,
+          altitude: altitudeLevel,
         }}
       >
 

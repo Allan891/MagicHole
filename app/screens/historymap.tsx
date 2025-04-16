@@ -52,7 +52,7 @@ export default function HistoryMap() {
   };
 
   const adjustZoom = (distance: number) => {
-    console.log(distance);
+    //console.log(distance);
     if (distance <= 200) setZoomLevel(19);
     else {
         if (distance <= 320) setZoomLevel(18);
