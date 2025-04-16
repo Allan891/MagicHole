@@ -1,15 +1,28 @@
 import { create } from 'zustand';
+
 import db from '../db/db';
+
+type Location = {
+  latitude : number;
+  longitude : number;
+};
+
 
 type Stroke = {
   selectedCourse: any;
   setSelectedCourse: (course: any) => void;
   strokes: number[];
   setStroke: (holeIndex: number, value: number) => void;
+  currentHole: number;
+  setCurrentHole: (hole: number) => void;
   reset: () => void;
+  location: Location | null;
+  setLocation: (loc: Location) => void;
 };
 
 export const globalStateVar = create<Stroke>((set) => ({
+  currentHole: 0,
+  setCurrentHole: (hole) => set({ currentHole: hole }),
   selectedCourse: null,
   setSelectedCourse: (course) => set({ selectedCourse: course }),
   strokes: Array(18).fill(undefined),
@@ -20,6 +33,8 @@ export const globalStateVar = create<Stroke>((set) => ({
       return { strokes: updated };
     }),
   reset: () => set({ strokes: Array(18).fill(undefined) }),
+  location: null,
+  setLocation: (loc) => set({ location : loc})
 }));
 
 export const SETTINGS = {

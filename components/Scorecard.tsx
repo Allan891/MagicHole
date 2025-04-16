@@ -1,12 +1,15 @@
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView, Touchable, TouchableOpacity } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { globalStateVar } from '../state/globalStateVar';
 import { useRound } from './RoundContext';
+import { getCourse } from '@/utils';
 
-export default function ScoreOverview() {
-  const strokes = globalStateVar((state) => state.strokes);
-  const courseObject = globalStateVar((state) => state.selectedCourse);
+export function Scorecard({strokes, courseId, handlePress}) {
+//   const strokes = globalStateVar((state) => state.strokes);
+//   const courseObject = globalStateVar((state) => state.selectedCourse);
+    //console.log('scorie:', strokes, courseId)
+  const courseObject = getCourse(courseId);
   if (!courseObject) {
     return <ThemedText>Loading course...</ThemedText>;
   }
@@ -38,22 +41,24 @@ export default function ScoreOverview() {
     }
 
     return (
-      <View key={holeIndex} style={styles.row}>
-        <ThemedText style={styles.cell}>{holeIndex + 1}</ThemedText>
-        <ThemedText style={styles.cell}>{par}</ThemedText>
-        <ThemedText style={scoreStyle}>{score ?? '-'}</ThemedText>
-        <ThemedText style={styles.cell}>
-          {score === undefined ? '-' : overPar === 0 ? 'E' : overPar > 0 ? `+${overPar}` : overPar}
-        </ThemedText>
-        <ThemedText style={styles.cell}>{stableford}</ThemedText>
-      </View>
+        <TouchableOpacity onPress={() => handlePress(holeIndex)}>
+            <View key={holeIndex} style={styles.row}>
+                <ThemedText style={styles.cell}>{holeIndex + 1}</ThemedText>
+                <ThemedText style={styles.cell}>{par}</ThemedText>
+                <ThemedText style={scoreStyle}>{score ?? '-'}</ThemedText>
+                <ThemedText style={styles.cell}>
+                {score === undefined ? '-' : overPar === 0 ? 'E' : overPar > 0 ? `+${overPar}` : overPar}
+                </ThemedText>
+                <ThemedText style={styles.cell}>{stableford}</ThemedText>
+            </View>
+        </TouchableOpacity>
     );
   };
 
   return (
-    <ScrollView style={{ backgroundColor: 'white' }}>
+
       <ThemedView style={styles.container}>
-        <ThemedText style={styles.title}>{courseObject.namn} – Scorecard</ThemedText>
+        <ThemedText style={styles.title}>{courseObject.namn}Scorecard</ThemedText>
 
         <View style={styles.row}>
           <ThemedText style={styles.header}>Hole</ThemedText>
@@ -65,8 +70,9 @@ export default function ScoreOverview() {
 
         <ThemedText style={styles.section}>Front 9</ThemedText>
         {courseObject.holes.slice(0, 9).map((_, i) => renderRow(i))}
-
-        <ThemedText style={styles.section}>Back 9</ThemedText>
+        {courseObject.holes.length > 9 &&
+          <ThemedText style={styles.section}>Back 9</ThemedText>
+        }
         {courseObject.holes.slice(9, 18).map((_, i) => renderRow(i + 9))}
 
         <View style={[styles.row, { marginTop: 16 }]}>
@@ -79,7 +85,7 @@ export default function ScoreOverview() {
           <ThemedText style={styles.cell}>–</ThemedText>
         </View>
       </ThemedView>
-    </ScrollView>
+
   );
 }
 

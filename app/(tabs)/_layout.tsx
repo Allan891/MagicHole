@@ -14,21 +14,19 @@ import { useClientOnlyValue } from "@/hooks/useClientOnlyValue";
 export default function TabLayout() {
   return (
     
-    <ThemeProvider value={DefaultTheme}>
-      {/* Tabs Collection */}
-      <Tabs initialRouteName="map">
-        
-        {/* Index Tab */}
-        <Tabs.Screen name="index"options={{headerShown: false,tabBarItemStyle: { title: 'no' ,display: "none" },}}/>
-        {/* Map Tab */}
-        <Tabs.Screen name="map" options={{headerShown: false, title: 'Map',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="golf-course" color={color} />, }} />
-        {/* Scorecard Tab */}
-        <Tabs.Screen name="score" options={{ title: 'Scorecard', tabBarIcon: ({ color }) => <MaterialIcons size={28} name="sports-score" color={color} />, // Change from "paperplane.fill"
-        }} />
-        {/* SettingsTab */}
-        <Tabs.Screen name="settings" options={{headerShown: false, title: 'Settings',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="settings" color={color} />, }} />
-      
+      <ThemeProvider value={DefaultTheme}>
+
+        <Tabs initialRouteName="map">
+        <Tabs.Screen name="index"
+                    options={{headerShown: false,
+                      tabBarItemStyle: {display: "none" },
+                    }}
+                  />
+
+        <Tabs.Screen name="map" options={{headerShown: false, title: 'Play',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="golf-course" color={color} />, }} />
         <Tabs.Screen name="history" options={{headerShown: false, title: 'History',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="list" color={color} />, }} />
+        <Tabs.Screen name="stats" options={{ title: 'Stats', tabBarIcon: ({ color }) => <MaterialIcons size={28} name="query-stats" color={color} />, }} />
+        <Tabs.Screen name="settings" options={{headerShown: false, title: 'Settings',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="settings" color={color} />, }} />
         </Tabs>
     </ThemeProvider>
     
