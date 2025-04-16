@@ -208,7 +208,7 @@ export default function HomeScreen() {
         console.log('Lie: ', previousStroke.lie);
         previousStroke.distance = distance;
         console.log('bait');
-        if (lastHole){
+        if (lastStroke){
             previousStroke.strokesGained = calculateRawSG(previousStroke, holeCoords.latitude,holeCoords.longitude) -1;
             }
         else{
