@@ -140,8 +140,40 @@ class Database {
     }
   }
 
-   // DELETE: Delete a course
-   async deleteCourse(course: Course) {
+    // Settings
+    async setSetting(setting: string, value: string) {
+      if (!this.db) return;
+      try {
+        await this.db.runAsync(
+          'REPLACE INTO Settings (setting, value) VALUES (?, ?);',
+          setting, value);
+        console.log('Setting updated');
+      } catch (error) {
+        console.error('Error updating setting:', error);
+      }
+    }
+
+    async getSettings(): Promise<[]> {
+      if (!this.db) return [];
+      try {
+        const settings = await this.db.getAllAsync(
+          'SELECT * FROM Settings;');
+          console.log('Settings fetched:', settings);
+          const output = settings.reduce((acc, { setting, value }) => {
+            acc[setting] = value
+            console.log('Acc', acc);
+            return acc;
+          }, {});          
+          return output;
+        
+      } catch (error) {
+        console.error('Error getting settings:', error);
+        return [];
+      }
+    }
+
+  // DELETE: Delete a course
+  async deleteCourse(course: Course) {
     if (!this.db) return;
     try {
       await this.db.runAsync('DELETE FROM Course WHERE id = ?;', course.id);

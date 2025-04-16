@@ -1,8 +1,12 @@
 import { create } from 'zustand';
+
+import db from '../db/db';
+
 type Location = {
   latitude : number;
   longitude : number;
 };
+
 
 type Stroke = {
   selectedCourse: any;
@@ -32,3 +36,14 @@ export const globalStateVar = create<Stroke>((set) => ({
   location: null,
   setLocation: (loc) => set({ location : loc})
 }));
+
+export const SETTINGS = {
+  TEST: false,
+  HANDICAP: 0,
+  LOCATION: '',
+  LANGUAGE: '',
+}
+
+export const settingsList = async (): Promise<[]> => {
+   return await db.getSettings();
+};
