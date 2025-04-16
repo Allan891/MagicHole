@@ -15,6 +15,8 @@ export function CoursePicker({ onChooseCourse }) {
   const location = globalStateVar((state) => state.location);
   
   useEffect(() => {
+
+    if (searchTerm != "") return;
     
     console.log('use effect here!! Bang ! ',location)
     if (!location) return;
@@ -35,8 +37,8 @@ export function CoursePicker({ onChooseCourse }) {
       courses.sort((a, b) => {
         return a.distance - b.distance;
       });    
-      setFilteredCourses(courses)
-  },[location])
+      setFilteredCourses(courses.slice(0,10))
+  },[location, searchTerm])
 
   useEffect(() => {
     if(searchTerm.length < 1 ) return
