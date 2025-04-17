@@ -8,6 +8,7 @@ import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { calculateDistance } from "@/utils";
 import {calculateAverage, generateStatTables, getMedian} from "@/utils";
 import { useRouter } from "expo-router";
+import { globalStateVar } from "../state/globalStateVar";
 //import { Text, useTheme } from '@rneui/themed';
 
 
@@ -16,6 +17,8 @@ export const Stats = () => {
    const [sGAverage, setsGAverage] = useState<number[]>(1);
    const [sGMedian, setsGMedian] = useState<number[]>(1);
    const router = useRouter();
+   const strokes = globalStateVar((state) => state.strokes);
+   
    useEffect(() => {
         /* db.getStrokes()
                .then((strokes) => {
@@ -35,7 +38,7 @@ export const Stats = () => {
                 */
         const fetchData = async () => {
             console.log('Start Fetch Data');
-            const strokeTables: stroke[][]  = await generateStatTables();
+            const strokeTables: Stroke[][]  = await generateStatTables();
                     console.log(strokeTables);
                     console.log('WE ALMST DIT IT');
                     console.log(' ');
@@ -60,7 +63,7 @@ export const Stats = () => {
             console.log('Start Stats');
             fetchData();
             //.catch(console.error());
-       }, []);
+       }, [strokes]);
 
 
 
@@ -106,8 +109,8 @@ export const Stats = () => {
 
                           <Text style={styles.statsItemLabel}>Average</Text>
 
-                          {(sGAverage[index+2] && sGAverage[index]>-10) && <Text style={styles.statsItemValue}>{sGAverage[index +2]}</Text>  }
-                         {(!sGAverage[index+2] || sGAverage[index]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                          {(sGAverage[index+2] && sGAverage[index+2]>-10) && <Text style={styles.statsItemValue}>{sGAverage[index +2]}</Text>  }
+                         {(!sGAverage[index+2] || sGAverage[index+2]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
                                <Text style={styles.statsItemLabel}>Median</Text>
 
                         {(sGMedian[index+2] && sGMedian[index+2]>-10) && <Text style={styles.statsItemValue}>{sGMedian[index+2]}</Text>  }

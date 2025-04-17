@@ -76,6 +76,7 @@ class Database {
       startLatitude REAL,
       startLongitude REAL,
       distance INTEGER,
+      distanceLeft INTEGER,
       strokesGained REAL,
       lie INTEGER,
       golfClubId INTEGER NOT NULL,
@@ -158,8 +159,10 @@ class Database {
       try {
         const settings = await this.db.getAllAsync(
           'SELECT * FROM Settings;');
+          console.log('Settings fetched:', settings);
           const output = settings.reduce((acc, { setting, value }) => {
             acc[setting] = value
+            console.log('Acc', acc);
             return acc;
           }, {});          
           return output;
@@ -205,6 +208,40 @@ class Database {
 
 //#endregion
 
+
+
+//#region CRUD Operations for Settings
+  // Settings
+  async setSetting(setting: string, value: string) {
+    if (!this.db) return;
+    try {
+      await this.db.runAsync(
+        'REPLACE INTO Settings (setting, value) VALUES (?, ?);',
+        setting, value);
+      console.log('Setting updated');
+    } catch (error) {
+      console.error('Error updating setting:', error);
+    }
+  }
+
+  async getSettings(): Promise<[]> {
+    if (!this.db) return [];
+    try {
+      const settings = await this.db.getAllAsync(
+        'SELECT * FROM Settings;');
+        const output = settings.reduce((acc, { setting, value }) => {
+          acc[setting] = value
+          return acc;
+        }, {});          
+        return output;
+      
+    } catch (error) {
+      console.error('Error getting settings:', error);
+      return [];
+    }
+  }
+//#endregion
+ 
 
 
 //#region CRUD Operations for Hole Table
@@ -268,7 +305,7 @@ class Database {
   async getHoleById(id: number): Promise<Hole | null> {
     if (!this.db) return null;
     try {
-      return await this.db.getFirstAsync<Hole>('SELECT * FROM Stroke WHERE id = ?;', id);
+      return await this.db.getFirstAsync<Hole>('SELECT * FROM Hole WHERE id = ?;', id);
     } catch (error) {
       console.error('Error fetching hole:', error);
       return null;
@@ -471,10 +508,10 @@ async updateRound(round: Round) {
 }
 
 // DELETE: Delete a round
-async deleteRound(round: Round) {
+async deleteRound(id: number) {
   if (!this.db) return;
   try {
-    await this.db.runAsync('DELETE FROM Round WHERE id = ?;', round.id);
+    await this.db.runAsync('DELETE FROM Round WHERE id = ?;', id);
     console.log('Round deleted');
   } catch (error) {
     console.error('Error deleting round:', error);
@@ -528,8 +565,8 @@ async getRoundById(id: number): Promise<Round | null> {
     if (!this.db) return -1;
     try {
       await this.db.runAsync(
-        'INSERT INTO Stroke (holeId, roundId, strokeNr, startLatitude, startLongitude, distance, strokesGained, lie, golfClubId, playerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-        stroke.holeId, stroke.roundId, stroke.strokeNr, stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.strokesGained, stroke.lie, stroke.golfClubId, stroke.playerId);
+        'INSERT INTO Stroke (holeId, roundId, strokeNr, startLatitude, startLongitude, distance, distanceLeft, strokesGained, lie, golfClubId, playerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+        stroke.holeId, stroke.roundId, stroke.strokeNr, stroke.startLatitude, stroke.startLongitude, stroke.distance, stroke.distanceLeft, stroke.strokesGained, stroke.lie, stroke.golfClubId, stroke.playerId);
       const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
       console.log('Stroke created with ID', result?.id);
       return result?.id ?? -2;

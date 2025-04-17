@@ -13,7 +13,7 @@ import { ThemedText } from '@/components/ThemedText';
 
 export function HoleOverview({ holeData, courseId}) {
 
-  console.log('holedata', holeData)
+  //console.log('holedata', holeData)
   
 
 
@@ -36,7 +36,7 @@ export function HoleOverview({ holeData, courseId}) {
     }else if (diff == -2){
       color = "blue";
     }
-    console.log('What color', color)
+    //console.log('What color', color)
     return color;
 
   }
@@ -48,7 +48,8 @@ export function HoleOverview({ holeData, courseId}) {
     <View 
     style={[styles.hole, 
       {
-        backgroundColor: getColor(getPar(courseId)[index] , item)
+        backgroundColor: getColor(getPar(courseId)[index] , item),
+        opacity: item == null ? 0.1 : 1
       } ]}>
     </View>
 

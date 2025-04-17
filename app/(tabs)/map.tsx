@@ -26,23 +26,32 @@ import {calculateStrokesGained,calculateRawSG} from '@/utils';
 import db from '../db/db';
 import { globalStateVar } from '../state/globalStateVar';
 import { setBackgroundColorAsync } from 'expo-system-ui';
+import { CircleButton } from '@/components/CircleButton';
+import { useRouter } from 'expo-router';
 
 
 
 export default function HomeScreen() {
 
+  const initialCourse = courses[Math.floor(Math.random() * courses.length)];
+
   const strokes = globalStateVar((state) => state.strokes);
+  const currentGlobalHole = globalStateVar((state) => state.currentHole);
+  const setLocationGlobal = globalStateVar((state) => state.setLocation);
   const setStroke = globalStateVar((state) => state.setStroke);
+  const resetScore = globalStateVar((state) => state.reset);
   const [mapStrokes, setMapStrokes] = useState<any[][]>([[]]);
   const mapRef = useRef<MapView | null>(null);
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [distanceLeft, setDistanceLeft] = useState<number | null>(null);
   const [zoomLevel, setZoomLevel] = useState<number>(18);
+  const [altitudeLevel, setAltitudeLevel] = useState<number>(0.009);
   const [bearing, setBearing] = useState(0);
   const [currentHole, setCurrentHole] = useState<number>(0);
   const [currentStroke, setCurrentStroke] = useState<number>(0);
   const [roundId, setRoundId] = useState<number | null>(null);
   const [strokeCoordinates, setStrokeCoordinates] = useState<LatLng[]>([]);
+  const [holeFinished, setHoleFinished] = useState<boolean>(false);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
 
   const [LockedView, setLockedView] = useState<boolean>(false);
@@ -50,7 +59,7 @@ export default function HomeScreen() {
   const [lon2, setLon2] = useState<number>(0);
 
 
-  const [courseObject, setCourseObject] = useState<Object>(courses[0]);
+  const [courseObject, setCourseObject] = useState<Object>(initialCourse);
   const [courseChosen, setCourseChosen] = useState<boolean>(false);
 
   const teeCoords = courseObject?.holes[currentHole].teeBack;
@@ -59,18 +68,52 @@ export default function HomeScreen() {
   const latitude = (teeCoords.latitude + holeCoords.latitude) / 2;
   const longitude = (teeCoords.longitude + holeCoords.longitude) / 2;
 
+  const resetState = () => {
+    setCurrentHole(0);
+    setCurrentStroke(0);
+    setMapStrokes([[]]);
+    setStrokeCoordinates([]);
+    setCourseChosen(false);
+    setLocation(null);
+    setDistanceLeft(null);
+    setZoomLevel(18);
+    setBearing(0);
+    setRoundId(null);
+    setCourseObject(initialCourse);
+  };
+
   const initialRegion = {
     latitude,
     longitude,
-    latitudeDelta: 1 / 1000,
-    longitudeDelta: 1 / 1000,
+    latitudeDelta: 1 / 800,
+    longitudeDelta: 1 / 800,
   };
 
+  const goToRegion = async () => {
 
+    const newRegion = {
+      latitude: courseObject.holes.at(-1).greenMiddle.latitude,
+      longitude: courseObject.holes.at(-1).greenMiddle.longitude,
+      latitudeDelta: 1 / 1000,
+      longitudeDelta: 1 / 1000,
+    }
 
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    mapRef.current?.animateToRegion(newRegion, 80000);
+  };
+
+  const router = useRouter();
+
+  const goToScorecard = () => {
+    router.push({
+      pathname: '/screens/score'
+    });
+  }
 
   const handleCourseChosen = async (id) => {
-    console.log('Course chosen: ', id);
+
+    resetScore();
+
     const newRound: Round = {
       time: Date.now(), // Example time in ISO 8601 format
       playerId: 999,      // Example player ID
@@ -79,12 +122,19 @@ export default function HomeScreen() {
     };
     const newRoundId = await db.createRound(newRound);
     setRoundId(newRoundId);
-    console.log("New round id: ", newRoundId);
+    //console.log("New round id: ", newRoundId);
     const thisCourse = courses.find(a => a.id === id);
+    const newRegion = {
+      latitude: thisCourse.holes[0].teeBack.latitude,
+      longitude: thisCourse.holes[0].teeBack.longitude,
+      latitudeDelta: 1 / 1000,
+      longitudeDelta: 1 / 1000,
+    }
+    mapRef.current?.animateToRegion(newRegion);
     setCourseObject(thisCourse);
     setSelectedCourse(thisCourse);
     setCourseChosen(true);
-    console.log('thisCourse', thisCourse);
+    //console.log('thisCourse', thisCourse);
     if (thisCourse){
       setBearing(  //set bearing for hole 0, since we dont switch holes here it doesnt happen automatically.
         calculateBearing(
@@ -109,19 +159,49 @@ export default function HomeScreen() {
   }
 
   const adjustZoom = (distance: number) => {
-    console.log(distance);
-    if (distance <= 200) setZoomLevel(19);
-    else {
-        if (distance <= 320) setZoomLevel(18);
-        else setZoomLevel(17);
+    //console.log(distance);
+    
+    if (distance <= 70){
+      console.log("distance <= 70");
+      setZoomLevel(19);
+      setAltitudeLevel(0.008)
+    }else if (70 < distance && distance <= 180){ 
+      console.log('70 < distance && distance <= 180')
+      setZoomLevel(19);
+      setAltitudeLevel(0.0065);
     }
-
+    else if (180  < distance && distance <= 320){
+      console.log('250  < distance && distance <= 320')
+      setZoomLevel(18);
+      setAltitudeLevel(0.009);
+    }
+    else if (320  < distance && distance <= 420){
+      console.log('320  < distance && distance <= 320')
+      // setZoomLevel(18); <-- Add android zoom level
+      setAltitudeLevel(0.010);
+    }
+    else if (420  < distance && distance <= 600){
+      console.log('420  < distance && distance <= 320')
+      // setZoomLevel(18); <-- Add android zoom level
+      setAltitudeLevel(0.012);
+    }
+    else if (600  < distance && distance <= 750){
+      console.log('600  < distance && distance <= 320')
+      // setZoomLevel(18); <-- Add android zoom level
+      setAltitudeLevel(0.016);
+    }
+    else {
+      console.log('else zoom')
+      setZoomLevel(17);
+      setAltitudeLevel(0.007);
+    }
   };
 
-  const addStroke = (lastHole = false) => {
+  const addStroke = (lastStroke = false) => {
+
     if (location) {
 
-      const { latitude, longitude } = lastHole? courseObject.holes[currentHole].greenMiddle : location;
+      const { latitude, longitude } = lastStroke ? courseObject.holes[currentHole].greenMiddle : location;
       const previousStrokes = mapStrokes[currentHole];
       const previousStroke: Stroke = previousStrokes?.length > 0 ? previousStrokes[previousStrokes.length - 1] : null;
       let thisStroke: Stroke = {
@@ -131,6 +211,7 @@ export default function HomeScreen() {
         startLatitude: latitude,
         startLongitude: longitude,
         distance: 0, // Placeholder, calculate if needed
+        distanceLeft: distanceLeft || -1,
         golfClubId: 69, // Placeholder, update with actual golf club ID
         playerId: 999,
         lie: 1, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.
@@ -139,7 +220,7 @@ export default function HomeScreen() {
       if (currentStroke == 0){ //AUTO SETS LIE TO 0 = TEE IF FIRST STROKE OF HOLE, CAN PROBABLY STAY
         thisStroke.lie = 0
       }
-      const distanceToFlag = previousStroke ? Math.round(calculateDistance(thisStroke.startLatitude, thisStroke.startLongitude, holeCoords.latitude, holeCoords.longitude)): 0;
+      const distanceToFlag = Math.round(calculateDistance(thisStroke.startLatitude, thisStroke.startLongitude, holeCoords.latitude, holeCoords.longitude));
       // PLACEHOLDER TO CHANGE CLUB = Putter and Lie = Green if distance is short. Should be done by manual input when implemented instead.
       if (distanceToFlag < 9) {
           thisStroke.golfClubId = 0;
@@ -149,15 +230,15 @@ export default function HomeScreen() {
 
       // Calculate distance if there's a previous stroke
       if (previousStroke) {
-        console.log('=======================================');
-        console.log('Previous stroke: ', previousStroke);
+        //console.log('=======================================');
+        //console.log('Previous stroke: ', previousStroke);
         const distance = previousStroke ? Math.round(calculateDistance(previousStroke.startLatitude, previousStroke.startLongitude, latitude, longitude)): 0;
 
-        console.log('Distance: ', distance);
-        console.log('Lie: ', previousStroke.lie);
+        //console.log('Distance: ', distance);
+        //console.log('Lie: ', previousStroke.lie);
         previousStroke.distance = distance;
-        console.log('bait');
-        if (lastHole){
+        //console.log('bait');
+        if (lastStroke){
             previousStroke.strokesGained = calculateRawSG(previousStroke, holeCoords.latitude,holeCoords.longitude) -1;
             }
         else{
@@ -165,22 +246,17 @@ export default function HomeScreen() {
         }
 
         //previousStroke.strokesGained = calculateStrokesGained(previousStroke, thisStroke, holeCoords.latitude,holeCoords.longitude)
-        console.log('Updated previous stroke: ', previousStroke);
-        console.log('=======================================');
+        //console.log('Updated previous stroke: ', previousStroke);
+        //console.log('=======================================');
         db.createStroke(previousStroke); // Save the previous stroke to the database
-        console.log('Saved previous stroke to database',);
+        //console.log('Saved previous stroke to database',);
 
 
       }
-      if(lastHole){
-          console.log('Strokes', mapStrokes);
 
-          console.log('LastStroke', previousStroke);
-          return;
-      }
       const updatedMapStrokes = [...mapStrokes];
-        console.log(updatedMapStrokes);
-        console.log('current hole: ',currentHole);
+        //console.log(updatedMapStrokes);
+        //console.log('current hole: ',currentHole);
         if (updatedMapStrokes[currentHole])
             updatedMapStrokes[currentHole] = [...updatedMapStrokes[currentHole], thisStroke];
         else
@@ -189,11 +265,12 @@ export default function HomeScreen() {
       setMapStrokes(updatedMapStrokes);
 
       const newArr = [...strokeCoordinates, { latitude, longitude }];
-      console.log('newArr', newArr);
+      //console.log('newArr', newArr);
       setStrokeCoordinates(newArr);
 
-      const updatedStrokes = [...strokes];
+      
 
+      if(lastStroke) return;
       setCurrentStroke(currentStroke + 1);
 
 
@@ -216,28 +293,63 @@ export default function HomeScreen() {
     setCurrentStroke(current - 1);
   };
 
+  const changeHole = (hole: number) => {
+
+    if (hole < 0 ) return;
+    if (hole >= courseObject.holes.length) return;
+
+    setCurrentHole(hole);
+    updateMapStrokes(hole);
+
+  }
+
+  const updateMapStrokes = (hole: number) => {
+    const holeStrokes = mapStrokes[hole];
+    if (!holeStrokes) {
+      setStrokeCoordinates([]);
+      return;
+    }
+    const newCoordinates = holeStrokes.map(item => ({
+      latitude: item.startLatitude,
+      longitude: item.startLongitude
+    }));
+    setStrokeCoordinates(newCoordinates);
+  }
+
   const nextHole = () => {
 
     if (currentHole + 1 >= courseObject.holes.length) {
       return;
     }
-    finishHole();
+    
     setCurrentHole(currentHole + 1);
     setCurrentStroke(0); // This will make the first stroke for the new hole be 1
     setStrokeCoordinates([]); // Reset map strokes
+    setHoleFinished(false);
 
     if (test) {
       setLocation(null);
       updateTestLocation(courseObject.holes[currentHole + 1].teeBack, courseObject.holes[currentHole + 1].greenMiddle);
     }
+    else {
+      setLocation(location);
+    };
+
     const distance = calculateDistance(courseObject.holes[currentHole + 1].teeBack.latitude,courseObject.holes[currentHole + 1].teeBack.longitude, courseObject.holes[currentHole + 1].greenMiddle.latitude, courseObject.holes[currentHole + 1].greenMiddle.longitude)
     adjustZoom(distance);
   };
+  
   const finishRound = () => {
     addStroke(true);
+    router.push({
+      pathname: '/screens/roundsummary',
+      params: { roundChosenId: roundId },
+    });
+    resetState();
   }
   const finishHole = () => {
     addStroke(true);
+    setHoleFinished(true);
   }
 
   const ToggleLock = () => {
@@ -246,7 +358,7 @@ export default function HomeScreen() {
 
   const updateTestLocation = (forcedLocation = {}, nextHole = {}) => {
 
-    console.log('Updating test location');
+    //console.log('Updating test location');
 
     let updatedLatitude;
     let updatedLongitude;
@@ -266,9 +378,11 @@ export default function HomeScreen() {
           updatedLatitude = location.latitude - (location.latitude - holeCoords.latitude)* (Math.random()*0.5 + 0.5);
           updatedLongitude = location.longitude - (location.longitude - holeCoords.longitude)* (Math.random()*0.5 + 0.5);
       }
+
+
     }
 
-    console.log('Update to: ', updatedLatitude, updatedLongitude);
+    //console.log('Update to: ', updatedLatitude, updatedLongitude);
 
     const testLocation: LocationObject = {
 
@@ -282,7 +396,16 @@ export default function HomeScreen() {
 
       timestamp: Date.now(),
     };
-      setLocation(testLocation)
+      const asdf: Location = {latitude: updatedLatitude, longitude: updatedLongitude};
+
+      if (test) {
+        setLocation(testLocation)
+        setLocationGlobal(asdf)
+      }
+      else {
+        setLocation(location)
+        setLocationGlobal(asdf)
+      };
       const distance = calculateDistance(
         testLocation.latitude,
         testLocation.longitude,
@@ -297,25 +420,27 @@ export default function HomeScreen() {
   const test = true; // Auto generate GPS locations to test
 
   if (test && !location) {
-
     updateTestLocation(teeCoords);
-
+    setLocationGlobal(teeCoords);
   }
 
   const updateLocation = (event) => {
     //console.log(event);
-
+    const { coordinate } = event?.nativeEvent;
+    //console.log('CTRLF HÄR',coordinate);
+    const asdf: Location = {latitude: coordinate.latitude, longitude: coordinate.longitude};
+    setLocationGlobal(event)
+    //console.log('ffffff',asdf)
     if (test) return;
 
-    const { coordinate } = event?.nativeEvent;
-    console.log(coordinate);
+    
 
     setLat2 ( coordinate.latitude);
     setLon2 ( coordinate.longitude); // Saves lat & lon of user position in "lat2" and "lon2" for use elsewhere.
     //return;
     if (coordinate){
       setLocation(coordinate);
-      console.log('location: ', location)
+      //console.log('location: ', location)
       //return;
       const distance = calculateDistance(
         coordinate.latitude,
@@ -343,6 +468,14 @@ export default function HomeScreen() {
     // }, [mapStrokes, currentHole]);
 
   // Update bearing when hole changes
+
+  useEffect(() => {
+    if(!courseChosen) return;
+    changeHole(currentGlobalHole);
+    router.back();
+  }, [currentGlobalHole]);
+  
+
   useEffect(() => {
     setBearing(
       calculateBearing(
@@ -360,7 +493,7 @@ export default function HomeScreen() {
   if (Platform.OS == 'ios') {
     handleHeight = screenHeight * 0.12;
   } else {
-    handleHeight = screenHeight * 0.09;
+    handleHeight = screenHeight * 0.04;
   }
   const collapsedY = screenHeight - handleHeight;
 
@@ -390,6 +523,8 @@ export default function HomeScreen() {
 
       }
 
+      {courseChosen &&
+
       <View style={{ width: '80%', height: 120, position: 'absolute', top: '10%', left: '10%', zIndex: 999999 }}>
       {currentHole == 0 && currentStroke == 0 &&
         <ThemedText style={{ textAlign: 'center', color: 'white'}} type="title">
@@ -414,8 +549,10 @@ export default function HomeScreen() {
          }
       </View>
 
+        }
       <MapView
-
+        ref={mapRef}
+        onMapReady={goToRegion}
         onUserLocationChange={updateLocation}
         scrollEnabled={!(LockedView)}
         rotateEnabled={!(LockedView)}
@@ -434,14 +571,17 @@ export default function HomeScreen() {
           heading: bearing,
           pitch: 90,
           zoom: zoomLevel,
+          altitude: altitudeLevel,
         }}
       >
-        <Marker coordinate={teeCoords}>
-          <MaterialIcons name="sports-golf" size={28} color="white" />
-        </Marker>
-        <Marker coordinate={holeCoords}>
-          <MaterialIcons name="golf-course" size={28} color="red" />
-        </Marker>
+
+          <Marker coordinate={courseChosen ? teeCoords : {latitude: 0, longitude: 0}}>
+            <MaterialIcons name="sports-golf" size={28} color="white" />
+          </Marker>
+          <Marker coordinate={courseChosen ? holeCoords : {latitude: 0, longitude: 0}}>
+            <MaterialIcons name="golf-course" size={28} color="red" />
+          </Marker>
+        
 
         <Polyline
             coordinates={strokeCoordinates}
@@ -457,7 +597,7 @@ export default function HomeScreen() {
             strokeWidth={3}
           />
 
-        {test && location &&
+        {test && location && courseChosen &&
 
         <Marker coordinate={location}>
           <MaterialIcons name="person" size={28} color="white" />
@@ -467,30 +607,60 @@ export default function HomeScreen() {
 
       </MapView>
 
-      <Animated.View
+        {courseChosen && 
+      <View style={styles.floatingButtonContainer}>
+      <CircleButton disabled={holeFinished} onPress={() => {addStroke()}} icon={"add-circle-outline"} label={"Add stroke"} ></CircleButton>
+      <CircleButton onPress={goToScorecard} icon={"sports-score"} label={"Scorecard"} ></CircleButton>
+      { currentHole + 1 >= courseObject.holes.length ? (
+        <CircleButton onPress={finishRound} icon={"check-circle-outline"} label={"Finish round"} ></CircleButton>
+      ) : (
+        holeFinished ? 
+          <CircleButton onPress={nextHole} icon={"navigate-next"} label={"Next hole"} ></CircleButton>
+        :
+          <CircleButton disabled={currentStroke == 0} onPress={finishHole} icon={"golf-course"} label={"Finish hole"} ></CircleButton>
+      )}
+      
+      </View>
+    }
+
+    
+<Animated.View
   {...panResponder.panHandlers}
-  style={[styles.bottomSheet, { transform: [{ translateY: sheetAnim }] }]}
+  style={[
+    styles.bottomSheet,
+    { transform: [{ translateY: sheetAnim }] },
+    !courseChosen && { display: 'none' }
+  ]}
 >
 
-  <View style={styles.strokeAdjusterRow}>
-  <TouchableOpacity onPress={removeStroke}>
-  <MaterialIcons name="remove-circle-outline" size={36} color="black" />
+
+
+<View style={styles.strokeAdjusterRow}>
+<TouchableOpacity style={{opacity: currentHole == 0 ? 0.5 : 1}} 
+onPress={() => { 
+  changeHole(currentHole - 1);
+}
+  }
+>
+    <MaterialIcons name="remove-circle-outline" size={36} color="black" />
 </TouchableOpacity>
 
 
   <ThemedText style={styles.strokeCount}>
-    {strokes[currentHole] ?? 0}
+    {(currentHole + 1).toString()}
   </ThemedText>
 
   <TouchableOpacity
+    style={{opacity: currentHole + 1 >= courseObject.holes.length ? 0.5 : 1}}
     onPress= {() => {
-      addStroke();
+      changeHole(currentHole + 1);
     }}
   >
     <MaterialIcons name="add-circle-outline" size={36} color="black" />
   </TouchableOpacity>
 </View>
 
+{/* 
 <View style={[styles.buttonRow, {flexDirection: 'column'}]}>
 {  location && currentStroke > 0 &&
          <ThemedText>Previous shot length:
@@ -521,7 +691,8 @@ export default function HomeScreen() {
       <ThemedText style={styles.holeOutText}>Next Hole</ThemedText>
     </View>)
   }
-</View>
+   */}
+{/* </View>  */}
 
 <View style={styles.buttonRow}>
   <ThemedText type="subtitle">{courseObject?.name}</ThemedText>
@@ -534,6 +705,17 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  floatingButtonContainer: {
+    position: 'absolute',
+    bottom: 40,
+    left: '10%',
+    width: '80%',
+    height: 50,
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
   bottomSheet: {
     position: 'absolute',
     left: 0,

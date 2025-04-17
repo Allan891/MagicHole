@@ -8,7 +8,7 @@ import { getCourse } from '@/utils';
 export function Scorecard({strokes, courseId, handlePress}) {
 //   const strokes = globalStateVar((state) => state.strokes);
 //   const courseObject = globalStateVar((state) => state.selectedCourse);
-    console.log('scorie:', strokes, courseId)
+    //console.log('scorie:', strokes, courseId)
   const courseObject = getCourse(courseId);
   if (!courseObject) {
     return <ThemedText>Loading course...</ThemedText>;
@@ -41,8 +41,8 @@ export function Scorecard({strokes, courseId, handlePress}) {
     }
 
     return (
-        <TouchableOpacity onPress={() => handlePress(holeIndex)}>
-            <View key={holeIndex} style={styles.row}>
+        <TouchableOpacity key={holeIndex} onPress={() => handlePress(holeIndex)}>
+            <View style={styles.row}>
                 <ThemedText style={styles.cell}>{holeIndex + 1}</ThemedText>
                 <ThemedText style={styles.cell}>{par}</ThemedText>
                 <ThemedText style={scoreStyle}>{score ?? '-'}</ThemedText>
@@ -56,9 +56,9 @@ export function Scorecard({strokes, courseId, handlePress}) {
   };
 
   return (
-    <ScrollView style={{ backgroundColor: 'white' }}>
+
       <ThemedView style={styles.container}>
-        <ThemedText style={styles.title}>{courseObject.namn} – Scorecard</ThemedText>
+        <ThemedText style={styles.title}>{courseObject.namn}Scorecard</ThemedText>
 
         <View style={styles.row}>
           <ThemedText style={styles.header}>Hole</ThemedText>
@@ -70,8 +70,9 @@ export function Scorecard({strokes, courseId, handlePress}) {
 
         <ThemedText style={styles.section}>Front 9</ThemedText>
         {courseObject.holes.slice(0, 9).map((_, i) => renderRow(i))}
-
-        <ThemedText style={styles.section}>Back 9</ThemedText>
+        {courseObject.holes.length > 9 &&
+          <ThemedText style={styles.section}>Back 9</ThemedText>
+        }
         {courseObject.holes.slice(9, 18).map((_, i) => renderRow(i + 9))}
 
         <View style={[styles.row, { marginTop: 16 }]}>
@@ -84,7 +85,7 @@ export function Scorecard({strokes, courseId, handlePress}) {
           <ThemedText style={styles.cell}>–</ThemedText>
         </View>
       </ThemedView>
-    </ScrollView>
+
   );
 }
 

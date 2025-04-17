@@ -1,10 +1,10 @@
 {
   "data": [
-    { "Distance": 0, "Tee": null, "Fairway": 2.4, "Rough": 2.59, "Sand": 2.53, "Recovery": null },
-    { "Distance": 18.29, "Tee": null, "Fairway": 2.4, "Rough": 2.59, "Sand": 2.53, "Recovery": null },
-    { "Distance": 36.58, "Tee": null, "Fairway": 2.6, "Rough": 2.78, "Sand": 2.82, "Recovery": null },
-    { "Distance": 54.86, "Tee": null, "Fairway": 2.7, "Rough": 2.91, "Sand": 3.15, "Recovery": null },
-    { "Distance": 73.15, "Tee": null, "Fairway": 2.75, "Rough": 2.96, "Sand": 3.24, "Recovery": null },
+    { "Distance": 0, "Tee": 2.92, "Fairway": 2.4, "Rough": 2.59, "Sand": 2.53, "Recovery": 3.8 },
+    { "Distance": 18.29, "Tee": 2.92, "Fairway": 2.4, "Rough": 2.59, "Sand": 2.53, "Recovery": 3.8 },
+    { "Distance": 36.58, "Tee": 2.92, "Fairway": 2.6, "Rough": 2.78, "Sand": 2.82, "Recovery": 3.8 },
+    { "Distance": 54.86, "Tee": 2.92, "Fairway": 2.7, "Rough": 2.91, "Sand": 3.15, "Recovery": 3.8 },
+    { "Distance": 73.15, "Tee": 2.92, "Fairway": 2.75, "Rough": 2.96, "Sand": 3.24, "Recovery": 3.8 },
     { "Distance": 91.44, "Tee": 2.92, "Fairway": 2.8, "Rough": 3.02, "Sand": 3.23, "Recovery": 3.8 },
     { "Distance": 109.73, "Tee": 2.99, "Fairway": 2.85, "Rough": 3.08, "Sand": 3.21, "Recovery": 3.78 },
     { "Distance": 128.02, "Tee": 2.97, "Fairway": 2.91, "Rough": 3.15, "Sand": 3.22, "Recovery": 3.8 },

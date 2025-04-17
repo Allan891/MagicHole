@@ -8,13 +8,15 @@ import { Scorecard } from '@/components/Scorecard';
 export default function ScoreOverview() {
   const strokes = globalStateVar((state) => state.strokes);
   const courseObject = globalStateVar((state) => state.selectedCourse);
+  const currentHole = globalStateVar((state) => state.currentHole);
+  const setCurrentHole = globalStateVar((state) => state.setCurrentHole);
   const courseId = courseObject.id;
   
 
     return (
-      <View style={styles.container}>
-        <Scorecard handlePress={()=>{}}strokes={strokes} courseId={courseId} />
-      </View>
+      <ScrollView style={styles.container}>
+        <Scorecard handlePress={setCurrentHole} strokes={strokes} courseId={courseId} />
+      </ScrollView>
     );
   };
 

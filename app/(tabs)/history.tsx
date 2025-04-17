@@ -1,17 +1,21 @@
-import { StyleSheet, View, ScrollView, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, ScrollView, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { globalStateVar } from '../state/globalStateVar';
 import courses from '@/constants/courses';
 import { HoleOverview } from '@/components/HoleOverview';
 import {getPar} from '@/utils';
-import db from '../db/dbParameterCalls';
+import dbExtra from '../db/dbParameterCalls';
+import db from '../db/db';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 
 
 
 export default function History() {
+
+  const strokes = globalStateVar((state) => state.strokes);
+
   const roundsexample = [
     {id:1,courseid:1, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9]},
     {id:2,courseid:2, timestamp: Date.now(), strokes: [2,5,4,6,3,5,6,8,9]},
@@ -28,19 +32,17 @@ export default function History() {
   const [rounds, setRounds] = useState<Object[]>([]);
 
   const router = useRouter();
+
+  async function updateRounds() {
+    const rounds2 = await dbExtra.getLatestRoundsData(999, 25);
+    setRounds(rounds2);
+  }
   
   useEffect(() => {
-
-    async function updateRounds() {
-      const rounds2 = await db.getLatestRoundsData(999, 25);
-      console.log('db rounds: ', rounds2);
-      setRounds(rounds2);
-    }
     
     updateRounds();
     
-
-    }, []);
+    }, [strokes]);
 
   const onChooseRound = async (id) => {
     router.push({
@@ -69,10 +71,29 @@ export default function History() {
     return diff;
   };  
 
+  const removeRound = (id) => {
+
+    db.deleteRound(id);
+    updateRounds();
+
+  }
+
+  const showConfirmation = (id) => {
+    Alert.alert(
+      'Are you sure you want to remove this round?',
+      'This action cannot be undone.',
+      [
+        { text: 'No', style: 'cancel' },
+        { text: 'Yes', onPress: () => removeRound(id) },
+      ],
+      { cancelable: true }
+    );
+  };
+
     const renderRound = ({ item }) => (
-      console.log(item.name),
+      //console.log(item),
       <View style={styles.courseItem}>
-        <TouchableOpacity onPress={() => onChooseRound(item.roundId)}>
+        <TouchableOpacity onLongPress={() => {showConfirmation(item.roundId)}} onPress={() => onChooseRound(item.roundId)}>
           <ThemedText style={styles.courseTotal}>{getCourseTotal(getPar(item.courseid),item.strokes)}</ThemedText>
           <ThemedText style={styles.courseText}>{getCourseName(item.courseid)}</ThemedText>
           <ThemedText>{getCourseTime(item.timestamp)}</ThemedText>

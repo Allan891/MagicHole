@@ -46,6 +46,7 @@ type Stroke = {
   startLongitude: number;
   distance: number;
   strokesGained: number;
+  distanceLeft: number;
   lie: number; // 0 = Tee, 1 = Fairway, 2 = Rough, 3 = Sand, 4 = Green, 5 = Recovery 
   golfClubId: number;
   playerId: number;
