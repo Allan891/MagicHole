@@ -18,7 +18,7 @@ export default function ScoreOverview() {
 
         {[
         { label: 'Import Courses & Holes', action: db.importCourses },
-        { label: 'Reset Data', action: () => console.log('Reset Data') },
+        { label: 'Get Approach Data', action: () => {console.log('Get Approach'); db.getApproachData(); }},
         { label: 'Get Courses & Holes', action: db.getCourses}
         ].map((button, index) => (
         <View key={index} style={{ marginBottom: 10 }}>

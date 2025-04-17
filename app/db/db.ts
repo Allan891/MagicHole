@@ -46,6 +46,7 @@ class Database {
       flagLongitude REAL NOT NULL,
       flagLatitude REAL NOT NULL,
       courseId INTEGER NOT NULL,
+      par INTEGER NOT NULL,
       FOREIGN KEY (courseId) REFERENCES Course (id));
 
     CREATE TABLE IF NOT EXISTS Player (
@@ -212,8 +213,8 @@ class Database {
     if (!this.db) return -1;
     try {
       await this.db.runAsync(
-        'INSERT INTO Hole (holeNr, backTeeLongitude, backTeeLatitude, flagLongitude, flagLatitude, courseId) VALUES (?, ?, ?, ?, ?, ?);',
-        hole.holeNr, hole.backTeeLongitude, hole.backTeeLatitude, hole.flagLongitude, hole.flagLatitude, hole.courseId);
+        'INSERT INTO Hole (holeNr, backTeeLongitude, backTeeLatitude, flagLongitude, flagLatitude, courseId, par) VALUES (?, ?, ?, ?, ?, ?, ?);',
+        hole.holeNr, hole.backTeeLongitude, hole.backTeeLatitude, hole.flagLongitude, hole.flagLatitude, hole.courseId, hole.par);
       const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
       console.log('Hole created with ID:', result?.id);
       return result?.id ?? -2;
@@ -785,6 +786,7 @@ importCourses = async () => {
         const holeEntry: Hole = {
           id: -1,
           holeNr: index + 1,
+          par: courseData.par[index],
           backTeeLongitude: hole.teeBack.longitude,
           backTeeLatitude: hole.teeBack.latitude,
           flagLongitude: hole.greenMiddle.longitude,
@@ -806,9 +808,39 @@ importCourses = async () => {
     });
     console.log("Holes ",allHoles);
     allHoles.forEach((hole) => {
-      console.log(`- ID: ${hole.id}, Nr: ${hole.holeNr}, Course: ${hole.courseId}, BackTLong: ${hole.backTeeLongitude}, BackTLat: ${hole.backTeeLatitude}, FlagLong: ${hole.flagLongitude}, FlagLat: ${hole.flagLatitude}`);
+      console.log(`- ID: ${hole.id}, Nr: ${hole.holeNr}, Course: ${hole.courseId}, BackTLong: ${hole.backTeeLongitude}, BackTLat: ${hole.backTeeLatitude}, FlagLong: ${hole.flagLongitude}, FlagLat: ${hole.flagLatitude}, Par: ${hole.par}`);
     });
   }
 //#endregion
 
+//#region Statistics
+async getApproachData(): Promise<[]> {
+  if (!this.db) return [];
+  try {
+    const data = await this.db.getAllAsync(`
+      SELECT*FROM Hole WHERE courseId IN (2,4);
+      SELECT Course.id AS courseId, Course.name,
+      Round.id AS 'roundID', 
+      Stroke.startLatitude, Stroke.startLongitude,
+      Hole.flagLongitude, Hole.flagLatitude
+      FROM Stroke
+      LEFT JOIN Round ON Stroke.roundId = Round.id
+      LEFT JOIN Course ON Course.id = Round.courseId
+      LEFT JOIN Hole ON Hole.holeNr = Stroke.holeId AND Course.id = Hole.courseId 
+      ;`);
+      console.log("Approach Data: ",data);
+      data.forEach((item: any) => {
+        console.log("============================================");
+        Object.entries(item).forEach(([key, value]) => {
+          
+          console.log(`${key}: ${value}`);
+        });
+      });
+      return data;
+  } catch (error) {
+    console.error('Error fetching tee slopes:', error);
+    return [];
+  }
+}
+//#endregion
 }export default new Database();
