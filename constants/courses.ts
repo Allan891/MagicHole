@@ -110356,6 +110356,409 @@ const courses = [
                 }
             }
         ]
+    },{
+        "id": 1337,
+        "name": "Augusta National Golf Club",
+        "par": [4,5,4,3,4,3,4,5,4,4,4,3,5,4,5,3,4,4],
+        "holes": [
+                {
+                    "greenBack": {
+                        "latitude": 56.2991599,
+                        "longitude": 12.4637654
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.504472,
+                        "longitude": -82.02351
+                    },
+                    "greenFront": {
+                        "latitude": 56.2991778,
+                        "longitude": 12.4640765
+                    },
+                    "teeFront": {
+                        "latitude": 56.2983494,
+                        "longitude": 12.4685212
+                    },
+                    "teeBack": {
+                        "latitude": 33.502419,
+                        "longitude": -82.019978
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2982268,
+                        "longitude": 12.462289
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.500392,
+                        "longitude": -82.023504
+                    },
+                    "greenFront": {
+                        "latitude": 56.2984165,
+                        "longitude": 12.4624432
+                    },
+                    "teeFront": {
+                        "latitude": 56.299412,
+                        "longitude": 12.4631943
+                    },
+                    "teeBack": {
+                        "latitude": 33.504747,
+                        "longitude": -82.024211
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2999575,
+                        "longitude": 12.4581829
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.501681,
+                        "longitude": -82.026005
+                    },
+                    "greenFront": {
+                        "latitude": 56.2998339,
+                        "longitude": 12.4584565
+                    },
+                    "teeFront": {
+                        "latitude": 56.2978077,
+                        "longitude": 12.4615528
+                    },
+                    "teeBack": {
+                        "latitude": 33.499795,
+                        "longitude": -82.023403
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2996963,
+                        "longitude": 12.4608406
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.501789,
+                        "longitude": -82.027914
+                    },
+                    "greenFront": {
+                        "latitude": 56.2997893,
+                        "longitude": 12.4604798
+                    },
+                    "teeFront": {
+                        "latitude": 56.3003436,
+                        "longitude": 12.4583663
+                    },
+                    "teeBack": {
+                        "latitude": 33.502012,
+                        "longitude": -82.02556
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2983047,
+                        "longitude": 12.4663223
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.498351,
+                        "longitude": -82.027449
+                    },
+                    "greenFront": {
+                        "latitude": 56.2983441,
+                        "longitude": 12.465924
+                    },
+                    "teeFront": {
+                        "latitude": 56.2990816,
+                        "longitude": 12.4612846
+                    },
+                    "teeBack": {
+                        "latitude": 33.501781,
+                        "longitude": -82.028282
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.292973,
+                        "longitude": 12.4707552
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.50032,
+                        "longitude": -82.026856
+                    },
+                    "greenFront": {
+                        "latitude": 56.2932052,
+                        "longitude": 12.4706586
+                    },
+                    "teeFront": {
+                        "latitude": 56.2971945,
+                        "longitude": 12.4696638
+                    },
+                    "teeBack": {
+                        "latitude": 33.498838,
+                        "longitude": -82.02729
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2925811,
+                        "longitude": 12.4732826
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.499443,
+                        "longitude": -82.023388
+                    },
+                    "greenFront": {
+                        "latitude": 56.2926019,
+                        "longitude": 12.4728923
+                    },
+                    "teeFront": {
+                        "latitude": 56.2928662,
+                        "longitude": 12.4707957
+                    },
+                    "teeBack": {
+                        "latitude": 33.50093,
+                        "longitude": -82.027418
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2952458,
+                        "longitude": 12.4715404
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.503698,
+                        "longitude": -82.023685
+                    },
+                    "greenFront": {
+                        "latitude": 56.2949749,
+                        "longitude": 12.4716799
+                    },
+                    "teeFront": {
+                        "latitude": 56.2921101,
+                        "longitude": 12.4730702
+                    },
+                    "teeBack": {
+                        "latitude": 33.499697,
+                        "longitude": -82.022861
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2932725,
+                        "longitude": 12.4735636
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.502303,
+                        "longitude": -82.020653
+                    },
+                    "greenFront": {
+                        "latitude": 56.2935017,
+                        "longitude": 12.4734215
+                    },
+                    "teeFront": {
+                        "latitude": 56.2956258,
+                        "longitude": 12.4720671
+                    },
+                    "teeBack": {
+                        "latitude": 33.504083,
+                        "longitude": -82.023637
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2962307,
+                        "longitude": 12.4726479
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.498051,
+                        "longitude": -82.020451
+                    },
+                    "greenFront": {
+                        "latitude": 56.2959761,
+                        "longitude": 12.4728491
+                    },
+                    "teeFront": {
+                        "latitude": 56.2933604,
+                        "longitude": 12.4753394
+                    },
+                    "teeBack": {
+                        "latitude": 33.502021,
+                        "longitude": -82.01971
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.297106,
+                        "longitude": 12.4730146
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.495206,
+                        "longitude": -82.022148
+                    },
+                    "greenFront": {
+                        "latitude": 56.2969267,
+                        "longitude": 12.4727665
+                    },
+                    "teeFront": {
+                        "latitude": 56.2961348,
+                        "longitude": 12.4717184
+                    },
+                    "teeBack": {
+                        "latitude": 33.498551,
+                        "longitude": -82.019291
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2981466,
+                        "longitude": 12.4786938
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.494509,
+                        "longitude": -82.023169
+                    },
+                    "greenFront": {
+                        "latitude": 56.2981488,
+                        "longitude": 12.4783224
+                    },
+                    "teeFront": {
+                        "latitude": 56.2984595,
+                        "longitude": 12.4733867
+                    },
+                    "teeBack": {
+                        "latitude": 33.495626,
+                        "longitude": -82.022389
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2988076,
+                        "longitude": 12.4722709
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.497088,
+                        "longitude": -82.025573
+                    },
+                    "greenFront": {
+                        "latitude": 56.2987682,
+                        "longitude": 12.4727832
+                    },
+                    "teeFront": {
+                        "latitude": 56.2984982,
+                        "longitude": 12.4789657
+                    },
+                    "teeBack": {
+                        "latitude": 33.494125,
+                        "longitude": -82.023494
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2989429,
+                        "longitude": 12.4797933
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.497435,
+                        "longitude": -82.02134
+                    },
+                    "greenFront": {
+                        "latitude": 56.2988328,
+                        "longitude": 12.4792998
+                    },
+                    "teeFront": {
+                        "latitude": 56.2994328,
+                        "longitude": 12.4725177
+                    },
+                    "teeBack": {
+                        "latitude": 33.497528,
+                        "longitude": -82.025553 
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2978519,
+                        "longitude": 12.482173
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.498873,
+                        "longitude": -82.025596
+                    },
+                    "greenFront": {
+                        "latitude": 56.297971,
+                        "longitude": 12.4819932
+                    },
+                    "teeFront": {
+                        "latitude": 56.2993614,
+                        "longitude": 12.4790355
+                    },
+                    "teeBack": {
+                        "latitude": 33.497672,
+                        "longitude": -82.0207
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2966412,
+                        "longitude": 12.4784276
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.499565,
+                        "longitude": -82.02644
+                    },
+                    "greenFront": {
+                        "latitude": 56.296732,
+                        "longitude": 12.4787253
+                    },
+                    "teeFront": {
+                        "latitude": 56.2981589,
+                        "longitude": 12.48212
+                    },
+                    "teeBack": {
+                        "latitude": 33.498281,
+                        "longitude": -82.025761
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2978407,
+                        "longitude": 12.4727522
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.498802,
+                        "longitude": -82.022184
+                    },
+                    "greenFront": {
+                        "latitude": 56.297857,
+                        "longitude": 12.4731465
+                    },
+                    "teeFront": {
+                        "latitude": 56.2968819,
+                        "longitude": 12.4793144
+                    },
+                    "teeBack": {
+                        "latitude": 33.499592,
+                        "longitude": -82.025764
+                    }
+                },
+                {
+                    "greenBack": {
+                        "latitude": 56.2995212,
+                        "longitude": 12.4701075
+                    },
+                    "greenMiddle": {
+                        "latitude": 33.501866,
+                        "longitude": -82.020525
+                    },
+                    "greenFront": {
+                        "latitude": 56.2993664,
+                        "longitude": 12.4703314
+                    },
+                    "teeFront": {
+                        "latitude": 56.2982333,
+                        "longitude": 12.4719598
+                    },
+                    "teeBack": {
+                        "latitude": 33.4984,
+                        "longitude": -82.02166
+                    }
+                }
+            
+        ]
     }
 ]
 
