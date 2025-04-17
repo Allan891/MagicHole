@@ -7,6 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { calculateDistance } from "@/utils";
 import {calculateAverage, generateStatTables, getMedian} from "@/utils";
+import { useRouter } from "expo-router";
 //import { Text, useTheme } from '@rneui/themed';
 
 
@@ -14,6 +15,7 @@ import {calculateAverage, generateStatTables, getMedian} from "@/utils";
 export const Stats = () => {
    const [sGAverage, setsGAverage] = useState<number[]>(1);
    const [sGMedian, setsGMedian] = useState<number[]>(1);
+   const router = useRouter();
    useEffect(() => {
         /* db.getStrokes()
                .then((strokes) => {
@@ -69,9 +71,16 @@ export const Stats = () => {
 
                   <View style={styles.stats}>
                     {items.map(({ label, value }, index) => (
-                      <View
+                        <View
                         key={index}
-                        style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}>
+                        style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}
+                        onTouchEnd={() => {
+                          if (label === "Approach") {
+                          // Navigate to approach.tsx
+                          // Assuming you are using expo-router or similar navigation
+                          router.push({pathname: '../screens/detailed_stats/approach'});
+                          }
+                        }}>
                         <Text style={styles.title}>{label}</Text>
 
                         <Text style={styles.statsItemLabel}>Average</Text>
@@ -80,10 +89,9 @@ export const Stats = () => {
                       {(!sGAverage[index] || sGAverage[index]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
                         <Text style={styles.statsItemLabel}>Median</Text>
 
-                       {(sGMedian[index] && sGMedian[index]>-10) && <Text style={styles.statsItemValue}>{sGMedian[index]}</Text>  }
-                      {(!sGMedian[index] || sGMedian[index]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
-
-                      </View>
+                        {(sGMedian[index] && sGMedian[index] > -10) && <Text style={styles.statsItemValue}>{sGMedian[index]}</Text>}
+                        {(!sGMedian[index] || sGMedian[index] <= -10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                        </View>
                     ))}
                   </View>
                 </View>
