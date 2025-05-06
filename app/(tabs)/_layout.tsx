@@ -24,9 +24,9 @@ export default function TabLayout() {
                   />
 
         <Tabs.Screen name="map" options={{headerShown: false, title: 'Play',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="golf-course" color={color} />, }} />
-        <Tabs.Screen name="history" options={{headerShown: false, title: 'History',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="list" color={color} />, }} />
+        <Tabs.Screen name="history" options={{ title: 'History',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="list" color={color} />, }} />
         <Tabs.Screen name="stats" options={{ title: 'Stats', tabBarIcon: ({ color }) => <MaterialIcons size={28} name="query-stats" color={color} />, }} />
-        <Tabs.Screen name="settings" options={{headerShown: false, title: 'Settings',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="settings" color={color} />, }} />
+        <Tabs.Screen name="settings" options={{ title: 'Settings',  tabBarIcon: ({ color }) => <MaterialIcons size={28} name="settings" color={color} />, }} />
         </Tabs>
     </ThemeProvider>
     

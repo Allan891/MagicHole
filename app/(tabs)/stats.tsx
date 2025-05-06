@@ -65,23 +65,23 @@ export const Stats = () => {
             //.catch(console.error());
        }, [strokes]);
 
-
-
       return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#f6f6f6' }}>
               <View style={styles.container}>
-                  <Text style={styles.title}>Your Stats</Text>
 
                   <View style={styles.stats}>
                     {items.map(({ label, value }, index) => (
                         <View
                         key={index}
                         style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}
-                        onTouchEnd={() => {
+                        onTouchEnd={async () => {
                           if (label === "Approach") {
-                          // Navigate to approach.tsx
-                          // Assuming you are using expo-router or similar navigation
-                          router.push({pathname: '../screens/detailed_stats/approach'});
+                            const approachData = await db.getApproachData(); 
+                            router.push({pathname: '../screens/detailed_stats/detailedstats', params:{page:'Approach',data:JSON.stringify(approachData)}});
+                          }
+                          else if (label === "Tee") {
+                            const teeData = await db.getTeeData(); 
+                            router.push({pathname: '../screens/detailed_stats/detailedstats',params:{page:'Tee',data:JSON.stringify(teeData)}});
                           }
                         }}>
                         <Text style={styles.title}>{label}</Text>
@@ -104,7 +104,17 @@ export const Stats = () => {
                       {items2.map(({ label, value }, index) => (
                         <View
                           key={index}
-                          style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}>
+                          style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}
+                          onTouchEnd={async () => {
+                            if (label === "Chip") {
+                              const teeData = await db.getTeeData(); 
+                              router.push({pathname: '../screens/detailed_stats/detailedstats',params:{page:'Chip',data:JSON.stringify(teeData)}});
+                            }
+                            else if (label === "Putt") {
+                              const teeData = await db.getTeeData(); 
+                              router.push({pathname: '../screens/detailed_stats/detailedstats',params:{page:'Putt',data:JSON.stringify(teeData)}});
+                            }
+                          }}>
                           <Text style={styles.title}>{label}</Text>
 
                           <Text style={styles.statsItemLabel}>Average</Text>
@@ -139,8 +149,6 @@ export const Stats = () => {
 let items = [
   {
     label: 'Tee',
-
-
     value: '2',
   },
   {
@@ -151,8 +159,6 @@ let items = [
 let items2 = [
   {
     label: 'Chip',
-
-
     value: '2',
   },
   {

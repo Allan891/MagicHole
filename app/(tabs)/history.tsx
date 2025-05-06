@@ -109,8 +109,6 @@ export default function History() {
   return (
 
     <ThemedView style={styles.container}>
-            <ThemedText style={styles.title}>History</ThemedText>
-
       <FlatList
               data={rounds}
               keyExtractor={(item, index) => index.toString()}

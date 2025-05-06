@@ -56,7 +56,7 @@ export default function SettingsTab() {
   // GetSettings
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f8f8f8',marginTop: 25 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f8f8f8' }}>
       <View style={styles.header}>
         <View style={styles.headerAction}>
           <TouchableOpacity
@@ -69,10 +69,6 @@ export default function SettingsTab() {
               size={24} />
           </TouchableOpacity>
         </View>
-
-        <Text numberOfLines={1} style={styles.headerTitle}>
-          Settings
-        </Text>
 
         <View style={[styles.headerAction, { alignItems: 'flex-end' }]}>
           <TouchableOpacity
