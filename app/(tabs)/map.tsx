@@ -430,7 +430,7 @@ export default function HomeScreen() {
 
   }
 
-  const test = false; // Auto generate GPS locations to test
+  const test = true; // Auto generate GPS locations to test
 
   if (test && !location) {
     updateTestLocation(teeCoords);
