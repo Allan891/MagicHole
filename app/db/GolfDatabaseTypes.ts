@@ -28,6 +28,7 @@ export type GolfClub = {
   playerId: number;
   name: string;
   type: GolfClubType;
+  iconType: GolfClubIconType;
   showInList: number;
 };
 
@@ -63,7 +64,7 @@ export type TeeSlope = {
   courseRatingFemale: number;
 };
 
-enum GolfClubType{
+export enum GolfClubType{
   driver = 'Driver',
   miniDriver = 'Mini Driver',
   hybrid1 = 'Hybrid 1',
@@ -85,5 +86,13 @@ enum GolfClubType{
   pWedge = 'PW',
   GWedge = 'GW',
   SWedge = 'SW',
-  lWedge = 'LW' ,
+  lWedge = 'LW'
+  }
+
+export enum GolfClubIconType{
+  driver = 'Driver',
+  hybrid = 'Hybrid',
+  iron = 'Iron',
+  wood = 'Wood',
+  wedge = 'Wedge'
   }

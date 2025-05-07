@@ -65,6 +65,7 @@ class Database {
       playerId INTEGER NOT NULL,
       name TEXT,
       type TEXT,
+      iconType TEXT,
       showInList INTEGER NOT NULL,
       FOREIGN KEY (playerId) REFERENCES player (id));
 
@@ -391,8 +392,8 @@ class Database {
     if (!this.db) return -1;
     try {
       await this.db.runAsync(
-        'INSERT INTO GolfClub (playerId, name, type, showInList) VALUES (?, ?, ?, ?);',
-        golfClub.playerId, golfClub.name, golfClub.type, golfClub.showInList);
+        'INSERT INTO GolfClub (playerId, name, type, showInList) VALUES (?, ?, ?, ?, ?);',
+        golfClub.playerId, golfClub.name, golfClub.type, golfClub.iconType, golfClub.showInList);
       const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
       console.log('Golf club created with ID:', result?.id);
       return result?.id ?? -2 //returns -2 if result.id is null or undefined
@@ -402,13 +403,14 @@ class Database {
     }
   }
 
+  
   // UPDATE: Update a golf club
   async updateGolfClub(golfClub: GolfClub) {
     if (!this.db) return;
     try {
       await this.db.runAsync(
-        'UPDATE GolfClub SET playerId = ?, name = "?", type = "?", showInList = ? WHERE id = ?;',
-        golfClub.playerId, golfClub.name, golfClub.type, golfClub.showInList, golfClub.id);
+        'UPDATE GolfClub SET playerId = ?, name = ?, type = ?, iconType = ?, showInList = ? WHERE id = ?;',
+        golfClub.playerId, golfClub.name, golfClub.type, golfClub.iconType, golfClub.showInList, golfClub.id);
       console.log('Golf club updated');
     } catch (error) {
       console.error('Error updating golf club:', error);
