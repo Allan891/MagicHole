@@ -569,9 +569,9 @@ export default function HomeScreen() {
         camera={{
           center: { latitude, longitude },
           heading: bearing,
-          pitch: 90,
-          zoom: zoomLevel,
-          altitude: altitudeLevel,
+          pitch: Platform.OS == 'android' ? 90 : 45,
+          zoom: Platform.OS == 'android' ? zoomLevel : undefined,
+          altitude: Platform.OS == 'ios' ? altitudeLevel : undefined
         }}
       >
 
