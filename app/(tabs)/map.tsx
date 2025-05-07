@@ -117,7 +117,7 @@ export default function HomeScreen() {
     const newRound: Round = {
       time: Date.now(), // Example time in ISO 8601 format
       playerId: 999,      // Example player ID
-      courseId: id+1,      // Example course ID
+      courseId: id,      // Example course ID
       handicap: 36         // Example handicap
     };
     const newRoundId = await db.createRound(newRound);
@@ -438,7 +438,6 @@ export default function HomeScreen() {
   }
 
   const updateLocation = (event) => {
-    console.log('updateLocation', event?.nativeEvent);
     const { coordinate } = event?.nativeEvent;
     //console.log('CTRLF HÄR',coordinate);
     const asdf: Location = {latitude: coordinate.latitude, longitude: coordinate.longitude};
