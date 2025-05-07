@@ -46,6 +46,7 @@ class Database {
       flagLongitude REAL NOT NULL,
       flagLatitude REAL NOT NULL,
       courseId INTEGER NOT NULL,
+      par INTEGER NOT NULL,
       FOREIGN KEY (courseId) REFERENCES Course (id));
 
     CREATE TABLE IF NOT EXISTS Player (
@@ -139,39 +140,6 @@ class Database {
       console.error('Error updating course:', error);
     }
   }
-
-    // Settings
-    async setSetting(setting: string, value: string) {
-      if (!this.db) return;
-      try {
-        await this.db.runAsync(
-          'REPLACE INTO Settings (setting, value) VALUES (?, ?);',
-          setting, value);
-        console.log('Setting updated');
-      } catch (error) {
-        console.error('Error updating setting:', error);
-      }
-    }
-
-    async getSettings(): Promise<[]> {
-      if (!this.db) return [];
-      try {
-        const settings = await this.db.getAllAsync(
-          'SELECT * FROM Settings;');
-          console.log('Settings fetched:', settings);
-          const output = settings.reduce((acc, { setting, value }) => {
-            acc[setting] = value
-            console.log('Acc', acc);
-            return acc;
-          }, {});          
-          return output;
-        
-      } catch (error) {
-        console.error('Error getting settings:', error);
-        return [];
-      }
-    }
-
   // DELETE: Delete a course
   async deleteCourse(course: Course) {
     if (!this.db) return;
@@ -249,8 +217,8 @@ class Database {
     if (!this.db) return -1;
     try {
       await this.db.runAsync(
-        'INSERT INTO Hole (holeNr, backTeeLongitude, backTeeLatitude, flagLongitude, flagLatitude, courseId) VALUES (?, ?, ?, ?, ?, ?);',
-        hole.holeNr, hole.backTeeLongitude, hole.backTeeLatitude, hole.flagLongitude, hole.flagLatitude, hole.courseId);
+        'INSERT INTO Hole (holeNr, backTeeLongitude, backTeeLatitude, flagLongitude, flagLatitude, courseId, par) VALUES (?, ?, ?, ?, ?, ?, ?);',
+        hole.holeNr, hole.backTeeLongitude, hole.backTeeLatitude, hole.flagLongitude, hole.flagLatitude, hole.courseId, hole.par);
       const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
       console.log('Hole created with ID:', result?.id);
       return result?.id ?? -2;
@@ -822,6 +790,7 @@ importCourses = async () => {
         const holeEntry: Hole = {
           id: -1,
           holeNr: index + 1,
+          par: courseData.par[index],
           backTeeLongitude: hole.teeBack.longitude,
           backTeeLatitude: hole.teeBack.latitude,
           flagLongitude: hole.greenMiddle.longitude,
@@ -843,9 +812,201 @@ importCourses = async () => {
     });
     console.log("Holes ",allHoles);
     allHoles.forEach((hole) => {
-      console.log(`- ID: ${hole.id}, Nr: ${hole.holeNr}, Course: ${hole.courseId}, BackTLong: ${hole.backTeeLongitude}, BackTLat: ${hole.backTeeLatitude}, FlagLong: ${hole.flagLongitude}, FlagLat: ${hole.flagLatitude}`);
+      console.log(`- ID: ${hole.id}, Nr: ${hole.holeNr}, Course: ${hole.courseId}, BackTLong: ${hole.backTeeLongitude}, BackTLat: ${hole.backTeeLatitude}, FlagLong: ${hole.flagLongitude}, FlagLat: ${hole.flagLatitude}, Par: ${hole.par}`);
     });
   }
 //#endregion
 
+//#region Statistics
+async getApproachData(): Promise<[]> {
+  if (!this.db) return [];
+  try {
+    const ptData = [
+      {
+        value: null,
+        distance: 50,
+        label: '50',
+        labelTextStyle: {color: 'gray', width: 60},
+      },
+        {value: 1, distance: 53},
+        {value: 1, distance: 53},
+        {value: 1, distance: 53},
+        {value: 1, distance: 53},
+        {value: 1, distance: 53},
+        {value: 1, distance: 53},
+        {value: 2, distance: 52},
+      
+        {value: 4,distance: 55},
+        {
+          value: null,
+          distance: 60,
+          label: '60',
+    
+          labelTextStyle: {color: 'gray', width: 60},
+        },
+        {
+          value: null,
+          distance: 70,
+          label: '70',
+          labelTextStyle: {color: 'gray', width: 60},
+        },
+        {value: 4, distance: 72},
+        {value: 2,  distance: 72},
+        {value: 3,  distance: 72},
+        {value: 3,  distance: 72},
+        {value: 2,  distance: 72},
+        {value: 3,  distance: 72},
+        {value: 3,  distance: 72},
+        {value: 2,  distance: 72},
+        {value: 2,  distance: 72},
+    
+        {value: 1,  distance: 75},
+        {value: 1,  distance: 77},
+        {value: 1,  distance: 79},
+        {
+          value: null,
+          distance: 80,
+          label: '80',
+          labelTextStyle: {color: 'gray', width: 60},
+        },
+        {value: 1,  distance: 81},
+        {value: 1,  distance: 81},
+        {value: 1,  distance: 82},
+        {value: 1,  distance: 82},
+        {value: 1,  distance: 82},
+        {value: -4, distance: 83},
+        {
+          value: null,
+          distance: 90,
+          label: '90',
+          labelTextStyle: {color: 'gray', width: 60},
+        },
+        {value: 2, distance: 91},
+        {value: 2, distance: 93},
+        {value: 2, distance: 96},
+        {value: 2, distance: 98},
+        {value: 2, distance: 103},
+      ];
+    return ptData;
+    const data = await this.db.getAllAsync(`
+      SELECT*FROM Hole WHERE courseId IN (2,4);
+      SELECT Course.id AS courseId, Course.name,
+      Round.id AS 'roundID', 
+      Stroke.startLatitude, Stroke.startLongitude,
+      Hole.flagLongitude, Hole.flagLatitude
+      FROM Stroke
+      LEFT JOIN Round ON Stroke.roundId = Round.id
+      LEFT JOIN Course ON Course.id = Round.courseId
+      LEFT JOIN Hole ON Hole.holeNr = Stroke.holeId AND Course.id = Hole.courseId 
+      ;`);
+      console.log("Approach Data: ",data);
+      data.forEach((item: any) => {
+        console.log("============================================");
+        Object.entries(item).forEach(([key, value]) => {
+          
+          console.log(`${key}: ${value}`);
+        });
+      });
+      return data;
+  } catch (error) {
+    console.error('Error fetching tee slopes:', error);
+    return [];
+  }
+}
+async getTeeData(): Promise<[]> {
+  if (!this.db) return [];
+  try {
+    const ptData = [
+      {
+        value: null,
+        distance: 50,
+        label: '50',
+        labelTextStyle: {color: 'gray', width: 60},
+      },
+        {value: 4, distance: 53},
+        {value: 4, distance: 53},
+        {value: 4, distance: 53},
+        {value: 3, distance: 53},
+        {value: 3, distance: 53},
+        {value: 3, distance: 53},
+        {value: 2, distance: 52},
+      
+        {value: 2,distance: 55},
+        {
+          value: null,
+          distance: 60,
+          label: '60',
+    
+          labelTextStyle: {color: 'gray', width: 60},
+        },
+        {
+          value: null,
+          distance: 70,
+          label: '70',
+          labelTextStyle: {color: 'gray', width: 60},
+        },
+        {value: 2, distance: 72},
+        {value: 2,  distance: 72},
+        {value: 1,  distance: 72},
+        {value: 1,  distance: 72},
+        {value: 1,  distance: 72},
+        {value: 0,  distance: 72},
+        {value: 0,  distance: 72},
+        {value: 0,  distance: 72},
+        {value: 1,  distance: 72},
+    
+        {value: 1,  distance: 75},
+        {value: 1,  distance: 77},
+        {value: 2,  distance: 79},
+        {
+          value: 2,
+          distance: 80,
+          label: '80',
+          labelTextStyle: {color: 'gray', width: 60},
+        },
+        {value: 2,  distance: 81},
+        {value: 2,  distance: 81},
+        {value: 3,  distance: 82},
+        {value: 3,  distance: 82},
+        {value: -2,  distance: 82},
+        {value: -4, distance: 83},
+        {
+          value: null,
+          distance: 90,
+          label: '90',
+          labelTextStyle: {color: 'gray', width: 60},
+        },
+        {value: 2, distance: 91},
+        {value: 2, distance: 93},
+        {value: 2, distance: 96},
+        {value: 2, distance: 98},
+        {value: 2, distance: 103},
+      ];
+    return ptData;
+    const data = await this.db.getAllAsync(`
+      SELECT*FROM Hole WHERE courseId IN (2,4);
+      SELECT Course.id AS courseId, Course.name,
+      Round.id AS 'roundID', 
+      Stroke.startLatitude, Stroke.startLongitude,
+      Hole.flagLongitude, Hole.flagLatitude
+      FROM Stroke
+      LEFT JOIN Round ON Stroke.roundId = Round.id
+      LEFT JOIN Course ON Course.id = Round.courseId
+      LEFT JOIN Hole ON Hole.holeNr = Stroke.holeId AND Course.id = Hole.courseId 
+      ;`);
+      console.log("Approach Data: ",data);
+      data.forEach((item: any) => {
+        console.log("============================================");
+        Object.entries(item).forEach(([key, value]) => {
+          
+          console.log(`${key}: ${value}`);
+        });
+      });
+      return data;
+  } catch (error) {
+    console.error('Error fetching tee slopes:', error);
+    return [];
+  }
+}
+//#endregion
 }export default new Database();
