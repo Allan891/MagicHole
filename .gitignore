@@ -40,3 +40,4 @@ yarn-error.*
 
 app-example
 package-lock.json
+.vscode/settings.json
