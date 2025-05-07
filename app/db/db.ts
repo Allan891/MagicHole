@@ -439,6 +439,17 @@ class Database {
     }
   }
 
+  // READ: Get golf clubs in list
+  async getGolfClubsInList(): Promise<GolfClub[]> {
+    if (!this.db) return [];
+    try {
+      return await this.db.getAllAsync('SELECT * FROM GolfClub WHERE showInList = 1;');
+    } catch (error) {
+      console.error('Error fetching golf clubs:', error);
+      return [];
+    }
+  }
+
   // READ: Get a golf club by ID
   async getGolfClubsById(id: number): Promise<GolfClub | null> {
     if (!this.db) return null;
