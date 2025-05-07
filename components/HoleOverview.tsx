@@ -19,6 +19,7 @@ export function HoleOverview({ holeData, courseId}) {
 
 
   const getColor = (par,strokes) => {
+    if (!par || strokes == null) return;
     const diff = strokes - par;
     
     let color = "gray";
