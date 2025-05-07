@@ -8,6 +8,7 @@ import type { GolfClub } from './GolfDatabaseTypes';
 import type { Round } from './GolfDatabaseTypes';
 import type { Stroke } from './GolfDatabaseTypes';
 import type { TeeSlope } from './GolfDatabaseTypes';
+import Fetchinfo
 import { G } from 'react-native-svg';
 class Database {
 
@@ -61,7 +62,7 @@ class Database {
       handicap REAL NOT NULL);
 
     CREATE TABLE IF NOT EXISTS GolfClub (
-      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      id INTEGER PRIMARY KEY NOT NULL,
       playerId INTEGER NOT NULL,
       name TEXT,
       type TEXT,
@@ -113,6 +114,7 @@ class Database {
       PRIMARY KEY (setting));
 
     `);
+    this.db.importGolfClubs();
     this.isInitialized = true;
     console.log('Database created');
   }
@@ -392,8 +394,8 @@ class Database {
     if (!this.db) return -1;
     try {
       await this.db.runAsync(
-        'INSERT INTO GolfClub (playerId, name, type, showInList) VALUES (?, ?, ?, ?, ?);',
-        golfClub.playerId, golfClub.name, golfClub.type, golfClub.iconType, golfClub.showInList);
+        'INSERT INTO GolfClub (id, playerId, name, type, showInList) VALUES (?, ?, ?, ?, ?, ?);',
+        golfClub.id, golfClub.playerId, golfClub.name, golfClub.type, golfClub.iconType, golfClub.showInList);
       const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
       console.log('Golf club created with ID:', result?.id);
       return result?.id ?? -2 //returns -2 if result.id is null or undefined
@@ -402,7 +404,6 @@ class Database {
       return -3;
     }
   }
-
   
   // UPDATE: Update a golf club
   async updateGolfClub(golfClub: GolfClub) {
@@ -416,6 +417,7 @@ class Database {
       console.error('Error updating golf club:', error);
     }
   }
+
 
   // DELETE: Delete a golf club
   async deleteGolfClub(golfClub: GolfClub) {
@@ -451,7 +453,7 @@ class Database {
   }
 
   // READ: Get a golf club by ID
-  async getGolfClubsById(id: number): Promise<GolfClub | null> {
+  async getGolfClubById(id: number): Promise<GolfClub | null> {
     if (!this.db) return null;
     try {
       return await this.db.getFirstAsync<GolfClub>('SELECT * FROM GolfClub WHERE id = ?;', id);
@@ -1014,4 +1016,6 @@ async getTeeData(): Promise<[]> {
   }
 }
 //#endregion
+
+
 }export default new Database();

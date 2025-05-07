@@ -84,9 +84,10 @@ export enum GolfClubType{
   wood5 = 'Wood 5',
   wood7 = 'Wood 7',
   pWedge = 'PW',
-  GWedge = 'GW',
-  SWedge = 'SW',
-  lWedge = 'LW'
+  gWedge = 'GW',
+  sWedge = 'SW',
+  lWedge = 'LW',
+  putter = 'Putter'
   }
 
 export enum GolfClubIconType{
@@ -94,5 +95,6 @@ export enum GolfClubIconType{
   hybrid = 'Hybrid',
   iron = 'Iron',
   wood = 'Wood',
-  wedge = 'Wedge'
+  wedge = 'Wedge',
+  putter = 'Putter'
   }
