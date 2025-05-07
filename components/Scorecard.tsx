@@ -14,8 +14,22 @@ export function Scorecard({strokes, courseId, handlePress}) {
     return <ThemedText>Loading course...</ThemedText>;
   }
   const totalStrokes = strokes.reduce((sum, val) => sum + (val ?? 0), 0);
-  const parTotal = courseObject.par?.reduce((sum, p) => sum + (p ?? 0), 0) ?? 0;
-  const diff = totalStrokes - parTotal;
+  let parTotal = courseObject.par?.reduce((sum, p) => sum + (p ?? 0), 0) ?? 0;
+
+  let parActual = [...courseObject.par];
+  strokes.forEach((stroke, index) => {
+    console.log('parActual', parActual)
+    if (stroke === undefined || null) {
+      console.log('stroke', stroke);
+      parActual[index] = 0;
+    }
+  });
+
+  let parTotalActual = parActual?.reduce((sum, p) => sum + (p ?? 0), 0) ?? 0;
+
+
+
+  const diff = totalStrokes - parTotalActual;
 
   const hcp = 6; // mock handicap 
 

@@ -126,6 +126,9 @@ const styles = StyleSheet.create({
   },
   courseText: {
     fontSize: 20,
+    width: '85%',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden'
   },
   courseDistanceText:{
     position: 'absolute',
