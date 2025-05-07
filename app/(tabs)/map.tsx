@@ -12,7 +12,7 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import MapView, { LatLng, Marker, Polyline } from 'react-native-maps';
+import MapView, { LatLng, Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
@@ -157,6 +157,19 @@ export default function HomeScreen() {
     if (test) updateTestLocation(thisCourse.holes[0].teeBack, thisCourse.holes[0].greenMiddle);
 
   }
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Permission to access location was denied');
+        return;
+      }
+  
+      const location = await Location.getCurrentPositionAsync({});
+      console.log(location);
+    })();
+  }, []);
 
   const adjustZoom = (distance: number) => {
     //console.log(distance);
@@ -417,7 +430,7 @@ export default function HomeScreen() {
 
   }
 
-  const test = true; // Auto generate GPS locations to test
+  const test = false; // Auto generate GPS locations to test
 
   if (test && !location) {
     updateTestLocation(teeCoords);
@@ -425,11 +438,11 @@ export default function HomeScreen() {
   }
 
   const updateLocation = (event) => {
-    //console.log(event);
+    console.log('updateLocation', event?.nativeEvent);
     const { coordinate } = event?.nativeEvent;
     //console.log('CTRLF HÄR',coordinate);
     const asdf: Location = {latitude: coordinate.latitude, longitude: coordinate.longitude};
-    setLocationGlobal(event)
+    setLocationGlobal(coordinate)
     //console.log('ffffff',asdf)
     if (test) return;
 
@@ -563,15 +576,18 @@ export default function HomeScreen() {
         showsUserLocation={test ? false : true}
         userLocationFastestInterval={10000}
         userLocationUpdateInterval={10000}
+        provider={PROVIDER_GOOGLE}
         mapType="satellite"
         style={{ flex: 1 }}
         initialRegion={initialRegion}
         camera={{
           center: { latitude, longitude },
           heading: bearing,
-          pitch: Platform.OS == 'android' ? 90 : 45,
-          zoom: Platform.OS == 'android' ? zoomLevel : undefined,
-          altitude: Platform.OS == 'ios' ? altitudeLevel : undefined
+          pitch: 90,
+          zoom: zoomLevel
+          // pitch: Platform.OS == 'android' ? 90 : 45,
+          // zoom: Platform.OS == 'android' ? zoomLevel : undefined,
+          // altitude: Platform.OS == 'ios' ? altitudeLevel : undefined
         }}
       >
 
