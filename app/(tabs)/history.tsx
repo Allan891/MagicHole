@@ -64,8 +64,14 @@ export default function History() {
   };
 
   const getCourseTotal = (par, strokes) => {
+    const parCopy = [...par];
+    strokes.forEach((stroke, index) => {
+      if (stroke === null) {
+        parCopy[index] = 0;
+      }
+    });
     const totalStrokes = strokes.reduce((acc, val) => acc+ val ,0);
-    const totalPar = par.reduce((acc, val) => acc+ val ,0);
+    const totalPar = parCopy.reduce((acc, val) => acc+ val ,0);
     let diff = totalStrokes - totalPar;
     diff = (diff >= 0 ? diff = "+" + diff : diff = diff );
     return diff;
