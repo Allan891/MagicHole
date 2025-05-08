@@ -544,7 +544,7 @@ export default function HomeScreen() {
 
       {!courseChosen &&
 
-      <CoursePicker onChooseCourse={handleCourseChosen} />
+       <CoursePicker onChooseCourse={handleCourseChosen} />
 
       }
 
