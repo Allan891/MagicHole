@@ -1,3 +1,6 @@
+import { globalStateVar } from '@/app/state/globalStateVar';
+import { ClubCircleButton } from '@/components/ClubCircleButton';
+import { ClubPicker } from '@/components/ClubPicker';
 import React, { useState } from 'react';
 import {
   View,
@@ -7,6 +10,7 @@ import {
   TouchableOpacity,
   Switch,
 } from 'react-native';
+import { Circle } from 'react-native-maps';
 
 const CLUB_CATEGORIES = {
   'Drivers & Woods': ['Driver (1 Wood)', '3 Wood', '5 Wood', '7 Wood'],
@@ -21,6 +25,15 @@ export default function ClubSettingScreen() {
   const [parkedClubs, setParkedClubs] = useState([]);
   const [proPlay, setProPlay] = useState(false);
   const [backupClubs, setBackupClubs] = useState([]);
+  const clubs = globalStateVar((state) => state.currentBag);
+  const getClubType = (name) => {
+    if (name == 'Drivers & Woods') return "wood";
+    if (name =='Hybrids') return "wood";
+    if (name == 'Irons') return "iron";
+    if (name =='Wedges') return "wedge";
+    if (name == 'Putter') return "putter";
+  }
+  
 
   const toggleClub = (club) => {
     const updated = activeClubs.includes(club)
@@ -34,12 +47,6 @@ export default function ClubSettingScreen() {
       ? parkedClubs.filter((c) => c !== club)
       : [...parkedClubs, club];
     setParkedClubs(updated);
-  };
-
-  const useProPlay = () => {
-    setBackupClubs(activeClubs);
-    setActiveClubs(['Driver (1 Wood)', '5 Iron', '7 Iron', 'Pitching Wedge (PW)', 'Putter']);
-    setParkedClubs([]);
   };
 
   const restoreUserClubs = () => {
@@ -59,6 +66,8 @@ export default function ClubSettingScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Club Settings</Text>
+        <ClubPicker onClubChoose={() => {}} />
+        
 
         {activeClubs.length > 0 && (
           <View style={styles.activeClubsContainer}>
@@ -76,14 +85,12 @@ export default function ClubSettingScreen() {
           </View>
         )}
 
-        <View style={styles.switchRow}>
-          <Text style={styles.label}>Use Pro Play</Text>
-          <Switch value={proPlay} onValueChange={handleProPlayToggle} />
-        </View>
+      
       </View>
 
       {Object.entries(CLUB_CATEGORIES).map(([category, clubs]) => (
         <View key={category} style={styles.section}>
+                <ClubCircleButton onPress={() => {}} currentClub={{type : getClubType(category)}} />
           <Text style={styles.sectionTitle}>{category}</Text>
           {clubs.map((club) => (
             <View key={club} style={styles.clubRow}>
@@ -93,11 +100,7 @@ export default function ClubSettingScreen() {
                   {activeClubs.includes(club) ? 'Remove' : 'Add'}
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => togglePark(club)}>
-                <Text style={[styles.parkButton, parkedClubs.includes(club) && styles.parked]}>
-                  {parkedClubs.includes(club) ? 'Unpark' : 'Park'}
-                </Text>
-              </TouchableOpacity>
+              
             </View>
           ))}
         </View>
