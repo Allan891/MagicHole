@@ -11,10 +11,11 @@ import courses from '@/constants/courses';
 import {getPar} from '@/utils';
 import { ThemedText } from '@/components/ThemedText';
 import { ClubIcon } from './ClubIcon';
+import { globalStateVar } from '@/app/state/globalStateVar';
 
 export function ClubPicker({onClubChoose}) {
 
-  const clubs = [{type: 'wood', name: 'Wood 3'},{type: 'wedge', name: 'Sand wedge'},{type: 'putter', name: 'Putter'},{type: 'iron', name: '9 iron'}]
+  const clubs = globalStateVar((state) => state.currentBag);
 
   const renderClub = ({ item, index }) => {
   

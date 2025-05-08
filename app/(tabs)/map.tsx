@@ -40,6 +40,7 @@ export default function HomeScreen() {
   const initialCourse = courses[Math.floor(Math.random() * courses.length)];
 
   const strokes = globalStateVar((state) => state.strokes);
+  const clubs = globalStateVar((state) => state.currentBag);
   const currentGlobalHole = globalStateVar((state) => state.currentHole);
   const setLocationGlobal = globalStateVar((state) => state.setLocation);
   const setStroke = globalStateVar((state) => state.setStroke);
@@ -57,7 +58,6 @@ export default function HomeScreen() {
   const [strokeCoordinates, setStrokeCoordinates] = useState<LatLng[]>([]);
   const [holeFinished, setHoleFinished] = useState<boolean>(false);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
-  const clubs = [{id:1, type: 'wood', name: 'Wood 3'},{id:2, type: 'wedge', name: 'Sand wedge'},{id:3, type: 'putter', name: 'Putter'},{id: 4, type: 'iron', name: '9 iron'}]
   const [currentClub, setCurrentClub] = useState<object>(clubs[0]);
 
 

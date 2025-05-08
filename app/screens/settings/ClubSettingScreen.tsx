@@ -1,3 +1,6 @@
+import { globalStateVar } from '@/app/state/globalStateVar';
+import { ClubCircleButton } from '@/components/ClubCircleButton';
+import { ClubPicker } from '@/components/ClubPicker';
 import React, { useState } from 'react';
 import {
   View,
@@ -5,7 +8,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Switch,
 } from 'react-native';
 
 const CLUB_CATEGORIES = {
@@ -17,48 +19,39 @@ const CLUB_CATEGORIES = {
 };
 
 export default function ClubSettingScreen() {
-  const [activeClubs, setActiveClubs] = useState([]);
-  const [parkedClubs, setParkedClubs] = useState([]);
-  const [proPlay, setProPlay] = useState(false);
-  const [backupClubs, setBackupClubs] = useState([]);
+  const [activeClubs, setActiveClubs] = useState<string[]>([]);
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const clubs = globalStateVar((state) => state.currentBag);
 
-  const toggleClub = (club) => {
+  const getClubType = (name: string) => {
+    if (name === 'Drivers & Woods') return 'wood';
+    if (name === 'Hybrids') return 'wood';
+    if (name === 'Irons') return 'iron';
+    if (name === 'Wedges') return 'wedge';
+    if (name === 'Putter') return 'putter';
+    return '';
+  };
+
+  const toggleClub = (club: string) => {
     const updated = activeClubs.includes(club)
       ? activeClubs.filter((c) => c !== club)
       : [...activeClubs, club];
     setActiveClubs(updated);
   };
 
-  const togglePark = (club) => {
-    const updated = parkedClubs.includes(club)
-      ? parkedClubs.filter((c) => c !== club)
-      : [...parkedClubs, club];
-    setParkedClubs(updated);
-  };
-
-  const useProPlay = () => {
-    setBackupClubs(activeClubs);
-    setActiveClubs(['Driver (1 Wood)', '5 Iron', '7 Iron', 'Pitching Wedge (PW)', 'Putter']);
-    setParkedClubs([]);
-  };
-
-  const restoreUserClubs = () => {
-    setActiveClubs(backupClubs);
-  };
-
-  const handleProPlayToggle = (value) => {
-    setProPlay(value);
-    if (value) {
-      useProPlay();
-    } else {
-      restoreUserClubs();
-    }
+  const toggleCategory = (category: string) => {
+    setExpandedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    );
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Club Settings</Text>
+        <ClubPicker onClubChoose={() => {}} />
 
         {activeClubs.length > 0 && (
           <View style={styles.activeClubsContainer}>
@@ -75,33 +68,38 @@ export default function ClubSettingScreen() {
             </View>
           </View>
         )}
-
-        <View style={styles.switchRow}>
-          <Text style={styles.label}>Use Pro Play</Text>
-          <Switch value={proPlay} onValueChange={handleProPlayToggle} />
-        </View>
       </View>
 
-      {Object.entries(CLUB_CATEGORIES).map(([category, clubs]) => (
-        <View key={category} style={styles.section}>
-          <Text style={styles.sectionTitle}>{category}</Text>
-          {clubs.map((club) => (
-            <View key={club} style={styles.clubRow}>
-              <Text style={styles.clubName}>{club}</Text>
-              <TouchableOpacity onPress={() => toggleClub(club)}>
-                <Text style={styles.toggleButton}>
-                  {activeClubs.includes(club) ? 'Remove' : 'Add'}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => togglePark(club)}>
-                <Text style={[styles.parkButton, parkedClubs.includes(club) && styles.parked]}>
-                  {parkedClubs.includes(club) ? 'Unpark' : 'Park'}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
-      ))}
+      {Object.entries(CLUB_CATEGORIES).map(([category, clubList]) => {
+        const isExpanded = expandedCategories.includes(category);
+        const clubType = getClubType(category);
+        return (
+          <View key={category} style={styles.section}>
+            <TouchableOpacity
+              style={styles.categoryHeader}
+              onPress={() => toggleCategory(category)}
+            >
+              <View style={styles.categoryContent}>
+                <ClubCircleButton onPress={() => {}} currentClub={{ type: clubType }} />
+                <Text style={styles.sectionTitle}>{category}</Text>
+              </View>
+              <Text style={styles.chevron}>{isExpanded ? '⌄' : '>'}</Text>
+            </TouchableOpacity>
+
+            {isExpanded &&
+              clubList.map((club) => (
+                <View key={club} style={styles.clubRow}>
+                  <Text style={styles.clubName}>{club}</Text>
+                  <TouchableOpacity onPress={() => toggleClub(club)}>
+                    <Text style={styles.toggleButton}>
+                      {activeClubs.includes(club) ? 'Remove' : 'Add'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+          </View>
+        );
+      })}
     </ScrollView>
   );
 }
@@ -119,27 +117,36 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  switchRow: {
+  section: {
+    marginBottom: 24,
+  },
+  categoryHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderColor: '#ddd',
   },
-  label: {
-    fontSize: 16,
+  categoryContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  section: {
-    marginBottom: 24,
+  chevron: {
+    fontSize: 18,
+    color: '#999',
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 8,
+    marginLeft: 10,
     color: '#333',
   },
   clubRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
+    paddingLeft: 10,
   },
   clubName: {
     flex: 1,
@@ -148,13 +155,6 @@ const styles = StyleSheet.create({
   toggleButton: {
     marginRight: 12,
     color: '#007bff',
-  },
-  parkButton: {
-    color: '#999',
-  },
-  parked: {
-    color: 'orange',
-    fontWeight: 'bold',
   },
   activeClubsContainer: {
     marginBottom: 16,
