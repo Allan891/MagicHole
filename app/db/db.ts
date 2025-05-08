@@ -88,7 +88,7 @@ class Database {
       distance INTEGER,
       distanceLeft INTEGER,
       strokesGained REAL,
-      lie INTEGER,
+      lie TEXT,
       golfClubId INTEGER NOT NULL,
       playerId INTEGER NOT NULL,
       PRIMARY KEY (holeId, roundId, strokeNr),

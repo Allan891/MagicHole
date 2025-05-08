@@ -32,6 +32,7 @@ import { CircleButton } from '@/components/CircleButton';
 import { useRouter } from 'expo-router';
 import { ClubIcon } from '@/components/ClubIcon';
 import { ClubCircleButton } from '@/components/ClubCircleButton';
+import { Stroke, StrokeLieType } from '../db/GolfDatabaseTypes';
 import * as Haptics from 'expo-haptics';
 import { LiePicker } from '@/components/LiePicker';
 import { LieCircleButton } from '@/components/LieCircleButton';
@@ -63,7 +64,6 @@ export default function HomeScreen() {
   const [holeFinished, setHoleFinished] = useState<boolean>(false);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
   const [currentClub, setCurrentClub] = useState<object>(clubs[0]);
-  const [currentLie, setCurrentLie] = useState<string>('tee');
 
   useEffect(() => {
     setCurrentClub(clubs[0])
@@ -249,15 +249,9 @@ export default function HomeScreen() {
         strokesGained: 0
       };
       if (currentStroke == 0){ //AUTO SETS LIE TO 0 = TEE IF FIRST STROKE OF HOLE, CAN PROBABLY STAY
-        thisStroke.lie = 0
+        thisStroke.lie = StrokeLieType.tee
       }
       const distanceToFlag = Math.round(calculateDistance(thisStroke.startLatitude, thisStroke.startLongitude, holeCoords.latitude, holeCoords.longitude));
-      // PLACEHOLDER TO CHANGE CLUB = Putter and Lie = Green if distance is short. Should be done by manual input when implemented instead.
-      if (distanceToFlag < 9) {
-          thisStroke.golfClubId = 0;
-          thisStroke.lie = 4;
-      }
-      // END OF PLACEHOLDER
 
       // Calculate distance if there's a previous stroke
       if (previousStroke) {

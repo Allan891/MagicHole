@@ -1,5 +1,6 @@
 import {calculateBearing, calculateDistance, getHole, getPar} from '@/utils';
 import db from '../app/db/db';
+import { Stroke, StrokeLieType } from '@/app/db/GolfDatabaseTypes';
 
 export
   const calculateStrokesGained = (StartSlag:Stroke , slutSlag:Stroke, latitude:number , longitude:number): number=>{
@@ -11,8 +12,9 @@ export
   }
 
 export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number) => {
-    if (slag.lie != 0 && slag.lie != 1 && slag.lie != 2 && slag.lie != 3 && slag.lie != 4){
-      slag.lie = 1 //lie = 1 Equals "Fairway"
+    if (slag.lie != StrokeLieType.tee && slag.lie != StrokeLieType.green &&
+       slag.lie != StrokeLieType.sand && slag.lie != StrokeLieType.rough && slag.lie != StrokeLieType.recovery){
+      slag.lie = StrokeLieType.fairway
     }
     const sGdata = require('../constants/StrokesGained.json')
     //console.log('sGdata', sGdata.data["Distance (Meters)"])
@@ -25,27 +27,27 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
 
     //console.log('slag.lie ', slag.lie)
     switch(slag.lie){
-     case (0): {
+     case (StrokeLieType.tee): {
          sGValues = sGdata.data.map(t=>t.Tee)
         break;
      }
-     case (1): {
+     case (StrokeLieType.fairway): {
          sGValues = sGdata.data.map(t=>t.Fairway)
         break;
      }
-     case (2): {
+     case (StrokeLieType.rough): {
          sGValues = sGdata.data.map(t=>t.Rough)
         break;
         }
-     case (3): {
+     case (StrokeLieType.sand): {
          sGValues = sGdata.data.map(t=>t.Sand)
         break;
         }
-     case (5):{
+     case (StrokeLieType.recovery):{
          sGValues = sGdata.data.map(t=>t.Recovery)
         break;
         }
-     case (4): {
+     case (StrokeLieType.green): {
          sGValues = sGdata.green.map(t=>t.Green)
         // lie green doesnt exist in this table, it has its own table and is dealt with below.
         break;
@@ -64,7 +66,7 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
     var secondDistance = sGDistance[indices[1]]
     var rvalue
 
-    if (slag.lie != 4){ ///lie = 4 Equals "Green"
+    if (slag.lie != StrokeLieType.green){
 
 
         rvalue = firstSG + (DLeft - firstDistance)  / (secondDistance - firstDistance) * (secondSG - firstSG)
@@ -91,7 +93,7 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
     //Lägg till manuell inmatning där man pekar mot flaggan istället för GPS koordinater
 
     //console.log('All Green Data Loaded');
-    if (slag.lie = 4) // lie = 4 Equals "Green"
+    if (slag.lie = StrokeLieType.green) // lie = 4 Equals "Green"
             //console.log('Green SG Calculation Started');
             rvalue = firstSGGreen + (DLeftGreen - firstDistanceGreen)  / (secondDistanceGreen - firstDistanceGreen) * (secondSGGreen - firstSGGreen)
             //console.log('Raw Strokes Gained: ', rvalue)
@@ -118,7 +120,7 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
     return sum / array.length;
 };
 
-export const getMedian = (arr: stroke[] | null): number => {
+export const getMedian = (arr: Stroke[] | null): number => {
   if (!arr || arr.length === 0 || arr[0].strokesGained == null) {
     return -10; // Return a default value or handle the error as needed
   }
@@ -134,11 +136,11 @@ export const getMedian = (arr: stroke[] | null): number => {
     : (values[mid - 1] + values[mid]) / 2; // Even length: average of two middle elements
 };
 
-export const categorizeStrokes =  (strokes: stroke[]): stroke[][] =>{
-    let strokesTee: stroke[] = [];
-    let strokesApproach: stroke[] = [];
-    let strokesChip: stroke[] = [];
-    let strokesPutt: stroke[] = [];
+export const categorizeStrokes =  (strokes: Stroke[]): Stroke[][] =>{
+    let strokesTee: Stroke[] = [];
+    let strokesApproach: Stroke[] = [];
+    let strokesChip: Stroke[] = [];
+    let strokesPutt: Stroke[] = [];
     for (const stroke of strokes) {
         //console.log('Stroke: ', stroke);
         //console.log('par: ', par);
@@ -156,7 +158,7 @@ export const categorizeStrokes =  (strokes: stroke[]): stroke[][] =>{
         else if (stroke.distanceLeft < 50){
           strokesChip.push(stroke);
         }
-        else if (stroke.lie == 0 && stroke.distanceLeft > 200){
+        else if (stroke.lie == StrokeLieType.tee && stroke.distanceLeft > 200){
           strokesTee.push(stroke);
         }
         else{
@@ -166,7 +168,7 @@ export const categorizeStrokes =  (strokes: stroke[]): stroke[][] =>{
         //stroke.category = ....
     }
     //console.log('ALL STROKES CATEGORIZED');
-    let returnValue: stroke[][] = [];
+    let returnValue: Stroke[][] = [];
     returnValue.push(strokesTee);
 
     returnValue.push(strokesApproach);
@@ -178,11 +180,11 @@ export const categorizeStrokes =  (strokes: stroke[]): stroke[][] =>{
 
 
 //export const generateStatTables = async (): Promise<[strokesTee: stroke[], strokesApproach: stroke[], strokesChip: stroke[], strokesPutt: stroke[]]>=>{
-export const generateStatTables = async (): stroke[][] =>{
-    let strokesTee: stroke[] = [];
-    let strokesApproach: stroke[] = [];
-    let strokesChip: stroke[] = [];
-    let strokesPutt: stroke[] = [];
+export const generateStatTables = async (): Promise<Stroke[][]> =>{
+    let strokesTee: Stroke[] = [];
+    let strokesApproach: Stroke[] = [];
+    let strokesChip: Stroke[] = [];
+    let strokesPutt: Stroke[] = [];
     const strokes = await db.getStrokes();
     for (const stroke of strokes) {
         //console.log('Stroke: ', stroke);
@@ -201,7 +203,7 @@ export const generateStatTables = async (): stroke[][] =>{
         else if (stroke.distanceLeft < 50){
           strokesChip.push(stroke);
         }
-        else if (stroke.lie == 0 && stroke.distanceLeft > 200){
+        else if (stroke.lie == StrokeLieType.tee && stroke.distanceLeft > 200){
           strokesTee.push(stroke);
         }
         else{
@@ -211,7 +213,7 @@ export const generateStatTables = async (): stroke[][] =>{
         //stroke.category = ....
     }
     //console.log('ALL STROKES CATEGORIZED');
-    let returnValue: stroke[][] = [];
+    let returnValue: Stroke[][] = [];
     returnValue.push(strokesTee);
 
     returnValue.push(strokesApproach);
