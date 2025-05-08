@@ -1,6 +1,5 @@
 import { getHoles } from "@/utils";
 import db from "./db";
-import golfClubs from "@/constants/golfClubs";
 
 class FetchInfo{
     async getRoundData(roundId:number): Promise<[roundId: (number | undefined), courseId: (number | undefined), timeStamp: (number | undefined), strokesEachHole: ((number | null)[])]> {
@@ -35,29 +34,5 @@ class FetchInfo{
         }
         return roundsData;
     }
-
-    async importGolfClubs() {
-        if (!db) {
-          console.error("Database connection is not available.");
-          return;
-        }
-      
-        for (const club of golfClubs) {
-          try {
-            const golfClub = {
-                id: club.id,
-                playerId: club.playerId,
-                name: club.name,
-                type: club.type,
-                showInList: club.showInList,
-                iconType: club.iconType
-            };
-            if (db.getGolfClubById(club.id) == null){
-                await db.createGolfClub(golfClub);
-            }
-          }
-          finally {}
-        } 
-      }
 
 } export default new FetchInfo();

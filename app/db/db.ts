@@ -8,7 +8,7 @@ import type { GolfClub } from './GolfDatabaseTypes';
 import type { Round } from './GolfDatabaseTypes';
 import type { Stroke } from './GolfDatabaseTypes';
 import type { TeeSlope } from './GolfDatabaseTypes';
-import Fetchinfo
+import db from './dbFunctions';
 import { G } from 'react-native-svg';
 class Database {
 
@@ -26,7 +26,7 @@ class Database {
 
 
 //#region Initialize the database and create tables
-  public initDb() {
+  public async initDb() {
     if (this.isInitialized) return;
     console.log('Database opened');
     this.db.execSync(`
@@ -114,7 +114,7 @@ class Database {
       PRIMARY KEY (setting));
 
     `);
-    this.db.importGolfClubs();
+    await db.importGolfClubs();
     this.isInitialized = true;
     console.log('Database created');
   }
@@ -394,7 +394,7 @@ class Database {
     if (!this.db) return -1;
     try {
       await this.db.runAsync(
-        'INSERT INTO GolfClub (id, playerId, name, type, showInList) VALUES (?, ?, ?, ?, ?, ?);',
+        'INSERT INTO GolfClub (id, playerId, name, type, iconType, showInList) VALUES (?, ?, ?, ?, ?, ?);',
         golfClub.id, golfClub.playerId, golfClub.name, golfClub.type, golfClub.iconType, golfClub.showInList);
       const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
       console.log('Golf club created with ID:', result?.id);
