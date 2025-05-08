@@ -11,6 +11,7 @@ import {
   Button,
   Alert,
   Platform,
+  TouchableHighlight,
 } from 'react-native';
 import MapView, { LatLng, Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -20,6 +21,7 @@ import * as Location from 'expo-location';
 import { ThemedText } from '@/components/ThemedText';
 import { LocationObject } from 'expo-location';
 import { CoursePicker } from '@/components/CoursePicker';
+import { ClubPicker } from '@/components/ClubPicker';
 import courses from '@/constants/courses';
 import {calculateBearing, calculateDistance} from '@/utils';
 import {calculateStrokesGained,calculateRawSG} from '@/utils';
@@ -28,6 +30,8 @@ import { globalStateVar } from '../state/globalStateVar';
 import { setBackgroundColorAsync } from 'expo-system-ui';
 import { CircleButton } from '@/components/CircleButton';
 import { useRouter } from 'expo-router';
+import { ClubIcon } from '@/components/ClubIcon';
+import { ClubCircleButton } from '@/components/ClubCircleButton';
 
 
 
@@ -53,6 +57,9 @@ export default function HomeScreen() {
   const [strokeCoordinates, setStrokeCoordinates] = useState<LatLng[]>([]);
   const [holeFinished, setHoleFinished] = useState<boolean>(false);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
+  const clubs = [{id:1, type: 'wood', name: 'Wood 3'},{id:2, type: 'wedge', name: 'Sand wedge'},{id:3, type: 'putter', name: 'Putter'},{id: 4, type: 'iron', name: '9 iron'}]
+  const [currentClub, setCurrentClub] = useState<object>(clubs[0]);
+
 
   const [LockedView, setLockedView] = useState<boolean>(false);
   const [lat2, setLat2] = useState<number>(0);
@@ -109,6 +116,8 @@ export default function HomeScreen() {
       pathname: '/screens/score'
     });
   }
+
+  console.log('Map rerender!');
 
   const handleCourseChosen = async (id) => {
 
@@ -225,7 +234,7 @@ export default function HomeScreen() {
         startLongitude: longitude,
         distance: 0, // Placeholder, calculate if needed
         distanceLeft: distanceLeft || -1,
-        golfClubId: 69, // Placeholder, update with actual golf club ID
+        golfClubId: currentClub.id, // Placeholder, update with actual golf club ID
         playerId: 999,
         lie: 1, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.
         strokesGained: 0
@@ -624,17 +633,17 @@ export default function HomeScreen() {
 
         {courseChosen && 
       <View style={styles.floatingButtonContainer}>
-      <CircleButton disabled={holeFinished} onPress={() => {addStroke()}} icon={"add-circle-outline"} label={"Add stroke"} ></CircleButton>
-      <CircleButton onPress={goToScorecard} icon={"sports-score"} label={"Scorecard"} ></CircleButton>
+      <CircleButton disabled={holeFinished} onPress={() => {addStroke()}} icon={"add-circle-outline"} label={"Add stroke"} />
+      <ClubCircleButton onPress={() => {sheetAnim.setValue(expandedY)}} currentClub={currentClub} />
+      <CircleButton onPress={goToScorecard} icon={"sports-score"} label={"Scorecard"} />
       { currentHole + 1 >= courseObject.holes.length ? (
-        <CircleButton onPress={finishRound} icon={"check-circle-outline"} label={"Finish round"} ></CircleButton>
+        <CircleButton onPress={finishRound} icon={"check-circle-outline"} label={"Finish round"} />
       ) : (
         holeFinished ? 
-          <CircleButton onPress={nextHole} icon={"navigate-next"} label={"Next hole"} ></CircleButton>
+          <CircleButton onPress={nextHole} icon={"navigate-next"} label={"Next hole"} />
         :
-          <CircleButton disabled={currentStroke == 0} onPress={finishHole} icon={"golf-course"} label={"Finish hole"} ></CircleButton>
+          <CircleButton disabled={currentStroke == 0} onPress={finishHole} icon={"golf-course"} label={"Finish hole"} />
       )}
-      
       </View>
     }
 
@@ -673,6 +682,9 @@ onPress={() => {
   >
     <MaterialIcons name="add-circle-outline" size={36} color="black" />
   </TouchableOpacity>
+
+
+
 </View>
 
 {/* 
@@ -712,6 +724,9 @@ onPress={() => {
 <View style={styles.buttonRow}>
   <ThemedText type="subtitle">{courseObject?.name}</ThemedText>
 </View>
+
+
+<ClubPicker onClubChoose={(item) => {setCurrentClub(item); sheetAnim.setValue(collapsedY);}} />
 
 </Animated.View>
 
