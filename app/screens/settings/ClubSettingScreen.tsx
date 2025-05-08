@@ -1,3 +1,4 @@
+import { GolfClub } from '@/app/db/GolfDatabaseTypes';
 import { globalStateVar } from '@/app/state/globalStateVar';
 import { ClubCircleButton } from '@/components/ClubCircleButton';
 import { ClubPicker } from '@/components/ClubPicker';
@@ -9,13 +10,15 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import db from '@/app/db/db';
+import golfClubs from '@/constants/golfClubs';
+
 
 const CLUB_CATEGORIES = {
-  'Drivers & Woods': ['Driver (1 Wood)', '3 Wood', '5 Wood', '7 Wood'],
-  Hybrids: ['2 Hybrid', '3 Hybrid', '4 Hybrid', '5 Hybrid'],
-  Irons: ['3 Iron', '4 Iron', '5 Iron', '6 Iron', '7 Iron', '8 Iron', '9 Iron'],
-  Wedges: ['Pitching Wedge (PW)', 'Gap Wedge (GW)', 'Approach Wedge (AW)', 'Sand Wedge (SW)', 'Lob Wedge (LW)'],
-  Putter: ['Putter'],
+  'Drivers & Woods': golfClubs.filter(a => a.iconType == 'Driver' || a.iconType == 'Wood'),
+  Hybrids: golfClubs.filter(a => a.iconType == 'Hybrid'),
+  Irons: golfClubs.filter(a => a.iconType == 'Iron'),
+  Wedges: golfClubs.filter(a => a.iconType == 'Wedge')
 };
 
 export default function ClubSettingScreen() {
@@ -24,13 +27,15 @@ export default function ClubSettingScreen() {
   const clubs = globalStateVar((state) => state.currentBag);
 
   const getClubType = (name: string) => {
-    if (name === 'Drivers & Woods') return 'wood';
-    if (name === 'Hybrids') return 'wood';
-    if (name === 'Irons') return 'iron';
-    if (name === 'Wedges') return 'wedge';
-    if (name === 'Putter') return 'putter';
+    if (name === 'Drivers & Woods') return 'Wood';
+    if (name === 'Hybrids') return 'Wood';
+    if (name === 'Irons') return 'Iron';
+    if (name === 'Wedges') return 'Wedge';
+    if (name === 'Putter') return 'Putter';
     return '';
   };
+
+  const setCurrentBag = globalStateVar((state) => state.setCurrentBag);
 
   const toggleClub = (club: string) => {
     const updated = activeClubs.includes(club)
@@ -38,6 +43,21 @@ export default function ClubSettingScreen() {
       : [...activeClubs, club];
     setActiveClubs(updated);
   };
+
+  const addClubToBag = (club: GolfClub) => {
+    if(clubs.some(a => a.id == club.id)) return;
+    club.showInList = 1;
+    setCurrentBag([club, ...clubs]);
+    db.updateGolfClub(club)
+  }
+
+  const removeClubFromBag = async (club: GolfClub) => {
+    if (club.id == 0) return
+    club.showInList = 0;
+    db.updateGolfClub(club)
+    const golfBag = await db.getGolfClubsInList()
+    setCurrentBag(golfBag)
+  }
 
   const toggleCategory = (category: string) => {
     setExpandedCategories((prev) =>
@@ -51,23 +71,8 @@ export default function ClubSettingScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Club Settings</Text>
-        <ClubPicker onClubChoose={() => {}} />
+        <ClubPicker onClubChoose={removeClubFromBag} />
 
-        {activeClubs.length > 0 && (
-          <View style={styles.activeClubsContainer}>
-            <Text style={styles.subTitle}>Selected Clubs:</Text>
-            <View style={styles.selectedList}>
-              {activeClubs.map((club) => (
-                <View key={club} style={styles.selectedClub}>
-                  <Text style={styles.selectedClubText}>{club}</Text>
-                  <TouchableOpacity onPress={() => toggleClub(club)}>
-                    <Text style={styles.removeButton}>✕</Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
-          </View>
-        )}
       </View>
 
       {Object.entries(CLUB_CATEGORIES).map(([category, clubList]) => {
@@ -80,7 +85,7 @@ export default function ClubSettingScreen() {
               onPress={() => toggleCategory(category)}
             >
               <View style={styles.categoryContent}>
-                <ClubCircleButton onPress={() => {}} currentClub={{ type: clubType }} />
+                <ClubCircleButton onPress={() => {}} currentClub={{ iconType: clubType }} />
                 <Text style={styles.sectionTitle}>{category}</Text>
               </View>
               <Text style={styles.chevron}>{isExpanded ? '⌄' : '>'}</Text>
@@ -88,11 +93,11 @@ export default function ClubSettingScreen() {
 
             {isExpanded &&
               clubList.map((club) => (
-                <View key={club} style={styles.clubRow}>
-                  <Text style={styles.clubName}>{club}</Text>
-                  <TouchableOpacity onPress={() => toggleClub(club)}>
+                <View key={club.id} style={styles.clubRow}>
+                  <Text style={styles.clubName}>{club.name}</Text>
+                  <TouchableOpacity onPress={() => addClubToBag(club)}>
                     <Text style={styles.toggleButton}>
-                      {activeClubs.includes(club) ? 'Remove' : 'Add'}
+                      Add
                     </Text>
                   </TouchableOpacity>
                 </View>

@@ -2,23 +2,28 @@ import React from 'react';
 import { Image, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 const CLUBS = {
-  wood: {
-    name: 'Wood 3',
+
+  Driver: {
     source: require('@/assets/images/wood.png'),
     style: { marginTop: -234, marginLeft: 85 },
   },
-  wedge: {
-    name: 'Sand wedge',
+  Hybrid: {
+    source: require('@/assets/images/wood.png'),
+    style: { marginTop: -234, marginLeft: 85 },
+  },
+  Wood: {
+    source: require('@/assets/images/wood.png'),
+    style: { marginTop: -234, marginLeft: 85 },
+  },
+  Wedge: {
     source: require('@/assets/images/wedge.png'),
     style: { marginTop: -250, marginLeft: 185 },
   },
-  putter: {
-    name: 'Putter',
+  Putter: {
     source: require('@/assets/images/putter.png'),
     style: { marginTop: -250, marginLeft: 170 },
   },
-  iron: {
-    name: '9 Iron',
+  Iron: {
     source: require('@/assets/images/iron.png'),
     style: { marginTop: -240, marginLeft: 120 },
   },
@@ -26,9 +31,9 @@ const CLUBS = {
 
 export function ClubIcon({ item, label=true }) {
 
-  console.log('club type:', item.type);
-  const club = CLUBS[item.type];
-
+  console.log('club type:', item.iconType);
+  const club = CLUBS[item.iconType];
+ 
   if (!club) return null;
 
   return (

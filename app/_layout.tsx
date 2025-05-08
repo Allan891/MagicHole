@@ -9,6 +9,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import db from './db/db';
+import { globalStateVar } from './state/globalStateVar';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -19,6 +20,8 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
+const setCurrentBag = globalStateVar((state) => state.setCurrentBag);
+
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -26,8 +29,17 @@ export default function RootLayout() {
   }, [loaded]);
 
   useEffect(() => {
-  db.initDb();
-}, []);
+  const loadDB = async () => {
+    await db.initDb()
+    const golfBag = await db.getGolfClubsInList()
+    console.log('Bag: ', golfBag)
+    setCurrentBag(golfBag)
+  }
+
+  loadDB()
+
+  }, []);
+
 
   if (!loaded) {
     return null;
