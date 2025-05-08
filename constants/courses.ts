@@ -113099,6 +113099,24 @@ const courses = [
                 }
             
         ]
+    },{
+        "id": 1303,
+        "name": "KTH Kista GC",
+        "par": [
+            4
+        ],
+        "holes": [
+            {
+                "greenMiddle": {
+                    "latitude": 59.40479227979287,
+                    "longitude": 17.951730172641504
+                },
+                "teeBack": {
+                    "latitude": 59.40479227979287,
+                    "longitude": 17.951730172641504
+                }
+            }
+        ]
     }
 ]
 
