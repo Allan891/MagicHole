@@ -1,7 +1,7 @@
 // import { StyleSheet, View, ScrollView, SafeAreaView, Text,TouchableOpacity,Switch,Image } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import { SETTINGS, settingsList } from '../state/globalStateVar';
+import { globalStateVar, SETTINGS, settingsList } from '../state/globalStateVar';
 import db from '../db/db';
 import coursesJson  from "../../constants/courses";
 import React, { useState,useEffect } from 'react';
@@ -35,6 +35,8 @@ export default function SettingsTab() {
     handicap: SETTINGS.HANDICAP,
     location: SETTINGS.LOCATION,
   });
+  const testMode = globalStateVar((state) => state.testMode);
+  const setTestMode = globalStateVar((state) => state.setTestMode);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -79,16 +81,13 @@ export default function SettingsTab() {
               <Text style={styles.rowLabel}>Test</Text>
               <View style={styles.rowSpacer} />
               <Switch
-                onValueChange={(toggleButton: boolean) =>{
-                  setForm({ ...form, toggleButton });
-                  SETTINGS.TEST = toggleButton;
-                  if(SETTINGS.TEST){
-                    console.log('Form', toggleButton);
-                    console.log('Global', SETTINGS.TEST);
-                  }
+                onValueChange={(value: boolean) => {
+                  setTestMode(value); // Update global state
+                  setForm(prevForm => ({ ...prevForm, toggleButton: value })); // Optional: keep form in sync
+                  SETTINGS.TEST = value;
                 }}
-                style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
-                value={form.toggleButton} />
+                value={testMode}
+                style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}/>
             </View>
           </View>
         </View>

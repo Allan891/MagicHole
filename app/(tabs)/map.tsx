@@ -32,6 +32,7 @@ import { CircleButton } from '@/components/CircleButton';
 import { useRouter } from 'expo-router';
 import { ClubIcon } from '@/components/ClubIcon';
 import { ClubCircleButton } from '@/components/ClubCircleButton';
+import * as Haptics from 'expo-haptics';
 
 
 
@@ -40,6 +41,7 @@ export default function HomeScreen() {
   const initialCourse = courses[Math.floor(Math.random() * courses.length)];
 
   const strokes = globalStateVar((state) => state.strokes);
+  const test = globalStateVar((state) => state.testMode);
   const clubs = globalStateVar((state) => state.currentBag);
   const currentGlobalHole = globalStateVar((state) => state.currentHole);
   const setLocationGlobal = globalStateVar((state) => state.setLocation);
@@ -443,8 +445,6 @@ export default function HomeScreen() {
 
   }
 
-  const test = true; // Auto generate GPS locations to test
-
   if (test && !location) {
     updateTestLocation(teeCoords);
     setLocationGlobal(teeCoords);
@@ -637,7 +637,7 @@ export default function HomeScreen() {
 
         {courseChosen && 
       <View style={styles.floatingButtonContainer}>
-      <CircleButton disabled={holeFinished} onPress={() => {addStroke()}} icon={"add-circle-outline"} label={"Add stroke"} />
+      <CircleButton disabled={holeFinished} onPress={() => {addStroke(); Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);}} icon={"add-circle-outline"} label={"Add stroke"} />
       <ClubCircleButton onPress={() => {sheetAnim.setValue(expandedY)}} currentClub={currentClub} />
       <CircleButton onPress={goToScorecard} icon={"sports-score"} label={"Scorecard"} />
       { currentHole + 1 >= courseObject.holes.length ? (
@@ -646,7 +646,7 @@ export default function HomeScreen() {
         holeFinished ? 
           <CircleButton onPress={nextHole} icon={"navigate-next"} label={"Next hole"} />
         :
-          <CircleButton disabled={currentStroke == 0} onPress={finishHole} icon={"golf-course"} label={"Finish hole"} />
+          <CircleButton disabled={currentStroke == 0} onPress={() => {finishHole(); Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);}} icon={"golf-course"} label={"Finish hole"} />
       )}
       </View>
     }
