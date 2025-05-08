@@ -91,12 +91,12 @@ export function CoursePicker({ onChooseCourse }) {
       <Modal visible={showOnboarding} animationType="slide">
         <Onboarding
           onDone={async () => {
-            await AsyncStorage.setItem('hasSeenOnboarding', 'true');
+            await AsyncStorage.setItem('hasSeenOnboarding', 'false');
             setShowOnboarding(false);
           }}
           onSkip={async () => {
-            await AsyncStorage.setItem('hasSeenOnboarding', 'true');
-            setShowOnboarding(false);
+            await AsyncStorage.setItem('hasSeenOnboarding', 'false');
+            setShowOnboarding(true);
           }}
           pages={[
             {
@@ -115,7 +115,7 @@ export function CoursePicker({ onChooseCourse }) {
               image: (
                 <Image
                   source={require('../assets/images/CourseList.png')}
-                  style={{ width: 180, height: 280 }}
+                  style={{ width: 260, height: 400 }}
                 />
               ),
               title: 'Select the course',
@@ -126,7 +126,7 @@ export function CoursePicker({ onChooseCourse }) {
               image: (
                 <Image
                   source={require('../assets/images/History.png')}
-                  style={{ width: 150, height: 150 }}
+                  style={{ width: 300, height: 300 }}
                 />
               ),
               title: 'Check your history',
@@ -137,7 +137,7 @@ export function CoursePicker({ onChooseCourse }) {
               image: (
                 <Image
                   source={require('../assets/images/Stats.png')}
-                  style={{ width: 150, height: 200 }}
+                  style={{ width: 300, height: 380 }}
                 />
               ),
               title: 'Tracking your improvement',
