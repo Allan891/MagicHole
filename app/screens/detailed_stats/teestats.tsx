@@ -7,6 +7,7 @@ import { CurveType, LineChart, BarChart} from "react-native-gifted-charts";
 import { Dimensions } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
+import { StrokeLieType } from '@/app/db/GolfDatabaseTypes';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -95,7 +96,7 @@ const handleTouch = (event) => {
           const ammendedData = await addNextStrokeLie(parsedData);
           const calculateFairwaysHit = () => {
             if (!ammendedData || !Array.isArray(ammendedData) || ammendedData.length === 0) return 0;
-            const count = ammendedData.filter(item => item.nextLie === 1 || item.nextLie === 3).length;
+            const count = ammendedData.filter(item => item.nextLie === StrokeLieType.fairway || item.nextLie === StrokeLieType.green).length;
             console.log('ammendedData length:', ammendedData.length);
             return Math.round((count / ammendedData.length) * 100);
         }
@@ -245,7 +246,7 @@ averageStrokeGainedByClub.sort((a, b) => {
       style={{
         fontSize: 18,
         fontWeight: 'bold',
-        color: `blcak`,
+        color: `black`,
         textAlign: 'center',
       }}
       >
