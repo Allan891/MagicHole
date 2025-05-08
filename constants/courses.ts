@@ -113108,8 +113108,8 @@ const courses = [
         "holes": [
             {
                 "greenMiddle": {
-                    "latitude": 59.40479227979287,
-                    "longitude": 17.951730172641504
+                    "latitude": 59.404467982858414,
+                    "longitude": 17.952143906195225
                 },
                 "teeBack": {
                     "latitude": 59.40479227979287,
