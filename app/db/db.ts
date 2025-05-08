@@ -1,7 +1,15 @@
 import * as SQLite from 'expo-sqlite';
 import { useEffect } from 'react';
 import coursesJson  from "../../constants/courses";
-
+import type { Course } from './GolfDatabaseTypes';
+import type { Hole } from './GolfDatabaseTypes';
+import type { Player } from './GolfDatabaseTypes';
+import type { GolfClub } from './GolfDatabaseTypes';
+import type { Round } from './GolfDatabaseTypes';
+import type { Stroke } from './GolfDatabaseTypes';
+import type { TeeSlope } from './GolfDatabaseTypes';
+import db from './dbFunctions';
+import { G } from 'react-native-svg';
 class Database {
 
 //#region Define the database schema
@@ -18,7 +26,7 @@ class Database {
 
 
 //#region Initialize the database and create tables
-  public initDb() {
+  public async initDb() {
     if (this.isInitialized) return;
     console.log('Database opened');
     this.db.execSync(`
@@ -54,9 +62,11 @@ class Database {
       handicap REAL NOT NULL);
 
     CREATE TABLE IF NOT EXISTS GolfClub (
-      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      id INTEGER PRIMARY KEY NOT NULL,
       playerId INTEGER NOT NULL,
       name TEXT,
+      type TEXT,
+      iconType TEXT,
       showInList INTEGER NOT NULL,
       FOREIGN KEY (playerId) REFERENCES player (id));
 
@@ -104,6 +114,7 @@ class Database {
       PRIMARY KEY (setting));
 
     `);
+    await db.importGolfClubs();
     this.isInitialized = true;
     console.log('Database created');
   }
@@ -383,8 +394,8 @@ class Database {
     if (!this.db) return -1;
     try {
       await this.db.runAsync(
-        'INSERT INTO GolfClub (playerId, name, showInList) VALUES (?, ?, ?);',
-        golfClub.playerId, golfClub.name, golfClub.showInList);
+        'INSERT INTO GolfClub (id, playerId, name, type, iconType, showInList) VALUES (?, ?, ?, ?, ?, ?);',
+        golfClub.id, golfClub.playerId, golfClub.name, golfClub.type, golfClub.iconType, golfClub.showInList);
       const result = await this.db.getFirstAsync("SELECT last_insert_rowid() AS id;");
       console.log('Golf club created with ID:', result?.id);
       return result?.id ?? -2 //returns -2 if result.id is null or undefined
@@ -393,19 +404,20 @@ class Database {
       return -3;
     }
   }
-
+  
   // UPDATE: Update a golf club
   async updateGolfClub(golfClub: GolfClub) {
     if (!this.db) return;
     try {
       await this.db.runAsync(
-        'UPDATE GolfClub SET playerId = ?, name = "?", showInList = ? WHERE id = ?;',
-        golfClub.playerId, golfClub.name, golfClub.showInList, golfClub.id);
+        'UPDATE GolfClub SET playerId = ?, name = ?, type = ?, iconType = ?, showInList = ? WHERE id = ?;',
+        golfClub.playerId, golfClub.name, golfClub.type, golfClub.iconType, golfClub.showInList, golfClub.id);
       console.log('Golf club updated');
     } catch (error) {
       console.error('Error updating golf club:', error);
     }
   }
+
 
   // DELETE: Delete a golf club
   async deleteGolfClub(golfClub: GolfClub) {
@@ -429,8 +441,19 @@ class Database {
     }
   }
 
+  // READ: Get golf clubs in list
+  async getGolfClubsInList(): Promise<GolfClub[]> {
+    if (!this.db) return [];
+    try {
+      return await this.db.getAllAsync('SELECT * FROM GolfClub WHERE showInList = 1;');
+    } catch (error) {
+      console.error('Error fetching golf clubs:', error);
+      return [];
+    }
+  }
+
   // READ: Get a golf club by ID
-  async getGolfClubsById(id: number): Promise<GolfClub | null> {
+  async getGolfClubById(id: number): Promise<GolfClub | null> {
     if (!this.db) return null;
     try {
       return await this.db.getFirstAsync<GolfClub>('SELECT * FROM GolfClub WHERE id = ?;', id);
@@ -829,11 +852,6 @@ async getApproachData(): Promise<[]> {
         labelTextStyle: {color: 'gray', width: 60},
       },
         {value: 1, distance: 53},
-        {value: 1, distance: 53},
-        {value: 1, distance: 53},
-        {value: 1, distance: 53},
-        {value: 1, distance: 53},
-        {value: 1, distance: 53},
         {value: 2, distance: 52},
       
         {value: 4,distance: 55},
@@ -851,14 +869,6 @@ async getApproachData(): Promise<[]> {
           labelTextStyle: {color: 'gray', width: 60},
         },
         {value: 4, distance: 72},
-        {value: 2,  distance: 72},
-        {value: 3,  distance: 72},
-        {value: 3,  distance: 72},
-        {value: 2,  distance: 72},
-        {value: 3,  distance: 72},
-        {value: 3,  distance: 72},
-        {value: 2,  distance: 72},
-        {value: 2,  distance: 72},
     
         {value: 1,  distance: 75},
         {value: 1,  distance: 77},
@@ -870,9 +880,6 @@ async getApproachData(): Promise<[]> {
           labelTextStyle: {color: 'gray', width: 60},
         },
         {value: 1,  distance: 81},
-        {value: 1,  distance: 81},
-        {value: 1,  distance: 82},
-        {value: 1,  distance: 82},
         {value: 1,  distance: 82},
         {value: -4, distance: 83},
         {
@@ -1009,4 +1016,6 @@ async getTeeData(): Promise<[]> {
   }
 }
 //#endregion
+
+
 }export default new Database();
