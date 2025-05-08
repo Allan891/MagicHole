@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { FlatList, StyleSheet, View, Text, Touchable, TouchableOpacity } from 'react-native';
+import { Image, FlatList, StyleSheet, View, Text, Touchable, TouchableOpacity } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -10,58 +10,28 @@ import Animated, {
 import courses from '@/constants/courses';
 import {getPar} from '@/utils';
 import { ThemedText } from '@/components/ThemedText';
+import { ClubIcon } from './ClubIcon';
 
-export function HoleOverview({ holeData, courseId}) {
+export function ClubPicker({onClubChoose}) {
 
-  //console.log('holedata', holeData)
+  const clubs = [{type: 'wood', name: 'Wood 3'},{type: 'wedge', name: 'Sand wedge'},{type: 'putter', name: 'Putter'},{type: 'iron', name: '9 iron'}]
+
+  const renderClub = ({ item, index }) => {
   
-
-
-
-  const getColor = (par,strokes) => {
-    if (!par || strokes == null) return;
-    const diff = strokes - par;
-    
-    let color = "gray";
-
-    if (diff > 3){
-      color = "black";
-    }else if (diff == 2){
-      color = "brown";
-    }else if (diff == 1){
-      color = "red";
-    }else if (diff == 0){
-      color = "yellow";
-    }else if (diff == -1){
-      color = "green";
-    }else if (diff == -2){
-      color = "blue";
-    }
-    //console.log('What color', color)
-    return color;
-
-  }
+    return (
+      <TouchableOpacity style={styles.clubwrapper} onPress={() => onClubChoose(item)}>
+      <ClubIcon item={item} />
+      </TouchableOpacity>
+    );
+  };
   
-
-
-  const renderHole = ({item, index}) => (
-
-    <View 
-    style={[styles.hole, 
-      {
-        backgroundColor: getColor(getPar(courseId)[index] , item),
-        opacity: item == null ? 0.1 : 1
-      } ]}>
-    </View>
-
-  );
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={holeData}
+        data={clubs}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={renderHole}
+        renderItem={renderClub}
         horizontal={true} // Set horizontal to true
         contentContainerStyle={styles.listStyle}
       />
@@ -87,7 +57,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   container: {
-    height: 20,
+    flex: 1
     // backgroundColor: "magenta"
   },
   courseItem: {
@@ -98,5 +68,21 @@ const styles = StyleSheet.create({
   courseText: {
     fontSize: 18,
   },
+  club: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(0,0,0,0.1)',
+    overflow: 'hidden'
+  },
+  clubwrapper: {
+    alignContent: 'center',
+    textAlign: 'center',
+    width: 50
+  },
+  clubtext: {
+    fontSize: 10,
+    textAlign: 'center'
+  }
 });
 

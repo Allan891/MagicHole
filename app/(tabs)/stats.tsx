@@ -7,6 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { calculateDistance } from "@/utils";
 import {calculateAverage, generateStatTables, getMedian} from "@/utils";
+import { useRouter } from "expo-router";
 import { globalStateVar } from "../state/globalStateVar";
 //import { Text, useTheme } from '@rneui/themed';
 
@@ -15,8 +16,10 @@ import { globalStateVar } from "../state/globalStateVar";
 export const Stats = () => {
    const [sGAverage, setsGAverage] = useState<number[]>(1);
    const [sGMedian, setsGMedian] = useState<number[]>(1);
+   const router = useRouter();
    const strokes = globalStateVar((state) => state.strokes);
-   
+   const [approachData, setApproachData] = useState<number[]>(1);
+
    useEffect(() => {
         /* db.getStrokes()
                .then((strokes) => {
@@ -36,11 +39,12 @@ export const Stats = () => {
                 */
         const fetchData = async () => {
             console.log('Start Fetch Data');
-            const strokeTables: stroke[][]  = await generateStatTables();
+            const strokeTables: Stroke[][]  = await generateStatTables();
                     console.log(strokeTables);
                     console.log('WE ALMST DIT IT');
                     console.log(' ');
                     console.log('asdf ',calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2));
+                    setApproachData(strokeTables[1]);
                     setsGAverage([
                         calculateAverage(strokeTables[0].map(t=>t.strokesGained )).toFixed(2),
                         calculateAverage(strokeTables[1].map(t=>t.strokesGained )).toFixed(2),
@@ -63,18 +67,25 @@ export const Stats = () => {
             //.catch(console.error());
        }, [strokes]);
 
-
-
       return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#f6f6f6' }}>
               <View style={styles.container}>
-                  <Text style={styles.title}>Your Stats</Text>
 
                   <View style={styles.stats}>
                     {items.map(({ label, value }, index) => (
-                      <View
+                        <View
                         key={index}
-                        style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}>
+                        style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}
+                        onTouchEnd={async () => {
+                          if (label === "Approach") {
+                            // const approachData = await db.getApproachData(); 
+                            router.push({pathname: '../screens/detailed_stats/approachstats', params:{page:'Approach',data:JSON.stringify(approachData)}});
+                          }
+                          else if (label === "Tee") {
+                            const teeData = await db.getTeeData(); 
+                            router.push({pathname: '../screens/detailed_stats/teestats',params:{page:'Tee',data:JSON.stringify(teeData)}});
+                          }
+                        }}>
                         <Text style={styles.title}>{label}</Text>
 
                         <Text style={styles.statsItemLabel}>Average</Text>
@@ -83,10 +94,9 @@ export const Stats = () => {
                       {(!sGAverage[index] || sGAverage[index]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
                         <Text style={styles.statsItemLabel}>Median</Text>
 
-                       {(sGMedian[index] && sGMedian[index]>-10) && <Text style={styles.statsItemValue}>{sGMedian[index]}</Text>  }
-                      {(!sGMedian[index] || sGMedian[index]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
-
-                      </View>
+                        {(sGMedian[index] && sGMedian[index] > -10) && <Text style={styles.statsItemValue}>{sGMedian[index]}</Text>}
+                        {(!sGMedian[index] || sGMedian[index] <= -10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                        </View>
                     ))}
                   </View>
                 </View>
@@ -96,7 +106,17 @@ export const Stats = () => {
                       {items2.map(({ label, value }, index) => (
                         <View
                           key={index}
-                          style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}>
+                          style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}
+                          onTouchEnd={async () => {
+                            if (label === "Chip") {
+                              const teeData = await db.getTeeData(); 
+                              router.push({pathname: '../screens/detailed_stats/chipstats',params:{page:'Chip',data:JSON.stringify(teeData)}});
+                            }
+                            else if (label === "Putt") {
+                              const teeData = await db.getTeeData(); 
+                              router.push({pathname: '../screens/detailed_stats/puttstats',params:{page:'Putt',data:JSON.stringify(teeData)}});
+                            }
+                          }}>
                           <Text style={styles.title}>{label}</Text>
 
                           <Text style={styles.statsItemLabel}>Average</Text>
@@ -131,8 +151,6 @@ export const Stats = () => {
 let items = [
   {
     label: 'Tee',
-
-
     value: '2',
   },
   {
@@ -143,8 +161,6 @@ let items = [
 let items2 = [
   {
     label: 'Chip',
-
-
     value: '2',
   },
   {

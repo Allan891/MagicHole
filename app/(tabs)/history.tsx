@@ -35,6 +35,7 @@ export default function History() {
 
   async function updateRounds() {
     const rounds2 = await dbExtra.getLatestRoundsData(999, 25);
+    console.log('rounds2', rounds2)
     setRounds(rounds2);
   }
   
@@ -64,8 +65,15 @@ export default function History() {
   };
 
   const getCourseTotal = (par, strokes) => {
+    if (!par) return;
+    const parCopy = [...par];
+    strokes.forEach((stroke, index) => {
+      if (stroke === null) {
+        parCopy[index] = 0;
+      }
+    });
     const totalStrokes = strokes.reduce((acc, val) => acc+ val ,0);
-    const totalPar = par.reduce((acc, val) => acc+ val ,0);
+    const totalPar = parCopy.reduce((acc, val) => acc+ val ,0);
     let diff = totalStrokes - totalPar;
     diff = (diff >= 0 ? diff = "+" + diff : diff = diff );
     return diff;
@@ -109,8 +117,6 @@ export default function History() {
   return (
 
     <ThemedView style={styles.container}>
-            <ThemedText style={styles.title}>History</ThemedText>
-
       <FlatList
               data={rounds}
               keyExtractor={(item, index) => index.toString()}
