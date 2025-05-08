@@ -16,14 +16,16 @@
         }
         h1 {
             font-size: 3.5rem;
-            color: #43A047;
+            /* color: #43A047; */
+            color: black;
             margin-top: 50px;
             font-weight: 600;
             text-shadow: 3px 3px 3px rgba(0,0,0,0.2);
         }
         h2 {
             font-size: 1.5rem;
-            color: #43A047;
+            /* color: #43A047; */
+            color: black;
             margin-top: 10px;
             font-weight: 600;
             text-shadow: 3px 3px 3px rgba(0,0,0,0.2);
@@ -89,6 +91,149 @@
             aspect-ratio: 1032 / 1816;
             border-radius: 15px;
         }
+        .profile-pic-fredrik {
+            background-image: url('fredrik.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex: 1;
+            min-width: 250px;
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 800 / 800;
+            border-radius: 150px;
+        }
+        .profile-pic-samuel {
+            background-image: url('samuel.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex: 1;
+            min-width: 250px;
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 800 / 800;
+            border-radius: 150px;
+        }
+        .profile-pic-mateusz {
+            background-image: url('mateusz.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex: 1;
+            min-width: 250px;
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 800 / 800;
+            border-radius: 150px;
+        }
+        .profile-pic-nippun {
+            background-image: url('nippun.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex: 1;
+            min-width: 250px;
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 800 / 800;
+            border-radius: 150px;
+        }
+        .profile-pic-andreas {
+            background-image: url('andreas.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex: 1;
+            min-width: 250px;
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 800 / 800;
+            border-radius: 150px;
+        }
+        .profile-pic-naser {
+            background-image: url('naser.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex: 1;
+            min-width: 250px;
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 800 / 800;
+            border-radius: 150px;
+        }
+        .profile-pic-allan {
+            background-image: url('allan.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex: 1;
+            min-width: 250px;
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 800 / 800;
+            border-radius: 150px;
+        }
+        .profile-pic-harry {
+            background-image: url('harry.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex: 1;
+            min-width: 250px;
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 800 / 800;
+            border-radius: 150px;
+        }
+        .profile-name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .profile-container {
+            display: inline-block; /* keeps image and name stacked */
+            text-align: center;
+            
+        }
+        .story-container {
+            display: inline-block; /* keeps image and name stacked */
+            text-align: center;
+            min-width: 1000px;
+            width: 100%;
+            min-height: 250px;
+            height: 800px;
+            aspect-ratio: 16/9;
+
+        }
+        .story-pic-1 {
+            background-image: url('sprintgoal1.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+            flex: 1;
+        }
+        .story-pic-2 {
+            background-image: url('sprintgoal2.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+            flex: 1;
+        }
+        .story-pic-3 {
+            background-image: url('sprintgoal3.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+            flex: 1;
+        }
+
         .github-link {
             margin-top: 40px;
             font-size: 1.2rem;
@@ -100,6 +245,19 @@
             text-shadow: 3px 3px 3px rgba(0,0,0,0.2);
         }
         .github-link a:hover {
+            text-decoration: underline;
+        }
+        .contact-email {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .contact-email a {
+            color: #ffffe6; /* Change as desired */
+            text-decoration: none;
+        }
+
+        .contact-email a:hover {
             text-decoration: underline;
         }
         @media (max-width: 768px) {
@@ -118,6 +276,8 @@
             position: absolute;
             width: 1000px;
             height: 1000px;
+            /* position: relative; */
+            top: -5%;
             z-index: -1;
         }
     </style>
@@ -152,10 +312,65 @@
                     <div class="divider"></div>
                     <div class="feature-text">Track your improvement with our smart strokes gained functionality.</div>
                 </div>
+                
+            </div>
+            <div class="profile">            
+                <div class="profile-container">
+                    <div class="profile-pic-fredrik"></div>
+                    <div class="profile-name">Fredrik Bjälå Ursäter</div>
+                    <div class="profile-name">Scrum master</div>
+                </div>
+                <div class="profile-container">
+                    <div class="profile-pic-samuel"></div>
+                    <div class="profile-name">Samuel Engbom</div>
+                    <div class="profile-name">Developer</div>
+                </div>
+                <div class="profile-container">
+                    <div class="profile-pic-mateusz"></div>
+                    <div class="profile-name">Mateusz Kaszyk</div>
+                    <div class="profile-name">Developer</div>
+                </div>
+                <div class="profile-container">
+                    <div class="profile-pic-nippun"></div>
+                    <div class="profile-name">Nippun Thianwan</div>
+                    <div class="profile-name">Developer</div>
+                </div>
+                <div class="profile-container">
+                    <div class="profile-pic-allan"></div>
+                    <div class="profile-name">Allan Al Saleh</div>
+                    <div class="profile-name">Developer</div>
+                </div>
+                <div class="profile-container">
+                    <div class="profile-pic-andreas"></div>
+                    <div class="profile-name">Andreas Modahl</div>
+                    <div class="profile-name">Product owner</div>
+                </div>
+                <div class="profile-container">
+                    <div class="profile-pic-andreas"></div>
+                    <div class="profile-name">Naser Alchadaideh</div>
+                    <div class="profile-name">Developer</div>
+                </div>
+                <div class="profile-container">
+                    <div class="profile-pic-harry"></div>
+                    <div class="profile-name">Harry Eriksson</div>
+                    <div class="profile-name">Developer</div>
+                </div>
+            </div>
+            <div class="story-container"> 
+                <div class="story-pic-1"></div>
+            </div>
+            <div class="story-container"> 
+                <div class="story-pic-2"></div>
+            </div>
+            <div class="story-container"> 
+                <div class="story-pic-3"></div>
             </div>
         </div>
         <div class="github-link responsive">
             <a href="https://github.com/f-r00t/MagicHole" target="_blank">View on GitHub</a>
+        </div>
+        <div class="contact-email">
+            Contact us: <a href="mailto:info@magichole.se">info@magichole.se</a>
         </div>
     </div>
 </body>
