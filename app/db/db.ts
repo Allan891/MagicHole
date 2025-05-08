@@ -1,7 +1,13 @@
 import * as SQLite from 'expo-sqlite';
 import { useEffect } from 'react';
 import coursesJson  from "../../constants/courses";
-
+import type { Course } from './GolfDatabaseTypes';
+import type { Hole } from './GolfDatabaseTypes';
+import type { Player } from './GolfDatabaseTypes';
+import type { GolfClub } from './GolfDatabaseTypes';
+import type { Round } from './GolfDatabaseTypes';
+import type { Stroke } from './GolfDatabaseTypes';
+import type { TeeSlope } from './GolfDatabaseTypes';
 class Database {
 
 //#region Define the database schema
@@ -829,11 +835,6 @@ async getApproachData(): Promise<[]> {
         labelTextStyle: {color: 'gray', width: 60},
       },
         {value: 1, distance: 53},
-        {value: 1, distance: 53},
-        {value: 1, distance: 53},
-        {value: 1, distance: 53},
-        {value: 1, distance: 53},
-        {value: 1, distance: 53},
         {value: 2, distance: 52},
       
         {value: 4,distance: 55},
@@ -851,14 +852,6 @@ async getApproachData(): Promise<[]> {
           labelTextStyle: {color: 'gray', width: 60},
         },
         {value: 4, distance: 72},
-        {value: 2,  distance: 72},
-        {value: 3,  distance: 72},
-        {value: 3,  distance: 72},
-        {value: 2,  distance: 72},
-        {value: 3,  distance: 72},
-        {value: 3,  distance: 72},
-        {value: 2,  distance: 72},
-        {value: 2,  distance: 72},
     
         {value: 1,  distance: 75},
         {value: 1,  distance: 77},
@@ -870,9 +863,6 @@ async getApproachData(): Promise<[]> {
           labelTextStyle: {color: 'gray', width: 60},
         },
         {value: 1,  distance: 81},
-        {value: 1,  distance: 81},
-        {value: 1,  distance: 82},
-        {value: 1,  distance: 82},
         {value: 1,  distance: 82},
         {value: -4, distance: 83},
         {

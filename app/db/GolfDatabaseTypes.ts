@@ -1,4 +1,4 @@
-type Course = {
+export type Course = {
   id: number;
   name: string;
   longitude: number;
@@ -7,7 +7,7 @@ type Course = {
   dateAdded: string;
 };
 
-type Hole = {
+export type Hole = {
   id: number;
   holeNr: number;
   backTeeLongitude: number;
@@ -18,19 +18,19 @@ type Hole = {
   par:number;
 };
 
-type Player = {
+export type Player = {
   id: number;
   handicap: number;
 };
 
-type GolfClub = {
+export type GolfClub = {
   id: number;
   playerId: number;
   name: string;
   showInList: number;
 };
 
-type Round = {
+export type Round = {
   id?: number;
   time: number;
   playerId: number;
@@ -38,7 +38,7 @@ type Round = {
   handicap: number;
 };
 
-type Stroke = {
+export type Stroke = {
   holeId: number;
   roundId: number;
   strokeNr: number;
@@ -53,7 +53,7 @@ type Stroke = {
   distanceToHole?: number; // Optional property
 };
 
-type TeeSlope = {
+export type TeeSlope = {
   id: string;
   courseId: number;
   slopeMale: number;
