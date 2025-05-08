@@ -60,6 +60,10 @@ export default function HomeScreen() {
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
   const [currentClub, setCurrentClub] = useState<object>(clubs[0]);
 
+  useEffect(() => {
+    setCurrentClub(clubs[0])
+  },[clubs])
+
 
   const [LockedView, setLockedView] = useState<boolean>(false);
   const [lat2, setLat2] = useState<number>(0);

@@ -18,8 +18,7 @@ const CLUB_CATEGORIES = {
   'Drivers & Woods': golfClubs.filter(a => a.iconType == 'Driver' || a.iconType == 'Wood'),
   Hybrids: golfClubs.filter(a => a.iconType == 'Hybrid'),
   Irons: golfClubs.filter(a => a.iconType == 'Iron'),
-  Wedges: golfClubs.filter(a => a.iconType == 'Wedge'),
-  Putter: golfClubs.filter(a => a.iconType == 'Putter')
+  Wedges: golfClubs.filter(a => a.iconType == 'Wedge')
 };
 
 export default function ClubSettingScreen() {
@@ -53,6 +52,7 @@ export default function ClubSettingScreen() {
   }
 
   const removeClubFromBag = async (club: GolfClub) => {
+    if (club.id == 0) return
     club.showInList = 0;
     db.updateGolfClub(club)
     const golfBag = await db.getGolfClubsInList()
