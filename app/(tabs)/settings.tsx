@@ -7,6 +7,7 @@ import coursesJson  from "../../constants/courses";
 import React, { useState,useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   StyleSheet,
@@ -226,7 +227,9 @@ export default function SettingsTab() {
         <View style={styles.section}>
           <View style={styles.sectionBody}>
             <View style={[styles.rowWrapper, styles.rowFirst, styles.rowLast, { alignItems: 'center' }]}>
-              <TouchableOpacity onPress={() => {}} style={styles.row}>
+              <TouchableOpacity onPress={async () => {
+                await AsyncStorage.setItem('hasSeenOnboarding','false');
+              }} style={styles.row}>
                 <Text style={[styles.rowLabel, styles.rowLabelLogout]}>Log Out</Text>
               </TouchableOpacity>
             </View>
