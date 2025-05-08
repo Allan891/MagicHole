@@ -19,6 +19,9 @@ export const Stats = () => {
    const router = useRouter();
    const strokes = globalStateVar((state) => state.strokes);
    const [approachData, setApproachData] = useState<number[]>(1);
+   const [chipData, setChipData] = useState<number[]>(1);
+   const [teeData, setTeeData] = useState<number[]>(1);
+   const [puttData, setPuttData] = useState<number[]>(1);
 
    useEffect(() => {
         /* db.getStrokes()
@@ -40,27 +43,30 @@ export const Stats = () => {
         const fetchData = async () => {
             console.log('Start Fetch Data');
             const strokeTables: Stroke[][]  = await generateStatTables();
-                    console.log(strokeTables);
-                    console.log('WE ALMST DIT IT');
-                    console.log(' ');
-                    console.log('asdf ',calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2));
-                    setApproachData(strokeTables[1]);
-                    setsGAverage([
-                        calculateAverage(strokeTables[0].map(t=>t.strokesGained )).toFixed(2),
-                        calculateAverage(strokeTables[1].map(t=>t.strokesGained )).toFixed(2),
-                        calculateAverage(strokeTables[2].map(t=>t.strokesGained )).toFixed(2),
-                        calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2)
-                        ]);
-                    console.log('went through average');
-                    setsGMedian([
-                        getMedian(strokeTables[0]).toFixed(2),
-                        getMedian(strokeTables[1]).toFixed(2),
-                        getMedian(strokeTables[2]).toFixed(2),
-                        getMedian(strokeTables[3]).toFixed(2)
-                    ]);
-                    console.log('went through median');
-                    console.log('median: ',sGMedian);
-                    console.log('WE DIT IT');
+            console.log(strokeTables);
+            console.log('WE ALMST DIT IT');
+            console.log(' ');
+            console.log('asdf ',calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2));
+            setTeeData(strokeTables[0]);
+            setApproachData(strokeTables[1]);
+            setChipData(strokeTables[2]);
+            setPuttData(strokeTables[3]);
+            setsGAverage([
+                calculateAverage(strokeTables[0].map(t=>t.strokesGained )).toFixed(2),
+                calculateAverage(strokeTables[1].map(t=>t.strokesGained )).toFixed(2),
+                calculateAverage(strokeTables[2].map(t=>t.strokesGained )).toFixed(2),
+                calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2)
+                ]);
+            console.log('went through average');
+            setsGMedian([
+                getMedian(strokeTables[0]).toFixed(2),
+                getMedian(strokeTables[1]).toFixed(2),
+                getMedian(strokeTables[2]).toFixed(2),
+                getMedian(strokeTables[3]).toFixed(2)
+            ]);
+            console.log('went through median');
+            console.log('median: ',sGMedian);
+            console.log('WE DIT IT');
         }
             console.log('Start Stats');
             fetchData();
@@ -78,11 +84,9 @@ export const Stats = () => {
                         style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}
                         onTouchEnd={async () => {
                           if (label === "Approach") {
-                            // const approachData = await db.getApproachData(); 
                             router.push({pathname: '../screens/detailed_stats/approachstats', params:{page:'Approach',data:JSON.stringify(approachData)}});
                           }
                           else if (label === "Tee") {
-                            const teeData = await db.getTeeData(); 
                             router.push({pathname: '../screens/detailed_stats/teestats',params:{page:'Tee',data:JSON.stringify(teeData)}});
                           }
                         }}>
@@ -109,12 +113,10 @@ export const Stats = () => {
                           style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}
                           onTouchEnd={async () => {
                             if (label === "Chip") {
-                              const teeData = await db.getTeeData(); 
-                              router.push({pathname: '../screens/detailed_stats/chipstats',params:{page:'Chip',data:JSON.stringify(teeData)}});
+                              router.push({pathname: '../screens/detailed_stats/chipstats',params:{page:'Chip',data:JSON.stringify(chipData)}});
                             }
                             else if (label === "Putt") {
-                              const teeData = await db.getTeeData(); 
-                              router.push({pathname: '../screens/detailed_stats/puttstats',params:{page:'Putt',data:JSON.stringify(teeData)}});
+                              router.push({pathname: '../screens/detailed_stats/puttstats',params:{page:'Putt',data:JSON.stringify(puttData)}});
                             }
                           }}>
                           <Text style={styles.title}>{label}</Text>

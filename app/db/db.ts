@@ -785,7 +785,6 @@ async getRoundById(id: number): Promise<Round | null> {
 //#region import and get courses
 importCourses = async () => {
     
-
     const holes: Hole[] = [];
     console.log("Courses from JSON: ", coursesJson);
     coursesJson.forEach(async (courseData: any) => {
@@ -841,180 +840,29 @@ importCourses = async () => {
 //#endregion
 
 //#region Statistics
-async getApproachData(): Promise<[]> {
-  if (!this.db) return [];
+
+// READ: Get next stroke's lie
+async getNextStrokeLie(roundId:number, holeId:number,strokeNr: number): Promise<number | null> {
+  if (!this.db) return null;
   try {
-    const ptData = [
-      {
-        value: null,
-        distance: 50,
-        label: '50',
-        labelTextStyle: {color: 'gray', width: 60},
-      },
-        {value: 1, distance: 53},
-        {value: 2, distance: 52},
-      
-        {value: 4,distance: 55},
-        {
-          value: null,
-          distance: 60,
-          label: '60',
-    
-          labelTextStyle: {color: 'gray', width: 60},
-        },
-        {
-          value: null,
-          distance: 70,
-          label: '70',
-          labelTextStyle: {color: 'gray', width: 60},
-        },
-        {value: 4, distance: 72},
-    
-        {value: 1,  distance: 75},
-        {value: 1,  distance: 77},
-        {value: 1,  distance: 79},
-        {
-          value: null,
-          distance: 80,
-          label: '80',
-          labelTextStyle: {color: 'gray', width: 60},
-        },
-        {value: 1,  distance: 81},
-        {value: 1,  distance: 82},
-        {value: -4, distance: 83},
-        {
-          value: null,
-          distance: 90,
-          label: '90',
-          labelTextStyle: {color: 'gray', width: 60},
-        },
-        {value: 2, distance: 91},
-        {value: 2, distance: 93},
-        {value: 2, distance: 96},
-        {value: 2, distance: 98},
-        {value: 2, distance: 103},
-      ];
-    return ptData;
-    const data = await this.db.getAllAsync(`
-      SELECT*FROM Hole WHERE courseId IN (2,4);
-      SELECT Course.id AS courseId, Course.name,
-      Round.id AS 'roundID', 
-      Stroke.startLatitude, Stroke.startLongitude,
-      Hole.flagLongitude, Hole.flagLatitude
-      FROM Stroke
-      LEFT JOIN Round ON Stroke.roundId = Round.id
-      LEFT JOIN Course ON Course.id = Round.courseId
-      LEFT JOIN Hole ON Hole.holeNr = Stroke.holeId AND Course.id = Hole.courseId 
-      ;`);
-      console.log("Approach Data: ",data);
-      data.forEach((item: any) => {
-        console.log("============================================");
-        Object.entries(item).forEach(([key, value]) => {
-          
-          console.log(`${key}: ${value}`);
-        });
-      });
-      return data;
+    return await this.db.getFirstAsync('SELECT lie FROM Stroke WHERE holeId = ? AND roundId = ? AND strokeNr = ?;', holeId, roundId, strokeNr+1);
   } catch (error) {
-    console.error('Error fetching tee slopes:', error);
-    return [];
+    console.error('Error fetching next stroke lie:', error);
+    return null;
   }
 }
-async getTeeData(): Promise<[]> {
-  if (!this.db) return [];
+
+// READ: Get next stroke's lie
+async getNextStroke(roundId:number, holeId:number,strokeNr: number): Promise<Stroke | null> {
+  if (!this.db) return null;
   try {
-    const ptData = [
-      {
-        value: null,
-        distance: 50,
-        label: '50',
-        labelTextStyle: {color: 'gray', width: 60},
-      },
-        {value: 4, distance: 53},
-        {value: 4, distance: 53},
-        {value: 4, distance: 53},
-        {value: 3, distance: 53},
-        {value: 3, distance: 53},
-        {value: 3, distance: 53},
-        {value: 2, distance: 52},
-      
-        {value: 2,distance: 55},
-        {
-          value: null,
-          distance: 60,
-          label: '60',
-    
-          labelTextStyle: {color: 'gray', width: 60},
-        },
-        {
-          value: null,
-          distance: 70,
-          label: '70',
-          labelTextStyle: {color: 'gray', width: 60},
-        },
-        {value: 2, distance: 72},
-        {value: 2,  distance: 72},
-        {value: 1,  distance: 72},
-        {value: 1,  distance: 72},
-        {value: 1,  distance: 72},
-        {value: 0,  distance: 72},
-        {value: 0,  distance: 72},
-        {value: 0,  distance: 72},
-        {value: 1,  distance: 72},
-    
-        {value: 1,  distance: 75},
-        {value: 1,  distance: 77},
-        {value: 2,  distance: 79},
-        {
-          value: 2,
-          distance: 80,
-          label: '80',
-          labelTextStyle: {color: 'gray', width: 60},
-        },
-        {value: 2,  distance: 81},
-        {value: 2,  distance: 81},
-        {value: 3,  distance: 82},
-        {value: 3,  distance: 82},
-        {value: -2,  distance: 82},
-        {value: -4, distance: 83},
-        {
-          value: null,
-          distance: 90,
-          label: '90',
-          labelTextStyle: {color: 'gray', width: 60},
-        },
-        {value: 2, distance: 91},
-        {value: 2, distance: 93},
-        {value: 2, distance: 96},
-        {value: 2, distance: 98},
-        {value: 2, distance: 103},
-      ];
-    return ptData;
-    const data = await this.db.getAllAsync(`
-      SELECT*FROM Hole WHERE courseId IN (2,4);
-      SELECT Course.id AS courseId, Course.name,
-      Round.id AS 'roundID', 
-      Stroke.startLatitude, Stroke.startLongitude,
-      Hole.flagLongitude, Hole.flagLatitude
-      FROM Stroke
-      LEFT JOIN Round ON Stroke.roundId = Round.id
-      LEFT JOIN Course ON Course.id = Round.courseId
-      LEFT JOIN Hole ON Hole.holeNr = Stroke.holeId AND Course.id = Hole.courseId 
-      ;`);
-      console.log("Approach Data: ",data);
-      data.forEach((item: any) => {
-        console.log("============================================");
-        Object.entries(item).forEach(([key, value]) => {
-          
-          console.log(`${key}: ${value}`);
-        });
-      });
-      return data;
+    return await this.db.getFirstAsync<Stroke>('SELECT * FROM Stroke WHERE holeId = ? AND roundId = ? AND strokeNr = ?;', holeId, roundId, strokeNr+1);
   } catch (error) {
-    console.error('Error fetching tee slopes:', error);
-    return [];
+    console.error('Error fetching next stroke lie:', error);
+    return null;
   }
 }
+
 //#endregion
 
 

@@ -72,6 +72,7 @@
         }
         .divider {
             height: 1px;
+            display: block; 
             background: #6aa84f;
             margin: 10px 0;
             opacity: 0.5;
@@ -80,7 +81,42 @@
             font-size: 0.9rem;
             color: #555;
         }
-        .image-placeholder {
+        .image-container {
+            position: relative;
+            flex: 1;
+            min-width: 300px;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1032 / 1816;
+            border-radius: 15px;
+        }
+
+        .image-screenshot,
+        .image-screenshot-right,
+        .image-screenshot-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; /* optional: scale to fit */
+            height: auto;
+        }
+        .image-screenshot {
+            transform: rotate(0deg);
+        }
+
+        .image-screenshot-right {
+            transform: rotate(20deg);
+            top: 0;
+            left: 100px;
+        }
+
+        .image-screenshot-left {
+            transform: rotate(-20deg);
+            top: 0;
+            left: -100px;
+        }
+        /*
+        .image-screenshot {
             background-image: url('screenshot.png');
             background-size: contain;
             background-position: center;
@@ -92,6 +128,34 @@
             aspect-ratio: 1032 / 1816;
             border-radius: 15px;
         }
+        .image-screenshot-right {
+            background-image: url('screenshot.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            transform: rotate(20deg);
+            transform-origin: center; 
+            flex: 1;
+            min-width: 300px;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1032 / 1816;
+            border-radius: 15px;
+        }
+        .image-screenshot-left {
+            transform: rotate(-20deg);
+            transform-origin: center; 
+            background-image: url('screenshot.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex: 1;
+            min-width: 300px;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1032 / 1816;
+            border-radius: 15px;
+        } */
         .profile-pic-fredrik {
             background-image: url('fredrik.png');
             background-size: contain;
@@ -193,12 +257,12 @@
             font-weight: bold;
         }
         .profile-container {
-            display: inline-block; /* keeps image and name stacked */
+            display: inline-block; 
             text-align: center;
             
         }
         .story-container {
-            display: inline-block; /* keeps image and name stacked */
+            display: inline-block; 
             text-align: center;
             min-width: 1500px;
             min-width: 1500px;
@@ -266,7 +330,9 @@
         }
 
         .qr-section img {
-            width: 100px;
+            margin: auto;
+            /* align-items: center; */
+            width: 200px;
             height: auto;
             border-radius: 8px;
         }
@@ -305,25 +371,30 @@
             <div class="features">
                 <div class="feature-card">
                     <div class="feature-title">⛳ Precision Tracking</div>
-                    <div class="divider"></div>
+                    <!-- <div class="divider"></div> -->
                     <div class="feature-text">Analyze every shot with pinpoint accuracy.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-title">📊 Smart Analytics</div>
-                    <div class="divider"></div>
+                    <!-- <div class="divider"></div> -->
                     <div class="feature-text">Gain insights into your performance trends.</div>
                 </div>
             </div>
-            <div class="image-placeholder"></div>
+            <div class="image-container">
+                <img src="screenshot.png" alt="Rotated Right" class="image-screenshot-right">
+                <img src="screenshot.png" alt="Rotated Left" class="image-screenshot-left">
+                <img src="screenshot.png" alt="Rotated Center" class="image-screenshot">
+            </div>
+
             <div class="features">
                 <div class="feature-card">
                     <div class="feature-title">📍 GPS Course Mapping</div>
-                    <div class="divider"></div>
+                    <!-- <div class="divider"></div> -->
                     <div class="feature-text">Navigate the course like a pro.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-title">📈 Improve your game</div>
-                    <div class="divider"></div>
+                    <!-- <div class="divider"></div> -->
                     <div class="feature-text">Track your improvement with our smart strokes gained functionality.</div>
                 </div>
             </div>
@@ -332,12 +403,10 @@
                 <h2>🏌️‍♂️📱⛳ How to Use the Golf App 🎉</h2>
                 
                 <div class="qr-section">
-                    <img src="qr-code.png" alt="QR Code to start">
-                    <div>
-                      <h3>🚀 Scan the QR Code to Start</h3>
-                      <p>📷➡️🟢 Just <strong>scan the QR code</strong> at the course or in the app to begin your round!</p>
-                    </div>
-                  </div>
+                    <img src="qr-code.png" alt="QR Code to start">    
+                </div>
+                <h3>🚀 Scan the QR Code to Start🚀</h3>
+                <p>📷➡️🟢 Just <strong>scan the QR code</strong> at the course or in the app to begin your round!</p>
                 
                 <h3>📖 Step-by-Step Guide 🏌️‍♀️</h3>
                 
