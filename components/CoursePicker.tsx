@@ -21,7 +21,7 @@ export function CoursePicker({ onChooseCourse }) {
   useEffect(() => {
     const checkIfOnboardingSeen = async () => {
       const hasSeen = await AsyncStorage.getItem('hasSeenOnboarding');
-      if (!hasSeen) {
+      if (!hasSeen || hasSeen === 'false') {
         setShowOnboarding(true);
       }
     };
@@ -91,12 +91,12 @@ export function CoursePicker({ onChooseCourse }) {
       <Modal visible={showOnboarding} animationType="slide">
         <Onboarding
           onDone={async () => {
-            await AsyncStorage.setItem('hasSeenOnboarding', 'false');
+            await AsyncStorage.setItem('hasSeenOnboarding', 'true');
             setShowOnboarding(false);
           }}
           onSkip={async () => {
-            await AsyncStorage.setItem('hasSeenOnboarding', 'false');
-            setShowOnboarding(true);
+            await AsyncStorage.setItem('hasSeenOnboarding', 'true');
+            setShowOnboarding(false);
           }}
           pages={[
             {
