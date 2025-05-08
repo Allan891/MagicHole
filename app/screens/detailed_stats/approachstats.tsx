@@ -123,7 +123,7 @@ averageStrokeGainedByDistanceLeft.sort((a, b) => {
   minValue = minValue > 0 ? -0.5 : Math.floor(minValue * 2) / 2;
   var maxValue = Math.max(...averageStrokeGainedByDistanceLeft.map(item => item.value));
   maxValue = maxValue < 0 ? 0.5 : Math.ceil(maxValue * 2) / 2;
-  var totalHeight = windowHeight * 0.4 * maxValue / (maxValue+Math.abs(minValue));
+  var totalHeight = windowHeight * 0.3 * maxValue / (maxValue+Math.abs(minValue));
   console.log('Max Value:', maxValue);
   console.log('noOfSections:', Math.ceil(maxValue)+1);
   console.log('Min Value:', minValue);
@@ -164,6 +164,7 @@ averageStrokeGainedByDistanceLeft.sort((a, b) => {
         yAxisColor= {CHART_AXIS_COLOR}
         xAxisColor= {CHART_AXIS_COLOR}
         yAxisTextStyle={{color: CHART_TEXT_COLOR}}
+        roundToDigits={1}
         />
           {/* <LineChart
           areaChart
@@ -262,7 +263,6 @@ averageStrokeGainedByDistanceLeft.sort((a, b) => {
           >
             <View
               style={{
-                top: -windowHeight +570,
                 width: windowWidth - 100,
                 height: 55,                
                 backgroundColor: POINTER_LABEL_COLOR+"c9",
