@@ -33,6 +33,8 @@ import { useRouter } from 'expo-router';
 import { ClubIcon } from '@/components/ClubIcon';
 import { ClubCircleButton } from '@/components/ClubCircleButton';
 import * as Haptics from 'expo-haptics';
+import { LiePicker } from '@/components/LiePicker';
+import { LieCircleButton } from '@/components/LieCircleButton';
 
 
 
@@ -61,6 +63,7 @@ export default function HomeScreen() {
   const [holeFinished, setHoleFinished] = useState<boolean>(false);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
   const [currentClub, setCurrentClub] = useState<object>(clubs[0]);
+  const [currentLie, setCurrentLie] = useState<string>('tee');
 
   useEffect(() => {
     setCurrentClub(clubs[0])
@@ -242,7 +245,7 @@ export default function HomeScreen() {
         distanceLeft: distanceLeft || -1,
         golfClubId: currentClub.id, // Placeholder, update with actual golf club ID
         playerId: 999,
-        lie: 1, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.
+        lie: currentLie, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.
         strokesGained: 0
       };
       if (currentStroke == 0){ //AUTO SETS LIE TO 0 = TEE IF FIRST STROKE OF HOLE, CAN PROBABLY STAY
@@ -522,7 +525,7 @@ export default function HomeScreen() {
   }
   const collapsedY = screenHeight - handleHeight;
 
-  const expandedY = screenHeight - 300;
+  const expandedY = screenHeight - 350;
   const sheetAnim = useRef(new Animated.Value(collapsedY)).current;
 
   const panResponder = useRef(
@@ -639,6 +642,7 @@ export default function HomeScreen() {
       <View style={styles.floatingButtonContainer}>
       <CircleButton disabled={holeFinished} onPress={() => {addStroke(); Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);}} icon={"add-circle-outline"} label={"Add stroke"} />
       <ClubCircleButton onPress={() => {sheetAnim.setValue(expandedY)}} currentClub={currentClub} />
+      <LieCircleButton onPress={() => {sheetAnim.setValue(expandedY)}} lie={currentLie} />
       <CircleButton onPress={goToScorecard} icon={"sports-score"} label={"Scorecard"} />
       { currentHole + 1 >= courseObject.holes.length ? (
         <CircleButton onPress={finishRound} icon={"check-circle-outline"} label={"Finish round"} />
@@ -731,6 +735,7 @@ onPress={() => {
 
 
 <ClubPicker onClubChoose={(item) => {setCurrentClub(item); sheetAnim.setValue(collapsedY);}} />
+<LiePicker onLieChoose={(item) => {setCurrentLie(item); sheetAnim.setValue(collapsedY);}} />
 
 </Animated.View>
 
@@ -742,13 +747,13 @@ const styles = StyleSheet.create({
   floatingButtonContainer: {
     position: 'absolute',
     bottom: 40,
-    left: '10%',
-    width: '80%',
+    left: '2.5%',
+    width: '95%',
     height: 50,
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   bottomSheet: {
     position: 'absolute',
