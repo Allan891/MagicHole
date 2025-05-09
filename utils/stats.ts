@@ -4,11 +4,16 @@ import { Stroke, StrokeLieType } from '@/app/db/GolfDatabaseTypes';
 
 export
   const calculateStrokesGained = (StartSlag:Stroke , slutSlag:Stroke, latitude:number , longitude:number): number=>{
-    //console.log('calc strokes gained start');
-    const rvalue = calculateRawSG(StartSlag,latitude,longitude) - 1 - calculateRawSG(slutSlag,latitude,longitude)
-    //console.log("Strokes Gained: ", rvalue)
-    //console.log('calc strokes gained end');
-    return rvalue
+    ////console.log('calc strokes gained start');
+    const prevRawSG = calculateRawSG(StartSlag,latitude,longitude);
+    const currentRawSG = calculateRawSG(slutSlag,latitude,longitude);
+    const prevSG = prevRawSG - 1 - currentRawSG;
+    //console.log('prevRawSG:', prevRawSG, ' currentRawSG:', currentRawSG, ' prevSG:', prevSG);
+
+    const rvalue = calculateRawSG(StartSlag,latitude,longitude) - 1 - calculateRawSG(slutSlag,latitude,longitude);
+    ////console.log("Strokes Gained: ", rvalue)
+    ////console.log('calc strokes gained end');
+    return rvalue;
   }
 
 export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number) => {
@@ -25,13 +30,16 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
     let sGValues
     //var name = "Fairway"
 
-    //console.log('slag.lie ', slag.lie)
+    ////console.log('slag.lie ', slag.lie)
     switch(slag.lie){
      case (StrokeLieType.tee): {
+      //console.log('Mapping from TEE');
          sGValues = sGdata.data.map(t=>t.Tee)
+         //console.log('sgValues TEE:', sGValues);
         break;
      }
      case (StrokeLieType.fairway): {
+      //console.log('Mapping from Fairway');
          sGValues = sGdata.data.map(t=>t.Fairway)
         break;
      }
@@ -48,7 +56,10 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
         break;
         }
      case (StrokeLieType.green): {
+      //console.log('Mapping from GREEN');
          sGValues = sGdata.green.map(t=>t.Green)
+         sGDistance = sGdata.green.map(t=>t.Distance )
+         //console.log('sgValues:', sGValues);
         // lie green doesnt exist in this table, it has its own table and is dealt with below.
         break;
         }
@@ -56,9 +67,9 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
    // var sGValues = sGdata.data.map(t=>t.name)
 
     //sGdata.data[slag.lie]
-    //console.log('SGVALUES', sGValues)
+    ////console.log('SGVALUES', sGValues)
     const DLeft = calculateDistance(slag.startLatitude, slag.startLongitude,latitude,longitude)
-    //console.log('sGDistance', sGDistance)
+    ////console.log('sGDistance', sGDistance)
     var indices = findSurroundingIndices(sGDistance,DLeft)
     var firstSG = sGValues[indices[0]]
     var secondSG = sGValues[indices[1]]
@@ -71,50 +82,50 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
 
         rvalue = firstSG + (DLeft - firstDistance)  / (secondDistance - firstDistance) * (secondSG - firstSG)
 
-        //console.log('Distance: ', DLeft, ' Lie: ', slag.lie ,' Raw Strokes Gained: ', rvalue)
+        ////console.log('Distance: ', DLeft, ' Lie: ', slag.lie ,' Raw Strokes Gained: ', rvalue)
         return rvalue
     }
-    //console.log('sGDistanceGreen');
-    const sGDistanceGreen = sGdata.green.map(t=>t.Distance )
-    //console.log('1');
+    ////console.log('sGDistanceGreen');
+    ////console.log('1');
     const DLeftGreen = calculateDistance(slag.startLatitude, slag.startLongitude,latitude,longitude)
 
-    //console.log('2');
-
+    ////console.log('2');
     const firstSGGreen = sGValues[indices[0]]
     const secondSGGreen = sGValues[indices[1]]
+    //console.log('FirstSGGreen:', firstSGGreen, ' secondSGGreen:', secondSGGreen, 'DLeftGreen:', DLeftGreen );
     //const firstSGGreen = sGdata.green["Green"][indices[0]]
     //const secondSGGreen = sGdata.green["Green"][indices[1]]
-    //console.log('3');
-    const firstDistanceGreen = sGDistanceGreen[indices[0]]
-    const secondDistanceGreen = sGDistanceGreen[indices[1]]
-    //console.log('4');
+    ////console.log('3');
+    const firstDistanceGreen = sGDistance[indices[0]]
+    const secondDistanceGreen = sGDistance[indices[1]]
+    //console.log('firstDistanceGreen:', firstDistanceGreen, ' secondDistanceGreen:', secondDistanceGreen);
     //TODO:
     //Lägg till manuell inmatning där man pekar mot flaggan istället för GPS koordinater
 
-    //console.log('All Green Data Loaded');
+    ////console.log('All Green Data Loaded');
     if (slag.lie = StrokeLieType.green) // lie = 4 Equals "Green"
-            //console.log('Green SG Calculation Started');
+            ////console.log('Green SG Calculation Started');
             rvalue = firstSGGreen + (DLeftGreen - firstDistanceGreen)  / (secondDistanceGreen - firstDistanceGreen) * (secondSGGreen - firstSGGreen)
-            //console.log('Raw Strokes Gained: ', rvalue)
-            //console.log('Green SG Calculation Done');
+            //console.log('SG Green:' , rvalue);
+            ////console.log('Raw Strokes Gained: ', rvalue)
+            ////console.log('Green SG Calculation Done');
             return rvalue
 
  }
 
   const findSurroundingIndices = (distanceArray:number[], value:number) => {
-      //console.log("asdf")
+      ////console.log("asdf")
     for (let i = 0; i < distanceArray.length - 1; i++) {
       if (distanceArray[i] <= value && value < distanceArray[i + 1]) {
         return [i, i + 1];
       }
     }
-    //console.log("Indices",distanceArray.length - 2, distanceArray.length - 1)
+    ////console.log("Indices",distanceArray.length - 2, distanceArray.length - 1)
     return [distanceArray.length - 2, distanceArray.length - 1]; // fallback
   }
 
   export const calculateAverage = (array: number[]): (number | undefined) => {
-    //console.log('array.length: ', array.length);
+    ////console.log('array.length: ', array.length);
     if (!array.length || array.length == 0 || !array) return -10;
     const sum = array.reduce((a: number, b: number): number => a + b);
     return sum / array.length;
@@ -142,14 +153,14 @@ export const categorizeStrokes =  (strokes: Stroke[]): Stroke[][] =>{
     let strokesChip: Stroke[] = [];
     let strokesPutt: Stroke[] = [];
     for (const stroke of strokes) {
-        //console.log('Stroke: ', stroke);
-        //console.log('par: ', par);
+        // console.log('Stroke: ', stroke);
+        ////console.log('par: ', par);
         //const dbhole = async db.getHole
         // const distance = calculateDistance(stroke.startLatitude, stroke.startLongitude, hole.greenMiddle.latitude, hole.greenMiddle.longitude );
         // stroke.distance = distance;
         //let category = 0;
-        //console.log('distance: ', distance);
-        //console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
+        ////console.log('distance: ', distance);
+        ////console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
         if (stroke.golfClubId == 99){
 
           strokesPutt.push(stroke);
@@ -163,11 +174,11 @@ export const categorizeStrokes =  (strokes: Stroke[]): Stroke[][] =>{
         }
         else{
           strokesApproach.push(stroke);
-          //console.log('stroketables1: ',strokesApproach);
+          ////console.log('stroketables1: ',strokesApproach);
         }
         //stroke.category = ....
     }
-    //console.log('ALL STROKES CATEGORIZED');
+    ////console.log('ALL STROKES CATEGORIZED');
     let returnValue: Stroke[][] = [];
     returnValue.push(strokesTee);
 
@@ -187,14 +198,14 @@ export const generateStatTables = async (): Promise<Stroke[][]> =>{
     let strokesPutt: Stroke[] = [];
     const strokes = await db.getStrokes();
     for (const stroke of strokes) {
-        //console.log('Stroke: ', stroke);
-        //console.log('par: ', par);
+        ////console.log('Stroke: ', stroke);
+        ////console.log('par: ', par);
         //const dbhole = async db.getHole
         // const distance = calculateDistance(stroke.startLatitude, stroke.startLongitude, hole.greenMiddle.latitude, hole.greenMiddle.longitude );
         // stroke.distance = distance;
         //let category = 0;
-        //console.log('distance: ', distance);
-        //console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
+        ////console.log('distance: ', distance);
+        ////console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
         if (stroke.golfClubId == 99){
 
           strokesPutt.push(stroke);
@@ -208,11 +219,11 @@ export const generateStatTables = async (): Promise<Stroke[][]> =>{
         }
         else{
           strokesApproach.push(stroke);
-          //console.log('stroketables1: ',strokesApproach);
+          ////console.log('stroketables1: ',strokesApproach);
         }
         //stroke.category = ....
     }
-    //console.log('ALL STROKES CATEGORIZED');
+    ////console.log('ALL STROKES CATEGORIZED');
     let returnValue: Stroke[][] = [];
     returnValue.push(strokesTee);
 
