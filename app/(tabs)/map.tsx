@@ -633,21 +633,21 @@ useEffect(() => {
             <MaterialIcons name="golf-course" size={28} color="red" />
           </Marker>
         
-        {strokeCoordinates?.length &&
+          {strokeCoordinates && strokeCoordinates.length > 0 && (
           <Polyline
-          coordinates={strokeCoordinates}
-          strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
-          strokeColors={[
-            '#7F0000',
-            // '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
-            '#B24112',
-            '#E5845C',
-            '#238C23',
-            '#7F0000',
-          ]}
-          strokeWidth={3}
+            coordinates={strokeCoordinates}
+            strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+            strokeColors={[
+              '#7F0000',
+              // '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
+              '#B24112',
+              '#E5845C',
+              '#238C23',
+              '#7F0000',
+            ]}
+            strokeWidth={3}
           />
-        }
+        )}
 
         {test && location && courseChosen &&
 
