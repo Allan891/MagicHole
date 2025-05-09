@@ -23,6 +23,17 @@ class Database {
   }
 //#endregion
 
+public async dropTables() {
+  this.db.execSync(`
+    DROP TABLE IF EXISTS Course;
+    DROP TABLE IF EXISTS Hole;
+    DROP TABLE IF EXISTS Player;
+    DROP TABLE IF EXISTS GolfClub;
+    DROP TABLE IF EXISTS Round;
+    DROP TABLE IF EXISTS Stroke;
+    DROP TABLE IF EXISTS TeeSlope;
+    `);
+}
 
 
 //#region Initialize the database and create tables
