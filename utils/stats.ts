@@ -1,6 +1,7 @@
 import {calculateBearing, calculateDistance, getHole, getPar} from '@/utils';
 import db from '../app/db/db';
-import { Stroke, StrokeLieType } from '@/app/db/GolfDatabaseTypes';
+import { GolfClubType, Stroke, StrokeLieType } from '@/app/db/GolfDatabaseTypes';
+import golfClubs from '@/constants/golfClubs';
 
 export
   const calculateStrokesGained = (StartSlag:Stroke , slutSlag:Stroke, latitude:number , longitude:number): number=>{
@@ -12,10 +13,10 @@ export
   }
 
 export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number) => {
-    if (slag.lie != StrokeLieType.tee && slag.lie != StrokeLieType.green &&
-       slag.lie != StrokeLieType.sand && slag.lie != StrokeLieType.rough && slag.lie != StrokeLieType.recovery){
-      slag.lie = StrokeLieType.fairway
-    }
+  if (slag.lie != StrokeLieType.tee && slag.lie != StrokeLieType.green &&
+    slag.lie != StrokeLieType.sand && slag.lie != StrokeLieType.rough && slag.lie != StrokeLieType.recovery){
+   slag.lie = StrokeLieType.fairway
+ }
     const sGdata = require('../constants/StrokesGained.json')
     //console.log('sGdata', sGdata.data["Distance (Meters)"])
     let sGDistance = sGdata.data.map(t=>t.Distance )
@@ -27,32 +28,32 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
 
     //console.log('slag.lie ', slag.lie)
     switch(slag.lie){
-     case (StrokeLieType.tee): {
-         sGValues = sGdata.data.map(t=>t.Tee)
-        break;
+      case (StrokeLieType.tee): {
+          sGValues = sGdata.data.map(t=>t.Tee)
+         break;
+      }
+      case (StrokeLieType.fairway): {
+          sGValues = sGdata.data.map(t=>t.Fairway)
+         break;
+      }
+      case (StrokeLieType.rough): {
+          sGValues = sGdata.data.map(t=>t.Rough)
+         break;
+         }
+      case (StrokeLieType.sand): {
+          sGValues = sGdata.data.map(t=>t.Sand)
+         break;
+         }
+      case (StrokeLieType.recovery):{
+          sGValues = sGdata.data.map(t=>t.Recovery)
+         break;
+         }
+      case (StrokeLieType.green): {
+          sGValues = sGdata.green.map(t=>t.Green)
+         // lie green doesnt exist in this table, it has its own table and is dealt with below.
+         break;
+         }
      }
-     case (StrokeLieType.fairway): {
-         sGValues = sGdata.data.map(t=>t.Fairway)
-        break;
-     }
-     case (StrokeLieType.rough): {
-         sGValues = sGdata.data.map(t=>t.Rough)
-        break;
-        }
-     case (StrokeLieType.sand): {
-         sGValues = sGdata.data.map(t=>t.Sand)
-        break;
-        }
-     case (StrokeLieType.recovery):{
-         sGValues = sGdata.data.map(t=>t.Recovery)
-        break;
-        }
-     case (StrokeLieType.green): {
-         sGValues = sGdata.green.map(t=>t.Green)
-        // lie green doesnt exist in this table, it has its own table and is dealt with below.
-        break;
-        }
-    }
    // var sGValues = sGdata.data.map(t=>t.name)
 
     //sGdata.data[slag.lie]
@@ -85,14 +86,11 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
     const secondSGGreen = sGValues[indices[1]]
     //const firstSGGreen = sGdata.green["Green"][indices[0]]
     //const secondSGGreen = sGdata.green["Green"][indices[1]]
-    //console.log('3');
     const firstDistanceGreen = sGDistanceGreen[indices[0]]
     const secondDistanceGreen = sGDistanceGreen[indices[1]]
-    //console.log('4');
     //TODO:
     //Lägg till manuell inmatning där man pekar mot flaggan istället för GPS koordinater
 
-    //console.log('All Green Data Loaded');
     if (slag.lie = StrokeLieType.green) // lie = 4 Equals "Green"
             //console.log('Green SG Calculation Started');
             rvalue = firstSGGreen + (DLeftGreen - firstDistanceGreen)  / (secondDistanceGreen - firstDistanceGreen) * (secondSGGreen - firstSGGreen)
@@ -142,14 +140,6 @@ export const categorizeStrokes =  (strokes: Stroke[]): Stroke[][] =>{
     let strokesChip: Stroke[] = [];
     let strokesPutt: Stroke[] = [];
     for (const stroke of strokes) {
-        //console.log('Stroke: ', stroke);
-        //console.log('par: ', par);
-        //const dbhole = async db.getHole
-        // const distance = calculateDistance(stroke.startLatitude, stroke.startLongitude, hole.greenMiddle.latitude, hole.greenMiddle.longitude );
-        // stroke.distance = distance;
-        //let category = 0;
-        //console.log('distance: ', distance);
-        //console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
         if (stroke.golfClubId == 0){
 
           strokesPutt.push(stroke);
@@ -163,7 +153,6 @@ export const categorizeStrokes =  (strokes: Stroke[]): Stroke[][] =>{
         }
         else{
           strokesApproach.push(stroke);
-          //console.log('stroketables1: ',strokesApproach);
         }
         //stroke.category = ....
     }
@@ -178,25 +167,18 @@ export const categorizeStrokes =  (strokes: Stroke[]): Stroke[][] =>{
     return returnValue;
 }
 
-
-//export const generateStatTables = async (): Promise<[strokesTee: stroke[], strokesApproach: stroke[], strokesChip: stroke[], strokesPutt: stroke[]]>=>{
 export const generateStatTables = async (): Promise<Stroke[][]> =>{
     let strokesTee: Stroke[] = [];
     let strokesApproach: Stroke[] = [];
     let strokesChip: Stroke[] = [];
     let strokesPutt: Stroke[] = [];
     const strokes = await db.getStrokes();
+    console.log('stats.ts => STROKES.LENGTH: ', strokes.length);
+    console.log('stats.ts => STROKES: ', strokes);
     for (const stroke of strokes) {
-        //console.log('Stroke: ', stroke);
-        //console.log('par: ', par);
-        //const dbhole = async db.getHole
-        // const distance = calculateDistance(stroke.startLatitude, stroke.startLongitude, hole.greenMiddle.latitude, hole.greenMiddle.longitude );
-        // stroke.distance = distance;
-        //let category = 0;
-        //console.log('distance: ', distance);
-        //console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
-        if (stroke.golfClubId == 0){
-
+        console.log('stats.ts => STROKE.CLUB: ', stroke.golfClubId);
+        const golfClub = golfClubs?.find(club => club.id === stroke.golfClubId);
+        if (golfClub && golfClub.type === GolfClubType.putter) {
           strokesPutt.push(stroke);
         } // Club 0 will always be putter.
 
@@ -208,14 +190,14 @@ export const generateStatTables = async (): Promise<Stroke[][]> =>{
         }
         else{
           strokesApproach.push(stroke);
-          //console.log('stroketables1: ',strokesApproach);
         }
-        //stroke.category = ....
     }
-    //console.log('ALL STROKES CATEGORIZED');
+    console.log('Tee strokes:', strokesTee.length);
+    console.log('Approach strokes:', strokesApproach.length);
+    console.log('Chip strokes:', strokesChip.length);
+    console.log('Putt strokes:', strokesPutt.length);
     let returnValue: Stroke[][] = [];
     returnValue.push(strokesTee);
-
     returnValue.push(strokesApproach);
     returnValue.push(strokesChip);
     returnValue.push(strokesPutt);

@@ -63,7 +63,7 @@ export default function HomeScreen() {
   const [strokeCoordinates, setStrokeCoordinates] = useState<LatLng[]>([]);
   const [holeFinished, setHoleFinished] = useState<boolean>(false);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
-  const [currentClub, setCurrentClub] = useState<object>(clubs[0]);
+  const [currentClub, setCurrentClub] = useState<object>(clubs[1]);
   const [currentLie, setCurrentLie] = useState<string>('tee');
 
 
@@ -251,6 +251,9 @@ export default function HomeScreen() {
         lie: currentLie, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.
         strokesGained: 0
       };
+      console.log('______________________________________');
+      console.log('thisStroke: ', thisStroke);
+      console.log('______________________________________');
       if (currentStroke == 0){ //AUTO SETS LIE TO 0 = TEE IF FIRST STROKE OF HOLE, CAN PROBABLY STAY
         thisStroke.lie = StrokeLieType.tee
       }

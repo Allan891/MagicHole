@@ -30,8 +30,6 @@ const CLUBS = {
 };
 
 export function ClubIcon({ item, label=true }) {
-
-  console.log('club type:', item.iconType);
   const club = CLUBS[item.iconType];
  
   if (!club) return null;

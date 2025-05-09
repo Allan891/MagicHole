@@ -3,7 +3,7 @@ import { useState } from 'react';
 import db from '../../db/db'; // Adjust the import path as necessary
 import { View, Text, StyleSheet, ScrollView,Modal, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams,Stack } from 'expo-router';
-import { CurveType, LineChart, BarChart} from "react-native-gifted-charts";
+import {  BarChart} from "react-native-gifted-charts";
 import { Dimensions } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
@@ -11,7 +11,6 @@ import { useFocusEffect } from '@react-navigation/native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-var dataLoaded = false;
 var PAGE_X= 0;
 var PAGE_Y= 0;
 var LOCATION_Y= 0;
@@ -41,52 +40,30 @@ const handleTouch = (event) => {
   // console.log(`Touch X: ${locationX}, Y: ${locationY}`);
   // console.log(`Page X: ${pageX}, Y: ${pageY}`);
 };
-
-function numberToString(num: string): string {
-  switch (num) {
-    case '0':
-      return 'Tee';
-    case '1':
-      return 'Fairway';
-    case '2':
-      return 'Rough';
-
-      case '3':
-        return 'Sand';
-
-      case '4':
-      return 'Green';
-
-      case '5':
-        return '???';
-                default:
-      return num.toString();
-  }
-}
 const groupSize = 3;
 const minDistance = 0;
 const maxDistance = 205;
 
 
-  const checkIfHoled = async (item) => {
-    const nextStroke = await db.getNextStroke(item.roundId, item.holeId, item.strokeNr);
-    if (nextStroke === null) {
-      return true ;
-    }
-    return false;
-  };
+const checkIfHoled = async (item) => {
+const nextStroke = await db.getNextStroke(item.roundId, item.holeId, item.strokeNr);
+if (nextStroke === null) {
+  return true ;
+}
+return false;
+};
 
-   const addHoled = async (data) => {
-      const updatedData = await Promise.all(
-        data.map(async (item) => {
-          const isHoled = await checkIfHoled(item);
-          console.log('isHoled:', isHoled);
-          return { ...item, holed: isHoled };
-        })
-      );
-      // console.log('Updated data:', updatedData);
-      return updatedData;
-    };
+const addHoled = async (data) => {
+  const updatedData = await Promise.all(
+    data.map(async (item) => {
+      const isHoled = await checkIfHoled(item);
+      console.log('isHoled:', isHoled);
+      return { ...item, holed: isHoled };
+    })
+  );
+  // console.log('Updated data:', updatedData);
+  return updatedData;
+};
 
 const PuttScreen: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -100,8 +77,6 @@ const PuttScreen: React.FC = () => {
   const { page, data } = useLocalSearchParams();
   let parsedData = [];
        
-  
-
   useFocusEffect(
       React.useCallback(() => {
         // Do this when screen is focused
@@ -129,18 +104,6 @@ const PuttScreen: React.FC = () => {
         
         const filteredData = Object.entries(grouped).map(
           ([range, strokeGainedArr]) => ({
-            // topLabelComponent: () => (
-            //   <Text
-            //     style={{
-            //       color: CHART_TEXT_COLOR,
-            //       fontSize: 13,
-            //       fontFamily: 'PoppinsMedium',
-            //     }}>
-            //       {console.log('strokeGainedArr[1]:', strokeGainedArr[1])}
-            //     {Math.round((strokeGainedArr[0].reduce((sum, val) => sum + val, 0) / strokeGainedArr[0].length) * 100)/100}
-            //   </Text>
-            // ),
-            // frontColor: CHART_TEXT_COLOR,
             label: range + 'm',
             value:
             Math.round((strokeGainedArr[0].reduce((sum, val) => sum + val, 0) / strokeGainedArr[0].length)* 100) / 100,
@@ -178,8 +141,8 @@ const PuttScreen: React.FC = () => {
         makePercentage: item.makePercentage, 
       }))
     : [];
-
   var totalHeight = windowHeight * 0.3 * maxValue / (maxValue+Math.abs(minValue));
+
     return (
     <>
     <Stack.Screen options={{ headerShown: false }} />
