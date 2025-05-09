@@ -64,13 +64,27 @@ export default function HomeScreen() {
   const [holeFinished, setHoleFinished] = useState<boolean>(false);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
   const [currentClub, setCurrentClub] = useState<object>(clubs[0]);
-  const [currentLie, setCurrentLie] = useState<string>('tee');
+  const [currentLie, setCurrentLie] = useState<StrokeLieType>(StrokeLieType.tee);
 
 
 
   useEffect(() => {
     setCurrentClub(clubs[0])
   },[clubs])
+
+
+  useEffect(() => {
+    const previousStrokes = mapStrokes[currentHole];
+    const previousStroke: Stroke = previousStrokes?.length > 0 ? previousStrokes[previousStrokes.length - 1] : null;
+
+    if (previousStroke == null){
+      setCurrentLie(StrokeLieType.tee)
+      return
+    }
+    if (previousStroke.strokeNr == 0){
+      setCurrentLie(StrokeLieType.fairway)
+    }
+  },[mapStrokes[currentHole]])
 
 
   const [LockedView, setLockedView] = useState<boolean>(false);
@@ -251,9 +265,7 @@ export default function HomeScreen() {
         lie: currentLie, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.
         strokesGained: 0
       };
-      if (currentStroke == 0){ //AUTO SETS LIE TO 0 = TEE IF FIRST STROKE OF HOLE, CAN PROBABLY STAY
-        thisStroke.lie = StrokeLieType.tee
-      }
+
       const distanceToFlag = Math.round(calculateDistance(thisStroke.startLatitude, thisStroke.startLongitude, holeCoords.latitude, holeCoords.longitude));
 
       // Calculate distance if there's a previous stroke
@@ -274,7 +286,7 @@ export default function HomeScreen() {
         }
 
         //previousStroke.strokesGained = calculateStrokesGained(previousStroke, thisStroke, holeCoords.latitude,holeCoords.longitude)
-        //console.log('Updated previous stroke: ', previousStroke);
+        console.log('Updated previous stroke: ', previousStroke);
         //console.log('=======================================');
         db.createStroke(previousStroke); // Save the previous stroke to the database
         //console.log('Saved previous stroke to database',);
