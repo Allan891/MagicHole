@@ -44,11 +44,12 @@ export default function ClubSettingScreen() {
     setActiveClubs(updated);
   };
 
-  const addClubToBag = (club: GolfClub) => {
+  const addClubToBag = async (club: GolfClub) => {
     if(clubs.some(a => a.id == club.id)) return;
     club.showInList = 1;
-    setCurrentBag([club, ...clubs]);
-    db.updateGolfClub(club)
+    await db.updateGolfClub(club)
+    let updatedClubs = [club, ...clubs];
+    updatedClubs.sort((a, b) => a.id - b.id)
   }
 
   const removeClubFromBag = async (club: GolfClub) => {
