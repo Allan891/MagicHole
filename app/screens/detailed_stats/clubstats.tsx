@@ -45,37 +45,50 @@ const ClubStatsScreen: React.FC = () => {
           const strokes = await db.getStrokesByGolfClubId(golfClubId);
           setAverageDistances(stats[0]);
           setStrokes(strokes);
-          console.log('strokes:', strokes)
+          console.log('strokes:', createDistanceHistogram(strokes))
       }
       getStats();
     },[]);
 
     function createDistanceHistogram(strokes: { distance: number }[]): { value: number, label: string }[] {
-
       const distances = strokes
         .map(s => s.distance)
         .filter(d => typeof d === 'number' && d > 0);
     
       if (distances.length === 0) return [];
     
-
       const min = Math.min(...distances);
       const max = Math.max(...distances);
     
-
+      // If there's only one distinct value, create a single bin
+      if (min === max) {
+        return [
+          {
+            value: distances.length,
+            label: `${Math.round(min)}m`
+          }
+        ];
+      }
+    
       const binCount = Math.ceil(Math.sqrt(distances.length));
       const binSize = (max - min) / binCount;
     
-
+      if (binSize === 0) {
+        return [
+          {
+            value: distances.length,
+            label: `${Math.round(min)}-${Math.round(max)}m`
+          }
+        ];
+      }
+    
       const bins = new Array(binCount).fill(0);
     
-
       for (const d of distances) {
         const binIndex = Math.min(Math.floor((d - min) / binSize), binCount - 1);
         bins[binIndex]++;
       }
     
-
       return bins.map((count, index) => {
         const binStart = min + binSize * index;
         const binEnd = binStart + binSize;
@@ -85,6 +98,7 @@ const ClubStatsScreen: React.FC = () => {
         };
       });
     }
+    
     
     
 
@@ -120,7 +134,7 @@ const ClubStatsScreen: React.FC = () => {
               autoShiftLabels={true}
               data={createDistanceHistogram(strokes)} 
               showFractionalValues={true}
-              maxValue={Math.max(createDistanceHistogram(strokes).map(s => s.value))}
+              maxValue={Math.max(...createDistanceHistogram(strokes).map(s => s.value))}
               mostNegativeValue={0}
               // noOfSections={Math.ceil(maxValue)*2}
               // noOfSectionsBelowXAxis ={Math.ceil(Math.abs(minValue))*2}
