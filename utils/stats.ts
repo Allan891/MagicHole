@@ -150,7 +150,7 @@ export const categorizeStrokes =  (strokes: Stroke[]): Stroke[][] =>{
         //let category = 0;
         //console.log('distance: ', distance);
         //console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
-        if (stroke.golfClubId == 0){
+        if (stroke.golfClubId == 99){
 
           strokesPutt.push(stroke);
         } // Club 0 will always be putter.
@@ -195,7 +195,7 @@ export const generateStatTables = async (): Promise<Stroke[][]> =>{
         //let category = 0;
         //console.log('distance: ', distance);
         //console.log('par: ',par[stroke.holeId],' lie: ',stroke.lie);
-        if (stroke.golfClubId == 0){
+        if (stroke.golfClubId == 99){
 
           strokesPutt.push(stroke);
         } // Club 0 will always be putter.
