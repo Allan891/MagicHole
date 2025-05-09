@@ -64,6 +64,9 @@ export default function HomeScreen() {
   const [holeFinished, setHoleFinished] = useState<boolean>(false);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
   const [currentClub, setCurrentClub] = useState<object>(clubs[0]);
+  const [currentLie, setCurrentLie] = useState<string>('tee');
+
+
 
   useEffect(() => {
     setCurrentClub(clubs[0])
@@ -729,7 +732,7 @@ onPress={() => {
 
 
 <ClubPicker onClubChoose={(item) => {setCurrentClub(item); sheetAnim.setValue(collapsedY);}} />
-<LiePicker onLieChoose={(item) => {setCurrentLie(item); sheetAnim.setValue(collapsedY);}} />
+<LiePicker onLieChoose={(item) => {console.log(item); setCurrentLie(item); sheetAnim.setValue(collapsedY);}} />
 
 </Animated.View>
 
