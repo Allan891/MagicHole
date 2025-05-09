@@ -26,29 +26,30 @@ export const Stats = () => {
    useEffect(() => {
         /* db.getStrokes()
                .then((strokes) => {
-               console.log('All strokes: ', strokes);
+               //console.log('All strokes: ', strokes);
                    const sGained = strokes.map(t=>t.strokesGained )
-                          console.log("sgained: ", sGained)
+                          //console.log("sgained: ", sGained)
                           //sgApproach = calculateAverage(sGained)
 
                           setsgApproach([calculateAverage(sGained).toFixed(2),55, 1337])
 
 
-                          console.log('sgApproach',sgApproach)
+                          //console.log('sgApproach',sgApproach)
                })
                .catch((error) => {
                console.error('Error fetching strokes:', error);
                });
                 */
         const fetchData = async () => {
-            console.log('Start Fetch Data');
+            //console.log('Start Fetch Data');
             const strokeTables: Stroke[][]  = await generateStatTables();
-            console.log(strokeTables);
-            console.log('WE ALMST DIT IT');
-            console.log(' ');
-            console.log('asdf ',calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2));
+            ////console.log(strokeTables);
+            ////console.log('WE ALMST DIT IT');
+            ////console.log(' ');
+            ////console.log('asdf ',calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2));
             setTeeData(strokeTables[0]);
             setApproachData(strokeTables[1]);
+            //console.log('chipData:', strokeTables[2]);
             setChipData(strokeTables[2]);
             setPuttData(strokeTables[3]);
             setsGAverage([
@@ -57,18 +58,18 @@ export const Stats = () => {
                 calculateAverage(strokeTables[2].map(t=>t.strokesGained )).toFixed(2),
                 calculateAverage(strokeTables[3].map(t=>t.strokesGained )).toFixed(2)
                 ]);
-            console.log('went through average');
+            //console.log('went through average');
             setsGMedian([
                 getMedian(strokeTables[0]).toFixed(2),
                 getMedian(strokeTables[1]).toFixed(2),
                 getMedian(strokeTables[2]).toFixed(2),
                 getMedian(strokeTables[3]).toFixed(2)
             ]);
-            console.log('went through median');
-            console.log('median: ',sGMedian);
-            console.log('WE DIT IT');
+            //console.log('went through median');
+            //console.log('median: ',sGMedian);
+            //console.log('WE DIT IT');
         }
-            console.log('Start Stats');
+            //console.log('Start Stats');
             fetchData();
             //.catch(console.error());
        }, [strokes]);

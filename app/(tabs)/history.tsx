@@ -35,7 +35,7 @@ export default function History() {
 
   async function updateRounds() {
     const rounds2 = await dbExtra.getLatestRoundsData(999, 25);
-    console.log('rounds2', rounds2)
+    //console.log('rounds2', rounds2)
     setRounds(rounds2);
   }
   

@@ -42,7 +42,7 @@ export default function SettingsTab() {
   useEffect(() => {
     const loadSettings = async () => {
       const settings = await settingsList();
-      console.log('Settings', settings);
+      //console.log('Settings', settings);
       if (settings && typeof settings === 'object') {
         setForm(prevForm => ({
           ...prevForm,

@@ -154,7 +154,7 @@ useEffect(() => {
     });
   }
 
-  console.log('Map rerender!');
+  //console.log('Map rerender!');
 
   const handleCourseChosen = async (id) => {
 
@@ -213,7 +213,7 @@ useEffect(() => {
       }
   
       const location = await Location.getCurrentPositionAsync({});
-      console.log(location);
+      //console.log(location);
     })();
   }, []);
 
@@ -221,36 +221,36 @@ useEffect(() => {
     //console.log(distance);
     
     if (distance <= 70){
-      console.log("distance <= 70");
+      //console.log("distance <= 70");
       setZoomLevel(19);
       setAltitudeLevel(0.008)
     }else if (70 < distance && distance <= 180){ 
-      console.log('70 < distance && distance <= 180')
+      //console.log('70 < distance && distance <= 180')
       setZoomLevel(19);
       setAltitudeLevel(0.0065);
     }
     else if (180  < distance && distance <= 320){
-      console.log('250  < distance && distance <= 320')
+      //console.log('250  < distance && distance <= 320')
       setZoomLevel(18);
       setAltitudeLevel(0.009);
     }
     else if (320  < distance && distance <= 420){
-      console.log('320  < distance && distance <= 320')
+      //console.log('320  < distance && distance <= 320')
       // setZoomLevel(18); <-- Add android zoom level
       setAltitudeLevel(0.010);
     }
     else if (420  < distance && distance <= 600){
-      console.log('420  < distance && distance <= 320')
+      //console.log('420  < distance && distance <= 320')
       // setZoomLevel(18); <-- Add android zoom level
       setAltitudeLevel(0.012);
     }
     else if (600  < distance && distance <= 750){
-      console.log('600  < distance && distance <= 320')
+      //console.log('600  < distance && distance <= 320')
       // setZoomLevel(18); <-- Add android zoom level
       setAltitudeLevel(0.016);
     }
     else {
-      console.log('else zoom')
+      //console.log('else zoom')
       setZoomLevel(17);
       setAltitudeLevel(0.007);
     }
@@ -297,10 +297,10 @@ useEffect(() => {
         }
 
         //previousStroke.strokesGained = calculateStrokesGained(previousStroke, thisStroke, holeCoords.latitude,holeCoords.longitude)
-        console.log('Updated previous stroke: ', previousStroke);
         //console.log('=======================================');
+        //console.log('Updated previous stroke: ', previousStroke);
         db.createStroke(previousStroke); // Save the previous stroke to the database
-        //console.log('Saved previous stroke to database',);
+        ////console.log('Saved previous stroke to database',);
 
 
       }
