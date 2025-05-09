@@ -19,32 +19,32 @@ export  const calculateRawSG = (slag:Stroke, latitude:number , longitude:number)
    slag.lie = StrokeLieType.fairway
  }
     const sGdata = require('../constants/StrokesGained.json')
-    let sGDistance = sGdata.data.map(t=>t.Distance )
-    let sGValues
+    let sGDistance = sGdata.data.map(t=>t.Distance );
+    let sGValues;
     switch(slag.lie){
      case (StrokeLieType.tee): {
-         sGValues = sGdata.data.map(t=>t.Tee)
+         sGValues = sGdata.data.map(t=>t.Tee);
         break;
      }
      case (StrokeLieType.fairway): {
-         sGValues = sGdata.data.map(t=>t.Fairway)
+         sGValues = sGdata.data.map(t=>t.Fairway);
         break;
      }
      case (StrokeLieType.rough): {
-         sGValues = sGdata.data.map(t=>t.Rough)
+         sGValues = sGdata.data.map(t=>t.Rough);
         break;
         }
      case (StrokeLieType.sand): {
-         sGValues = sGdata.data.map(t=>t.Sand)
+         sGValues = sGdata.data.map(t=>t.Sand);
         break;
         }
      case (StrokeLieType.recovery):{
-         sGValues = sGdata.data.map(t=>t.Recovery)
+         sGValues = sGdata.data.map(t=>t.Recovery);
         break;
         }
      case (StrokeLieType.green): {
-         sGValues = sGdata.green.map(t=>t.Green)
-         sGDistance = sGdata.green.map(t=>t.Distance )
+         sGValues = sGdata.green.map(t=>t.Green);
+         sGDistance = sGdata.green.map(t=>t.Distance);
         // lie green doesnt exist in this table, it has its own table and is dealt with below.
         break;
         }
