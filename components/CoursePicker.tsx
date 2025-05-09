@@ -175,13 +175,13 @@ const styles = StyleSheet.create({
   },
   courseText: {
     fontSize: 20,
-    width: '85%',
+    width: '80%',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
   },
   courseDistanceText: {
     position: 'absolute',
-    left: '92%',
+    right: 0,
     fontSize: 15,
   },
   searchInput: {
