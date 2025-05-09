@@ -9,6 +9,9 @@ import { calculateDistance } from "@/utils";
 import {calculateAverage, generateStatTables, getMedian} from "@/utils";
 import { useRouter } from "expo-router";
 import { globalStateVar } from "../state/globalStateVar";
+import PagerView from 'react-native-pager-view';
+import ClubStats from "@/components/ClubStats";
+
 //import { Text, useTheme } from '@rneui/themed';
 
 
@@ -22,6 +25,8 @@ export const Stats = () => {
    const [chipData, setChipData] = useState<number[]>(1);
    const [teeData, setTeeData] = useState<number[]>(1);
    const [puttData, setPuttData] = useState<number[]>(1);
+   const [currentPage, setCurrentPage] = useState(0);
+
 
    useEffect(() => {
         /* db.getStrokes()
@@ -74,12 +79,14 @@ export const Stats = () => {
        }, [strokes]);
 
       return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#f6f6f6' }}>
+        <View style={{ flex: 1, backgroundColor: '#fff' }}>
+          <PagerView style={styles.container} initialPage={0} onPageSelected={(e) => setCurrentPage(e.nativeEvent.position)}>
+            <View style={styles.page} key="1">
               <View style={styles.container}>
 
                   <View style={styles.stats}>
                     {items.map(({ label, value }, index) => (
-                        <View
+                      <View
                         key={index}
                         style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}
                         onTouchEnd={async () => {
@@ -103,39 +110,54 @@ export const Stats = () => {
                         </View>
                     ))}
                   </View>
-                </View>
-                <View style={styles.container}>
+              </View>
+              <View style={styles.container}>
 
-                    <View style={styles.stats}>
-                      {items2.map(({ label, value }, index) => (
-                        <View
-                          key={index}
-                          style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}
-                          onTouchEnd={async () => {
-                            if (label === "Chip") {
-                              router.push({pathname: '../screens/detailed_stats/chipstats',params:{page:'Chip',data:JSON.stringify(chipData)}});
-                            }
-                            else if (label === "Putt") {
-                              router.push({pathname: '../screens/detailed_stats/puttstats',params:{page:'Putt',data:JSON.stringify(puttData)}});
-                            }
-                          }}>
-                          <Text style={styles.title}>{label}</Text>
+                  <View style={styles.stats}>
+                    {items2.map(({ label, value }, index) => (
+                      <View
+                        key={index}
+                        style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}
+                        onTouchEnd={async () => {
+                          if (label === "Chip") {
+                            router.push({pathname: '../screens/detailed_stats/chipstats',params:{page:'Chip',data:JSON.stringify(chipData)}});
+                          }
+                          else if (label === "Putt") {
+                            router.push({pathname: '../screens/detailed_stats/puttstats',params:{page:'Putt',data:JSON.stringify(puttData)}});
+                          }
+                        }}>
+                        <Text style={styles.title}>{label}</Text>
 
-                          <Text style={styles.statsItemLabel}>Average</Text>
+                        <Text style={styles.statsItemLabel}>Average</Text>
 
-                          {(sGAverage[index+2] && sGAverage[index+2]>-10) && <Text style={styles.statsItemValue}>{sGAverage[index +2]}</Text>  }
-                         {(!sGAverage[index+2] || sGAverage[index+2]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
-                               <Text style={styles.statsItemLabel}>Median</Text>
+                        {(sGAverage[index+2] && sGAverage[index+2]>-10) && <Text style={styles.statsItemValue}>{sGAverage[index +2]}</Text>  }
+                        {(!sGAverage[index+2] || sGAverage[index+2]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                              <Text style={styles.statsItemLabel}>Median</Text>
 
-                        {(sGMedian[index+2] && sGMedian[index+2]>-10) && <Text style={styles.statsItemValue}>{sGMedian[index+2]}</Text>  }
-                      {(!sGMedian[index+2] || sGMedian[index+2]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
+                      {(sGMedian[index+2] && sGMedian[index+2]>-10) && <Text style={styles.statsItemValue}>{sGMedian[index+2]}</Text>  }
+                    {(!sGMedian[index+2] || sGMedian[index+2]<=-10) && <Text style={styles.statsItemValue}>'N/A'</Text>}
 
-                        </View>
-                      ))}
-                    </View>
+                      </View>
+                    ))}
                   </View>
-
-            </SafeAreaView>
+              </View>
+            </View>
+            <View style={styles.page} key="2">
+              <ClubStats />
+            </View>
+          </PagerView>
+          <View style={styles.pageIndicatorContainer}>
+              {[0, 1].map((page) => (
+                <View
+                  key={page}
+                  style={[
+                    styles.dot,
+                    currentPage === page ? styles.activeDot : styles.inactiveDot,
+                  ]}
+                />
+              ))}
+            </View>
+            </View>
 
 
 
@@ -172,8 +194,30 @@ let items2 = [
 ];
 
 const styles = StyleSheet.create({
+  pageIndicatorContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 6,
+  },
+  activeDot: {
+    backgroundColor: '#888',
+  },
+  inactiveDot: {
+    backgroundColor: '#ccc',
+  },
+  page: {
+    flex: 1,
+  },
   container: {
-    padding: 24,
+    flex: 1
   },
   title: {
     fontSize: 32,
