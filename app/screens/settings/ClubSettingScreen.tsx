@@ -52,7 +52,7 @@ export default function ClubSettingScreen() {
   }
 
   const removeClubFromBag = async (club: GolfClub) => {
-    if (club.id == 0) return
+    if (club.id == 99) return
     club.showInList = 0;
     db.updateGolfClub(club)
     const golfBag = await db.getGolfClubsInList()

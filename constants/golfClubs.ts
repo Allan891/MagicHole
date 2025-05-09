@@ -3,7 +3,7 @@ import { GolfClubIconType } from "@/app/db/GolfDatabaseTypes";
 
     const golfClubs = [
         {
-            "id": 0,
+            "id": 1,
             "playerId": 999,
             "name": "Driver",
             "type": GolfClubType.driver,
@@ -11,7 +11,7 @@ import { GolfClubIconType } from "@/app/db/GolfDatabaseTypes";
             "showInList": 1
         },
         {
-            "id": 1,
+            "id": 2,
             "playerId": 999,
             "name": "Mini Driver",
             "type": GolfClubType.miniDriver,
