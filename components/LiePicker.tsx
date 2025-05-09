@@ -13,10 +13,11 @@ import { ThemedText } from '@/components/ThemedText';
 import { ClubIcon } from './ClubIcon';
 import { globalStateVar } from '@/app/state/globalStateVar';
 import { LieIcon } from './LieIcon';
+import { StrokeLieType } from '@/app/db/GolfDatabaseTypes';
 
 export function LiePicker({onLieChoose}) {
 
-  const lies = ["tee", "fairway", "rough", "sand", "green", "recovery"];
+  const lies = [StrokeLieType.tee, StrokeLieType.fairway, StrokeLieType.rough, StrokeLieType.sand, StrokeLieType.green, StrokeLieType.recovery];
   
   const renderLie = ({ item, index }) => {
   

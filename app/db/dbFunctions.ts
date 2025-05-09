@@ -1,5 +1,6 @@
 import db from "./db";
 import golfClubs from "@/constants/golfClubs";
+import { GolfClubType } from "./GolfDatabaseTypes";
 
 class FillDbdata{
     async importGolfClubs() {
@@ -9,6 +10,11 @@ class FillDbdata{
         }
       
         for (const club of golfClubs) {
+          if (club.type == GolfClubType.putter || club.type == GolfClubType.driver ||
+            club.type == GolfClubType.sWedge || club.type == GolfClubType.pWedge ||
+            club.type == GolfClubType.iron9 || club.type == GolfClubType.iron8 || club.type == GolfClubType.iron7 ||
+            club.type == GolfClubType.iron6 || club.type == GolfClubType.iron5 ||
+            club.type == GolfClubType.wood3)
           try {
             const golfClub = {
                 id: club.id,
@@ -20,7 +26,6 @@ class FillDbdata{
             };
             const clubInDb = await db.getGolfClubById(golfClub.id);
             if (clubInDb == null){
-                console.log('55555');
                 await db.createGolfClub(golfClub);
                 console.log('Club ', golfClub.type);
             }

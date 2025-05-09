@@ -63,14 +63,39 @@ export default function HomeScreen() {
   const [strokeCoordinates, setStrokeCoordinates] = useState<LatLng[]>([]);
   const [holeFinished, setHoleFinished] = useState<boolean>(false);
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
-  const [currentClub, setCurrentClub] = useState<object>(clubs[1]);
-  const [currentLie, setCurrentLie] = useState<string>('tee');
+  const [currentClub, setCurrentClub] = useState<object>(clubs[0]);
+  const [currentLie, setCurrentLie] = useState<StrokeLieType>(StrokeLieType.tee);
 
 
 
   useEffect(() => {
     setCurrentClub(clubs[0])
   },[clubs])
+
+
+useEffect(() => {
+  const fetchPutter = async () => {
+    if (currentLie === StrokeLieType.green) {
+      const putter = await db.getGolfClubById(99);
+      setCurrentClub(putter);
+    }
+  };
+  fetchPutter();
+}, [currentLie]);
+
+
+  useEffect(() => {
+    const previousStrokes = mapStrokes[currentHole];
+    const previousStroke: Stroke = previousStrokes?.length > 0 ? previousStrokes[previousStrokes.length - 1] : null;
+
+    if (previousStroke == null){
+      setCurrentLie(StrokeLieType.tee)
+      return
+    }
+    if (previousStroke.strokeNr == 0){
+      setCurrentLie(StrokeLieType.fairway)
+    }
+  },[mapStrokes[currentHole]])
 
 
   const [LockedView, setLockedView] = useState<boolean>(false);
@@ -129,7 +154,7 @@ export default function HomeScreen() {
     });
   }
 
-  console.log('Map rerender!');
+  //console.log('Map rerender!');
 
   const handleCourseChosen = async (id) => {
 
@@ -188,7 +213,7 @@ export default function HomeScreen() {
       }
   
       const location = await Location.getCurrentPositionAsync({});
-      console.log(location);
+      //console.log(location);
     })();
   }, []);
 
@@ -196,36 +221,36 @@ export default function HomeScreen() {
     //console.log(distance);
     
     if (distance <= 70){
-      console.log("distance <= 70");
+      //console.log("distance <= 70");
       setZoomLevel(19);
       setAltitudeLevel(0.008)
     }else if (70 < distance && distance <= 180){ 
-      console.log('70 < distance && distance <= 180')
+      //console.log('70 < distance && distance <= 180')
       setZoomLevel(19);
       setAltitudeLevel(0.0065);
     }
     else if (180  < distance && distance <= 320){
-      console.log('250  < distance && distance <= 320')
+      //console.log('250  < distance && distance <= 320')
       setZoomLevel(18);
       setAltitudeLevel(0.009);
     }
     else if (320  < distance && distance <= 420){
-      console.log('320  < distance && distance <= 320')
+      //console.log('320  < distance && distance <= 320')
       // setZoomLevel(18); <-- Add android zoom level
       setAltitudeLevel(0.010);
     }
     else if (420  < distance && distance <= 600){
-      console.log('420  < distance && distance <= 320')
+      //console.log('420  < distance && distance <= 320')
       // setZoomLevel(18); <-- Add android zoom level
       setAltitudeLevel(0.012);
     }
     else if (600  < distance && distance <= 750){
-      console.log('600  < distance && distance <= 320')
+      //console.log('600  < distance && distance <= 320')
       // setZoomLevel(18); <-- Add android zoom level
       setAltitudeLevel(0.016);
     }
     else {
-      console.log('else zoom')
+      //console.log('else zoom')
       setZoomLevel(17);
       setAltitudeLevel(0.007);
     }
@@ -251,12 +276,7 @@ export default function HomeScreen() {
         lie: currentLie, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.
         strokesGained: 0
       };
-      console.log('______________________________________');
-      console.log('thisStroke: ', thisStroke);
-      console.log('______________________________________');
-      if (currentStroke == 0){ //AUTO SETS LIE TO 0 = TEE IF FIRST STROKE OF HOLE, CAN PROBABLY STAY
-        thisStroke.lie = StrokeLieType.tee
-      }
+
       const distanceToFlag = Math.round(calculateDistance(thisStroke.startLatitude, thisStroke.startLongitude, holeCoords.latitude, holeCoords.longitude));
 
       // Calculate distance if there's a previous stroke
@@ -277,10 +297,10 @@ export default function HomeScreen() {
         }
 
         //previousStroke.strokesGained = calculateStrokesGained(previousStroke, thisStroke, holeCoords.latitude,holeCoords.longitude)
-        //console.log('Updated previous stroke: ', previousStroke);
         //console.log('=======================================');
+        //console.log('Updated previous stroke: ', previousStroke);
         db.createStroke(previousStroke); // Save the previous stroke to the database
-        //console.log('Saved previous stroke to database',);
+        ////console.log('Saved previous stroke to database',);
 
 
       }
@@ -613,20 +633,21 @@ export default function HomeScreen() {
             <MaterialIcons name="golf-course" size={28} color="red" />
           </Marker>
         
-
-        <Polyline
-            coordinates={strokeCoordinates}
-            strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
-            strokeColors={[
-              '#7F0000',
-              // '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
-              '#B24112',
-              '#E5845C',
-              '#238C23',
-              '#7F0000',
-            ]}
-            strokeWidth={3}
+        {strokeCoordinates?.length &&
+          <Polyline
+          coordinates={strokeCoordinates}
+          strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+          strokeColors={[
+            '#7F0000',
+            // '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
+            '#B24112',
+            '#E5845C',
+            '#238C23',
+            '#7F0000',
+          ]}
+          strokeWidth={3}
           />
+        }
 
         {test && location && courseChosen &&
 

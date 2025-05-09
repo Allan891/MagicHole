@@ -1,29 +1,30 @@
+import { StrokeLieType } from '@/app/db/GolfDatabaseTypes';
 import React from 'react';
 import { Image, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 const LIES = {
 
-  tee: {
+  Tee: {
     source: require('@/assets/images/tee.png'),
     style: {  },
   },
-  fairway: {
+  Fairway: {
     source: require('@/assets/images/fairway.png'),
     style: {  },
   },
-  rough: {
+  Rough: {
     source: require('@/assets/images/rough.png'),
     style: {  },
   },
-  sand: {
+  Sand: {
     source: require('@/assets/images/sand.png'),
     style: {},
   },
-  green: {
+  Green: {
     source: require('@/assets/images/green.png'),
     style: {  },
   },
-  recovery: {
+  Recovery: {
     source: require('@/assets/images/recovery.png'),
     style: {  },
   },

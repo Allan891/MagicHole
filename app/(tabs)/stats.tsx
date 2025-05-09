@@ -25,10 +25,11 @@ export const Stats = () => {
 
    useEffect(() => {
         const fetchData = async () => {
-            console.log('Start Fetch Data');
+            //console.log('Start Fetch Data');
             const strokeTables: Stroke[][]  = await generateStatTables();
             setTeeData(strokeTables[0]);
             setApproachData(strokeTables[1]);
+            //console.log('chipData:', strokeTables[2]);
             setChipData(strokeTables[2]);
             setPuttData(strokeTables[3]);
             setsGAverage([

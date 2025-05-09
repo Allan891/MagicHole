@@ -32,7 +32,7 @@ const setCurrentBag = globalStateVar((state) => state.setCurrentBag);
   const loadDB = async () => {
     await db.initDb()
     const golfBag = await db.getGolfClubsInList()
-    console.log('Bag: ', golfBag)
+    //console.log('Bag: ', golfBag)
     setCurrentBag(golfBag)
   }
 

@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.95)',
     borderLeftWidth: 1,
     borderLeftColor: '#ccc',
-    zIndex: 99999,
+    zIndex: 999999999,
     flexDirection: 'row',
   },
   strokeListContent: {

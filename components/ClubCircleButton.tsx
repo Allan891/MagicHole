@@ -4,7 +4,7 @@ import { ClubIcon } from './ClubIcon';
 // import ClubIcon from './ClubIcon'; // Ensure this import exists
 
 export function ClubCircleButton({ onPress, currentClub, disabled = false }) {
-    console.log('currentClub', currentClub)
+    //console.log('currentClub', currentClub)
   return (
     <View style={{ alignItems: 'center', opacity: disabled ? 0.5 : 1 }}>
       <TouchableOpacity
