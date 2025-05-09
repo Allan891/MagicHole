@@ -73,6 +73,17 @@ export default function HomeScreen() {
   },[clubs])
 
 
+useEffect(() => {
+  const fetchPutter = async () => {
+    if (currentLie === StrokeLieType.green) {
+      const putter = await db.getGolfClubById(99);
+      setCurrentClub(putter);
+    }
+  };
+  fetchPutter();
+}, [currentLie]);
+
+
   useEffect(() => {
     const previousStrokes = mapStrokes[currentHole];
     const previousStroke: Stroke = previousStrokes?.length > 0 ? previousStrokes[previousStrokes.length - 1] : null;
