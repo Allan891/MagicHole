@@ -31,7 +31,7 @@ export function LiePicker({onLieChoose}) {
   
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onStartShouldSetResponder={() => true}>
       <FlatList
         data={lies}
         keyExtractor={(item, index) => index.toString()}

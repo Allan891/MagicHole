@@ -107,52 +107,85 @@ export function CoursePicker({ onChooseCourse }) {
               image: (
                 <Image
                   source={require('../assets/images/adaptive-icon.png')}
-                  style={{ width: '50%', height: '50%', resizeMode: 'contain' }}
+                  style={{ borderRadius: 20, width: '50%', height: '50%', resizeMode: 'contain' }}
                 />
               ),
 
               title: 'Welcome to Magic Hole',
-              subtitle: 'Your digital golf tracking, let’s take you in a short journey to find out the app!',
+              subtitle: 'Let’s take you on a short journey to find out about the app!',
             },
             {
-              backgroundColor: '#e0f7fa',
+              backgroundColor: '#fff',
               image: (
                 <Image
                   source={require('../assets/images/s1.png')}
-                  style={{ width: '60%', height: '70%', resizeMode: 'stretch' }}
+                  style={{ height: '70%', resizeMode: 'contain' }}
                 />
               ),
               title: 'Choose the course',
               subtitle: 'Select course by distance or name.',
             },
             {
-              backgroundColor: '#e0f7fa',
+              backgroundColor: '#fff',
+              image: (
+                <Image
+                  source={require('../assets/images/mapview.png')}
+                  style={{ height: '70%', resizeMode: 'contain' }}
+                />
+              ),
+              title: 'Register your strokes',
+              subtitle: 'Don\'t forget to select club and lie!',
+            },
+            {
+              backgroundColor: '#fff',
+              image: (
+                <Image
+                  source={require('../assets/images/scorecard.png')}
+                  style={{ height: '70%', resizeMode: 'contain' }}
+                />
+              ),
+              title: 'Check your score',
+              subtitle: 'MagicHole features a fully functional score card!',
+            },
+            {
+              backgroundColor: '#fff',
               image: (
                 <Image
                   source={require('../assets/images/s3.png')}
-                  style={{ width: '50%', height: '70%', resizeMode: 'stretch' }}
+                  style={{ height: '70%', resizeMode: 'contain' }}
                 />
               ),
               title: 'Check your history',
               subtitle: 'Review past rounds, scores, and course performance.',
             },
             {
-              backgroundColor: '#e0f7fa',
+              backgroundColor: '#fff',
               image: (
                 <Image
                   source={require('../assets/images/s5.png')}
-                  style={{ width: '50%', height: '70%', resizeMode: 'stretch' }}
+                  style={{ height: '70%', resizeMode: 'contain' }}
                 />
                ),
               title: 'Tracking your improvement',
               subtitle: 'Track strokes gained, fairways hit, and putts.',
             },
             {
-              backgroundColor: '#e0f7fa',
+              backgroundColor: '#fff',
+              image: (
+                <Image
+                  source={require('../assets/images/clubstats.png')}
+                  style={{ height: '70%', resizeMode: 'contain' }}
+                />
+              ),
+              title: 'Find your best club',
+              subtitle: 'Get stats on individual clubs.',
+            },
+            {
+              backgroundColor: '#000',
               image: (
                 <Image
                   source={require('../assets/images/Last.png')}
-                  style={{ width: '100%', height: '100%', resizeMode: 'stretch' }}
+                  style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
                 />
                ),
               title: 'Tracking your improvement',
