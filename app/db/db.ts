@@ -41,13 +41,13 @@ public async dropTables() {
     if (this.isInitialized) return;
     console.log('Database opened');
     this.db.execSync(`
-    -- DROP TABLE IF EXISTS Course;
-    -- DROP TABLE IF EXISTS Hole;
-    -- DROP TABLE IF EXISTS Player;
-    -- DROP TABLE IF EXISTS GolfClub;
-    -- DROP TABLE IF EXISTS Round;
-    -- DROP TABLE IF EXISTS Stroke;
-    -- DROP TABLE IF EXISTS TeeSlope;
+    --DROP TABLE IF EXISTS Course;
+    --DROP TABLE IF EXISTS Hole;
+    --DROP TABLE IF EXISTS Player;
+    --DROP TABLE IF EXISTS GolfClub;
+    --DROP TABLE IF EXISTS Round;
+    --DROP TABLE IF EXISTS Stroke;
+    --DROP TABLE IF EXISTS TeeSlope;
 
     CREATE TABLE IF NOT EXISTS Course (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

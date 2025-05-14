@@ -39,7 +39,7 @@ export const globalStateVar = create<Stroke>((set) => ({
   reset: () => set({ strokes: Array(18).fill(undefined) }),
   location: null,
   setLocation: (loc) => set({ location : loc}),
-  currentBag: [{id:1, type: 'wood', name: 'Wood 3'},{id:2, type: 'wedge', name: 'Sand wedge'},{id:3, type: 'putter', name: 'Putter'},{id: 4, type: 'iron', name: '9 iron'}], 
+  currentBag: [], 
   setCurrentBag: (bag) => set({ currentBag: bag }), 
   testMode: false,
   setTestMode: (testMode) => set({ testMode }), 

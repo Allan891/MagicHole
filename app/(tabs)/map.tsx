@@ -90,6 +90,7 @@ useEffect(() => {
 
     if (previousStroke == null){
       setCurrentLie(StrokeLieType.tee)
+      setCurrentClub(clubs[0]);
       return
     }
     if (previousStroke.strokeNr == 0){
@@ -276,7 +277,7 @@ useEffect(() => {
         lie: currentLie, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.
         strokesGained: 0
       };
-
+      console.log('This stroke: ', thisStroke)
       const distanceToFlag = Math.round(calculateDistance(thisStroke.startLatitude, thisStroke.startLongitude, holeCoords.latitude, holeCoords.longitude));
 
       // Calculate distance if there's a previous stroke
@@ -633,7 +634,7 @@ useEffect(() => {
             <MaterialIcons name="golf-course" size={28} color="red" />
           </Marker>
         
-        {strokeCoordinates && strokeCoordinates.length > 0 && (
+          {strokeCoordinates && strokeCoordinates.length > 0 && (
           <Polyline
             coordinates={strokeCoordinates}
             strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
