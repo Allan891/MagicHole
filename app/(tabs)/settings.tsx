@@ -93,85 +93,10 @@ export default function SettingsTab() {
           </View>
         </View>
 
-        <View style={[styles.section, { paddingTop: 4 }]}>
-          <Text style={styles.sectionTitle}>Account</Text>
-          <View style={styles.sectionBody}>
-            <TouchableOpacity onPress={() => {}} style={styles.profile}>
-              <Image
-                alt=""
-                source={{ uri: 'https://cdnb.artstation.com/p/assets/covers/images/079/306/785/large/nicolas-amarilla-nicolas-amarilla-sk-wukong-final-crop.jpg?1724555196' }}
-                style={styles.profileAvatar} />
-              <View style={styles.profileBody}>
-                <Text style={styles.profileName}>Wu Kong</Text>
-                <Text style={styles.profileHandle}>wu@kong.cn</Text>
-              </View>
-              <FeatherIcon color="#bcbcbc" name="chevron-right" size={22} />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.section}></View>
-        <Text style={styles.sectionTitle}>Text Fields</Text>
-        <View style={styles.sectionBody}>
-          <View style={[styles.rowWrapper, styles.rowFirst]}>
-            <TextInput
-              value={form.textValue.toString()}
-              onChangeText={(text: string) => {
-                setForm({ ...form, textValue: text });
-                SETTINGS.LANGUAGE = form.textValue;
-              }}
-              keyboardType="default"
-              placeholder="Enter a text"
-              placeholderTextColor="#888888"
-              style={{ height: 40, marginTop: 5, borderBottomWidth: 1, borderRadius: 12, paddingLeft: 10, paddingRight: 10, paddingBottom: 0, borderColor: '#ccc', color: '#000', fontSize: 16 }}
-            />
-          </View>
-
-          <View style={[styles.rowWrapper, styles.rowLast]}>
-            <TextInput
-              value={form.handicap.toString()}
-              onChangeText={(text: string) => {
-                let handicap: number = parseInt(text);
-                setForm({ ...form, handicap });
-                SETTINGS.HANDICAP = handicap;
-              }}
-              keyboardType="decimal-pad"
-              placeholder="Change your handicap here:"
-              placeholderTextColor="#888888"
-              style={{ height: 40, marginTop: 5, marginBottom: 2, borderBottomWidth: 1, borderRadius: 12, paddingLeft: 10, paddingRight: 10, paddingBottom: 0, borderColor: '#ccc', color: '#00ff00', fontSize: 16 }}
-            />
-          </View>
-        </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Preferences</Text>
           <View style={styles.sectionBody}>
-            <View style={[styles.rowWrapper, styles.rowFirst]}>
-              <TouchableOpacity
-                onPress={() => {
-                  router.push({pathname: "../screens/settings/LanguageScreen"});
-                }}
-                style={styles.row}>
-                <Text style={styles.rowLabel}>Language</Text>
-                <View style={styles.rowSpacer} />
-                <Text style={styles.rowValue}>Chinese</Text>
-                <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.rowWrapper}>
-              <TouchableOpacity
-                onPress={() => {
-                  router.push({pathname: "../screens/settings/LocationScreen"});
-                }}
-                style={styles.row}>
-                <Text style={styles.rowLabel}>Location</Text>
-                <View style={styles.rowSpacer} />
-                <Text style={styles.rowValue}> {form.location} </Text>
-                <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-              </TouchableOpacity>
-            </View>
-
             <View style={styles.rowWrapper}>
               <TouchableOpacity
                 onPress={() => {
@@ -185,7 +110,7 @@ export default function SettingsTab() {
             </View>
           </View>
         </View>
-
+{/* 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Resources</Text>
           <View style={styles.sectionBody}>
@@ -221,7 +146,7 @@ export default function SettingsTab() {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </View> */}
 
         <View style={styles.section}>
           <View style={styles.sectionBody}>
@@ -229,13 +154,13 @@ export default function SettingsTab() {
               <TouchableOpacity onPress={async () => {
                 await AsyncStorage.setItem('hasSeenOnboarding','false');
               }} style={styles.row}>
-                <Text style={[styles.rowLabel, styles.rowLabelLogout]}>Log Out</Text>
+                <Text style={[styles.rowLabel, styles.rowLabelLogout]}>Reset App</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
 
-        <Text style={styles.contentFooter}>App Version 2.24 #50491</Text>
+        <Text style={styles.contentFooter}>App Version v1.0-Nether Void Release</Text>
       </ScrollView>
     </SafeAreaView>
   );
