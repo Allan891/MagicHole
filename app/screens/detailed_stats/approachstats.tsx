@@ -41,9 +41,6 @@ const handleTouch = (event) => {
   PAGE_Y= pageY;
   LOCATION_X= locationX;
   LOCATION_Y= locationY;
-  // console.log(`\n`);
-  // console.log(`Touch X: ${locationX}, Y: ${locationY}`);
-  // console.log(`Page X: ${pageX}, Y: ${pageY}`);
 };
 
 const checkIfHoled = async (item) => {
@@ -54,12 +51,12 @@ const checkIfHoled = async (item) => {
 
 const checkIfLandedOnGreen = async (stroke : Stroke) => {
   const nextStroke = await db.getNextStroke(stroke.roundId, stroke.holeId, stroke.strokeNr);
-  console.log('\n');
-  console.log('checkIfLandedOnGreen => nextStroke: ', nextStroke === null);
-  console.log('checkIfLandedOnGreen => nextStroke.lie: ', nextStroke?.lie);
-  console.log('\n');
-  if (nextStroke === null) return true ;
-  if (nextStroke.lie == StrokeLieType.green) return true;
+  if (nextStroke === null) {
+    return true ;
+  }
+  if (nextStroke.lie == StrokeLieType.green) {
+    return true ;
+  }
   return false;
 }
 

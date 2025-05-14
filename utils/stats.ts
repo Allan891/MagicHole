@@ -151,14 +151,10 @@ export const generateStatTables = async (): Promise<Stroke[][]> =>{
     let strokesPutt: Stroke[] = [];
     const strokes = await db.getStrokes();
     console.log('stats.ts => STROKES.LENGTH: ', strokes.length);
-    console.log('stats.ts => STROKES: ', strokes);
     for (const stroke of strokes) {
-
         if (stroke.golfClubId == 99){
-
           strokesPutt.push(stroke);
-        } // Club 0 will always be putter.
-
+        }
         else if (stroke.distanceLeft < 50){
           strokesChip.push(stroke);
         }
@@ -169,10 +165,6 @@ export const generateStatTables = async (): Promise<Stroke[][]> =>{
           strokesApproach.push(stroke);
         }
     }
-    console.log('Tee strokes:', strokesTee.length);
-    console.log('Approach strokes:', strokesApproach.length);
-    console.log('Chip strokes:', strokesChip.length);
-    console.log('Putt strokes:', strokesPutt.length);
     let returnValue: Stroke[][] = [];
     returnValue.push(strokesTee);
     returnValue.push(strokesApproach);
