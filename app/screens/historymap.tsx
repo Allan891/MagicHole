@@ -26,7 +26,8 @@ export default function HistoryMap() {
   const panelAnim = useRef(new Animated.Value(0)).current;
 
   const courseObject = getCourse(courseId);
-  const strokes = parsedHoleData?.userStrokes;
+  const strokes = parsedHoleData?.userStrokes.sort((a, b) => a.strokeNr - b.strokeNr);
+  
 
   const strokeCoordinates = strokes.map((stroke) => ({
     latitude: stroke.startLatitude,
@@ -163,7 +164,7 @@ export default function HistoryMap() {
               color={index === 0 ? 'white' : 'yellow'}
             />
             <ThemedText style={{ color: 'white', fontSize: 10 }}>
-              {'Stroke ' + index}
+              {'Stroke ' + (index + 1)}
             </ThemedText>
           </Marker>
         ))}
