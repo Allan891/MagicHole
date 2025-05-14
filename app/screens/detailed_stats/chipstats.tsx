@@ -39,49 +39,6 @@ const handleTouch = (event) => {
   // console.log(`Page X: ${pageX}, Y: ${pageY}`);
 };
 
-function numberToString(num: string): string {
-  switch (num) {
-    case '0':
-      return 'Tee';
-    case '1':
-      return 'Fairway';
-    case '2':
-      return 'Rough';
-
-      case '3':
-        return 'Sand';
-
-      case '4':
-      return 'Putt';
-
-      case '5':
-        return '???';
-                default:
-      return num.toString();
-  }
-}
-
-
-  const fetchAndJoinData = async () => {
-    try {
-      const holeData = await db.getHoles(); // Fetch data from the first DB function
-      const strokesData = await db.getStrokes(); // Fetch data from the second DB function
-  
-      // Join the arrays based on holeId = id
-      const joinedData = strokesData.map(stroke => {
-        const hole = holeData.find(h => h.id === stroke.holeId);
-        return {
-          ...stroke,
-          holeLong : hole ? hole.flagLongitude: null,
-          holeLat: hole ? hole.flagLatitude:null,
-        };
-      });
-      return joinedData;
-    } catch (error) {
-      console.error('Error fetching or joining data:', error);
-      return [];
-    }
-  };
   
 const ChipScreen: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -104,6 +61,7 @@ const ChipScreen: React.FC = () => {
   const maxDistance = 205;
 
   const groupedByLie = parsedData.reduce((acc, item) => {
+    console.log('groupedByLie item:', item);
     const lie = item.lie;
     if (!acc[lie]) acc[lie] = [];
     acc[lie].push(item.strokesGained);
@@ -123,7 +81,7 @@ const ChipScreen: React.FC = () => {
         </Text>
       ),
       frontColor: CHART_TEXT_COLOR,
-      label: numberToString(range),
+      label: range,
       value:
         strokeGainedArr.reduce((sum, val) => sum + val, 0) / strokeGainedArr.length,
     })
@@ -184,84 +142,6 @@ averageStrokeGainedByDistanceLeft.sort((a, b) => {
         yAxisTextStyle={{color: CHART_TEXT_COLOR}}
         roundToDigits={1}
         />
-          {/* <LineChart
-          areaChart
-          curved
-          width={windowWidth-40}
-          curveType = {CurveType.QUADRATIC}
-          data={averageStrokeGainedByDistanceLeft}
-          rotateLabel
-          spacing={15}
-          backgroundColor={CHART_BG_COLOR}
-          color={CHART_LINE_COLOR}
-          startFillColor={CHART_AREA_COLOR+"60"}
-          endFillColor={CHART_AREA_COLOR+"03"}
-          yAxisColor= {CHART_AXIS_COLOR}
-          xAxisColor= {CHART_AXIS_COLOR}
-          yAxisTextStyle={{color: CHART_TEXT_COLOR}}
-          rulesColor= {CHART_RULES_COLOR}
-          rulesThickness={1}
-          thickness={1}
-          startOpacity={0.8}
-          endOpacity={0.1}
-          initialSpacing={0}
-          endSpacing={5}
-          noOfSections={6}
-          rulesType="solid"
-          showScrollIndicator={true}
-          stepValue={1}
-          adjustToWidth={true}
-          maxValue={maxValue+Math.abs(minValue)}
-          yAxisThickness={1}
-          xAxisThickness={1}
-          yAxisOffset={minValue}
-          yAxisSide='right'
-          pointerConfig={{
-            pointerStripHeight: 200,
-            pointerStripColor: POINTER_STRIP_COLOR,
-            pointerStripWidth: 2,
-            pointerColor: POINTER_COLOR,
-            radius: 6,
-            pointerLabelWidth: 100,
-            pointerLabelHeight: 90,
-            activatePointersOnLongPress: true,
-            autoAdjustPointerLabelPosition: true,
-            pointerLabelComponent: items => {
-              var marginL = 0;
-              if (PAGE_X > 200){
-                marginL = -110;
-              }
-              if (PAGE_X <= 200 && PAGE_X > 80){
-                marginL = 50;
-              }
-              if (PAGE_X < 80){
-                marginL = 0;
-              }
-              return (
-                <View
-                  style={{
-                    height: 90,
-                    width: 180,
-                    justifyContent: 'center',
-                    marginTop: 0,
-                    marginLeft: marginL, // Adjusted to fit better
-                    overflow: 'hidden', // Hide overflowing content
-                  }}>
-  
-                  <View style={{paddingHorizontal:14,paddingVertical:6, borderRadius:16, backgroundColor: POINTER_LABEL_COLOR+'B2', display:'flex'}}>
-
-                    <Text style={{color:POINTER_TEXT_COLOR,fontWeight: 'bold',textAlign:'justify'}}>
-                        {'•Stroke Gained: ' + (items[0].value > 0 ? '+' : '') + (items[0].value === null ? '-' : items[0].value)}
-                    </Text>
-                    <Text style={{color:POINTER_TEXT_COLOR,fontWeight: 'bold',textAlign:'justify'}}>
-                      {'•Distance: ' + items[0].distance + 'm'}
-                    </Text>
-                  </View>
-                </View>
-              );
-            },
-          }}
-        /> */}
         {/* Modal to show the information when a bar is pressed */}
       {barData && (
         <Modal

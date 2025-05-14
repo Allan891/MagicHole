@@ -45,6 +45,14 @@ export const globalStateVar = create<Stroke>((set) => ({
   setTestMode: (testMode) => set({ testMode }), 
 }));
 
+// Initialize testMode from settingsList
+db.getSettings().then(settings => {
+  // Assuming settings is an array of objects with a 'toggleButton' key
+  const toggleButton = settings["toggleButton"] ?? false;
+  const toggleButtonValue = toggleButton === '1' ? true : false;
+  globalStateVar.getState().setTestMode(toggleButtonValue);
+});
+
 export const SETTINGS = {
   TEST: false,
   HANDICAP: 0,

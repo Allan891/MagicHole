@@ -29,15 +29,16 @@ interface FormState {
 }
 
 export default function SettingsTab() {
+  const testMode = globalStateVar((state) => state.testMode);
+  const setTestMode = globalStateVar((state) => state.setTestMode);
   const router = useRouter();
   const [form, setForm] = useState<FormState>({
-    toggleButton: SETTINGS.TEST,
+    toggleButton: testMode,
     textValue: SETTINGS.LANGUAGE,
     handicap: SETTINGS.HANDICAP,
     location: SETTINGS.LOCATION,
   });
-  const testMode = globalStateVar((state) => state.testMode);
-  const setTestMode = globalStateVar((state) => state.setTestMode);
+ 
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -65,6 +66,7 @@ export default function SettingsTab() {
         <View style={[styles.headerAction, { alignItems: 'flex-end' }]}>
           <TouchableOpacity onPress={async() => {
             for(const [key,value] of Object.entries(form)){
+              console.log(key,value);
               await db.setSetting(key,value);
             }
           }}>
@@ -85,7 +87,7 @@ export default function SettingsTab() {
                 onValueChange={(value: boolean) => {
                   setTestMode(value); // Update global state
                   setForm(prevForm => ({ ...prevForm, toggleButton: value })); // Optional: keep form in sync
-                  SETTINGS.TEST = value;
+                  setTestMode(value); // Update global state
                 }}
                 value={testMode}
                 style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}/>
@@ -152,6 +154,8 @@ export default function SettingsTab() {
           <View style={styles.sectionBody}>
             <View style={[styles.rowWrapper, styles.rowFirst, styles.rowLast, { alignItems: 'center' }]}>
               <TouchableOpacity onPress={async () => {
+                await db.dropTables();
+                await db.initDb();
                 await AsyncStorage.setItem('hasSeenOnboarding','false');
               }} style={styles.row}>
                 <Text style={[styles.rowLabel, styles.rowLabelLogout]}>Reset App</Text>
