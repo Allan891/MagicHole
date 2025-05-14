@@ -50,6 +50,7 @@ export default function ClubSettingScreen() {
     await db.updateGolfClub(club)
     let updatedClubs = [club, ...clubs];
     updatedClubs.sort((a, b) => a.id - b.id)
+    setCurrentBag(updatedClubs)
   }
 
   const removeClubFromBag = async (club: GolfClub) => {
