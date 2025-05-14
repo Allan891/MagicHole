@@ -11,12 +11,15 @@ import { globalStateVar } from '../app/state/globalStateVar';
 import * as Location from 'expo-location';
 import Onboarding from 'react-native-onboarding-swiper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Dimensions } from 'react-native';
+
 
 export function CoursePicker({ onChooseCourse }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCourses, setFilteredCourses] = useState(courses);
   const location = globalStateVar((state) => state.location);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const { width, height } = Dimensions.get('window');
 
   useEffect(() => {
     const checkIfOnboardingSeen = async () => {
@@ -103,30 +106,31 @@ export function CoursePicker({ onChooseCourse }) {
               backgroundColor: '#fff',
               image: (
                 <Image
-                  source={require('../assets/images/icon.png')}
-                  style={{ width: 150, height: 150 }}
+                  source={require('../assets/images/adaptive-icon.png')}
+                  style={{ width: '50%', height: '50%', resizeMode: 'contain' }}
                 />
               ),
+
               title: 'Welcome to Magic Hole',
-              subtitle: 'Your digital golf tracking – let’s take you in a short journey to find out the app!',
+              subtitle: 'Your digital golf tracking, let’s take you in a short journey to find out the app!',
             },
             {
               backgroundColor: '#e0f7fa',
               image: (
                 <Image
-                  source={require('../assets/images/CourseList.png')}
-                  style={{ width: 260, height: 400 }}
+                  source={require('../assets/images/s1.png')}
+                  style={{ width: '60%', height: '70%', resizeMode: 'stretch' }}
                 />
               ),
-              title: 'Select the course',
-              subtitle: 'Filter courses by distance or name.',
+              title: 'Choose the course',
+              subtitle: 'Select course by distance or name.',
             },
             {
               backgroundColor: '#e0f7fa',
               image: (
                 <Image
-                  source={require('../assets/images/History.png')}
-                  style={{ width: 300, height: 300 }}
+                  source={require('../assets/images/s3.png')}
+                  style={{ width: '50%', height: '70%', resizeMode: 'stretch' }}
                 />
               ),
               title: 'Check your history',
@@ -136,10 +140,21 @@ export function CoursePicker({ onChooseCourse }) {
               backgroundColor: '#e0f7fa',
               image: (
                 <Image
-                  source={require('../assets/images/Stats.png')}
-                  style={{ width: 300, height: 380 }}
+                  source={require('../assets/images/s5.png')}
+                  style={{ width: '50%', height: '70%', resizeMode: 'stretch' }}
                 />
-              ),
+               ),
+              title: 'Tracking your improvement',
+              subtitle: 'Track strokes gained, fairways hit, and putts.',
+            },
+            {
+              backgroundColor: '#e0f7fa',
+              image: (
+                <Image
+                  source={require('../assets/images/Last.png')}
+                  style={{ width: '100%', height: '100%', resizeMode: 'stretch' }}
+                />
+               ),
               title: 'Tracking your improvement',
               subtitle: 'Track strokes gained, fairways hit, and putts.',
             },
@@ -156,6 +171,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     maxHeight: '80%',
     width: '80%',
+    // height: '80%',
     left: '8%',
     top: '10%',
     backgroundColor: 'white',
