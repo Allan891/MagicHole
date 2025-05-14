@@ -1,31 +1,19 @@
 import React from 'react';
 import { useState } from 'react';
-import db from '../../db/db'; // Adjust the import path as necessary
 import { View, Text, StyleSheet, ScrollView,Modal, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams,Stack } from 'expo-router';
-import { CurveType, LineChart, BarChart} from "react-native-gifted-charts";
+import { BarChart} from "react-native-gifted-charts";
 import { Dimensions } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {Stats_theme} from '../../../constants/Colors';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
 
 var PAGE_X= 0;
 var PAGE_Y= 0;
 var LOCATION_Y= 0;
 var LOCATION_X= 0;
-const PAGE_BG_COLOR="#Fff";
-const CHART_BG_COLOR="#fff";
-const CHART_LINE_COLOR="#2A4A2C";
-const CHART_AREA_COLOR="#A7D08E";
-const CHART_AXIS_COLOR="#3B5C3A";
-const CHART_RULES_COLOR="#808080";
-const CHART_TEXT_COLOR="#3B5C3A";
-const POINTER_STRIP_COLOR="#6B8E23";
-const POINTER_COLOR="#FFFFFF";
-const POINTER_LABEL_COLOR="#3B5C3A";
-const POINTER_TEXT_COLOR="#FFFFFF";
 
 const handleTouch = (event) => {
   const { locationX, locationY, pageX, pageY } = event.nativeEvent;
@@ -33,10 +21,6 @@ const handleTouch = (event) => {
   PAGE_Y= pageY;
   LOCATION_X= locationX;
   LOCATION_Y= locationY;
-
-  // console.log(`\n`);
-  // console.log(`Touch X: ${locationX}, Y: ${locationY}`);
-  // console.log(`Page X: ${pageX}, Y: ${pageY}`);
 };
 
   
@@ -73,14 +57,14 @@ const ChipScreen: React.FC = () => {
       topLabelComponent: () => (
         <Text
           style={{
-            color: CHART_TEXT_COLOR,
+            color: Stats_theme.CHART_TEXT_COLOR,
             fontSize: 13,
             fontFamily: 'PoppinsMedium',
           }}>
           {Math.round((strokeGainedArr.reduce((sum, val) => sum + val, 0) / strokeGainedArr.length) * 100)/100}
         </Text>
       ),
-      frontColor: CHART_TEXT_COLOR,
+      frontColor: Stats_theme.BAR_COLOR,
       label: range,
       value:
         strokeGainedArr.reduce((sum, val) => sum + val, 0) / strokeGainedArr.length,
@@ -96,19 +80,14 @@ averageStrokeGainedByDistanceLeft.sort((a, b) => {
 });
   console.log('Grouped data:', averageStrokeGainedByDistanceLeft);
   var minValue = Math.min(...averageStrokeGainedByDistanceLeft.map(item => item.value));
-  minValue = minValue > 0 ? -0.5 : Math.floor(minValue * 2) / 2;
   var maxValue = Math.max(...averageStrokeGainedByDistanceLeft.map(item => item.value));
+  minValue = minValue > 0 ? -0.5 : Math.floor(minValue * 2) / 2;
   maxValue = maxValue < 0 ? 0.5 : Math.ceil(maxValue * 2) / 2;
   var totalHeight = windowHeight * 0.3 * maxValue / (maxValue+Math.abs(minValue));
-  console.log('Max Value:', maxValue);
-  console.log('noOfSections:', Math.ceil(maxValue)+1);
-  console.log('Min Value:', minValue);
-  console.log('noOfSectionsBelowXAxis:', Math.ceil(Math.abs(minValue))+1);
-
   return (
     <>
     <Stack.Screen options={{ headerShown: false }} />
-    <SafeAreaView style={{ backgroundColor: PAGE_BG_COLOR }}></SafeAreaView>
+    <SafeAreaView style={{ backgroundColor: Stats_theme.PAGE_BG_COLOR }}></SafeAreaView>
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Detailed Stats - {page}</Text>
       {/* Add your components or content here */}
@@ -128,18 +107,19 @@ averageStrokeGainedByDistanceLeft.sort((a, b) => {
         noOfSectionsBelowXAxis ={Math.ceil(Math.abs(minValue))*2}
         height ={totalHeight}
         width={windowWidth-40}
-        barBorderColor={CHART_LINE_COLOR}
-        frontColor={CHART_AREA_COLOR}
+        barBorderColor={Stats_theme.BAR_BORDER_COLOR}
+        barBorderWidth={1}
+        frontColor={Stats_theme.BAR_COLOR}
         spacing={10}
         barWidth={40}
         stepValue={0.5}
         negativeStepValue={0.5}
         rulesType="dashed"
-        backgroundColor={CHART_BG_COLOR}
-        color={CHART_LINE_COLOR}
-        yAxisColor= {CHART_AXIS_COLOR}
-        xAxisColor= {CHART_AXIS_COLOR}
-        yAxisTextStyle={{color: CHART_TEXT_COLOR}}
+        backgroundColor={Stats_theme.CHART_BG_COLOR}
+        color={Stats_theme.BAR_BORDER_COLOR}
+        yAxisColor= {Stats_theme.CHART_AXIS_LINE_COLOR}
+        xAxisColor= {Stats_theme.CHART_AXIS_LINE_COLOR}
+        yAxisTextStyle={{color: Stats_theme.CHART_TEXT_COLOR}}
         roundToDigits={1}
         />
         {/* Modal to show the information when a bar is pressed */}
@@ -163,19 +143,19 @@ averageStrokeGainedByDistanceLeft.sort((a, b) => {
               style={{
                 width: windowWidth - 100,
                 height: 55,                
-                backgroundColor: POINTER_LABEL_COLOR+"c9",
+                backgroundColor: Stats_theme.POPUP_INFO_BG_COLOR+"c9",
                 padding: 0,
                 borderRadius: 10,
-                borderWidth: 3,
-                borderColor: 'black',
+                borderWidth: 2,
+                borderColor: Stats_theme.BAR_BORDER_COLOR,
                 alignItems: 'center',
                 margin:0,
               }}
             >
-              <Text style={{ fontSize: 18, fontWeight: 'bold',color: POINTER_TEXT_COLOR }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold',color: Stats_theme.POPUP_INFO_TEXT_COLOR }}>
               Distance: {barData.label} 
               </Text>
-              <Text style={{ fontSize: 16 ,color: POINTER_TEXT_COLOR }}>
+              <Text style={{ fontSize: 16 ,color: Stats_theme.POPUP_INFO_TEXT_COLOR }}>
                 Avg Stroke Gained: {barData.value}
               </Text>
             </View>
@@ -193,7 +173,7 @@ averageStrokeGainedByDistanceLeft.sort((a, b) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: PAGE_BG_COLOR,
+    backgroundColor: Stats_theme.PAGE_BG_COLOR,
   },
   title: {
     fontSize: 24,
