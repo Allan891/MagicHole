@@ -10,7 +10,15 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.MagicHole"
+      "bundleIdentifier": "com.anonymous.MagicHole",
+      "config": {
+        "googleMapsApiKey": "AIzaSyBxKzp5Ts7nnKHl6hLoK2pKK-WUX1_s5mA"
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to track your golf strokes.",
+        "NSLocationAlwaysUsageDescription": "This app uses your location to track your golf strokes."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -44,6 +52,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "d997231f-fd0f-4bde-bd7a-4550eb111c3a"
+      }
     }
   }
 }

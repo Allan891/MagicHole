@@ -618,6 +618,67 @@ async getRoundById(id: number): Promise<Round | null> {
     }
   }
 
+  async getAverageDistanceByClub(): Promise<{ maxDistance: number, strokeCount: number, golfClubId: number, averageDistance: number }[]> {
+    if (!this.db) return [];
+    try {
+      return await this.db.getAllAsync(
+        `SELECT 
+          golfClubId, 
+          AVG(distance) AS averageDistance,
+          MAX(distance) AS maxDistance,
+          COUNT(*) AS strokeCount
+        FROM 
+          Stroke
+        GROUP BY 
+          golfClubId;`
+      );
+    } catch (error) {
+      console.error('Error fetching average distances:', error);
+      return [];
+    }
+  }
+
+  async getAverageDistanceForClub(golfClubId): Promise<{ maxDistance: number, strokeCount: number, averageDistance: number }> {
+    if (!this.db) return [];
+    try {
+      return await this.db.getAllAsync(
+        `SELECT 
+          golfClubId, 
+          AVG(distance) AS averageDistance,
+          MAX(distance) AS maxDistance,
+          COUNT(*) AS strokeCount
+        FROM 
+          Stroke
+        WHERE 
+          golfClubId = ?;`, golfClubId
+      );
+    } catch (error) {
+      console.error('Error fetching average distances:', error);
+      return [];
+    }
+  }
+
+  async getClubStats(golfClubId): Promise<{ maxDistance: number, strokeCount: number, golfClubId: number, averageDistance: number }[]> {
+    if (!this.db) return [];
+    try {
+      return await this.db.getFirstAsync(
+        `SELECT 
+          AVG(distance) AS averageDistance,
+          MAX(distance) AS maxDistance,
+          COUNT(*) AS strokeCount
+        FROM 
+          Stroke
+        WHERE
+          golfClubId = ?
+        ;`, golfClubId
+      );
+    } catch (error) {
+      console.error('Error fetching average distances:', error);
+      return [];
+    }
+  }
+  
+
   // READ: Get a stroke by ID
   async getStrokeById(id: number): Promise<Stroke | null> {
     if (!this.db) return null;
@@ -674,7 +735,7 @@ async getRoundById(id: number): Promise<Round | null> {
     if (!this.db) return [];
     try {
       return await this.db.getAllAsync(
-        'SELECT * FROM Stroke WHERE golfClubId = ?;',golfClubId);
+        'SELECT * FROM Stroke WHERE golfClubId = ?;', golfClubId);
     } catch (error) {
       console.error('Error fetching strokes by golf club:', error);
       return [];
