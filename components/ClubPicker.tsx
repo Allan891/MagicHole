@@ -28,7 +28,7 @@ export function ClubPicker({onClubChoose}) {
   
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onStartShouldSetResponder={() => true}>
       <FlatList
         data={clubs}
         keyExtractor={(item, index) => index.toString()}
