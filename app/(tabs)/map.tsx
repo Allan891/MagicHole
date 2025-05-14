@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import MapView, { LatLng, Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -36,6 +36,8 @@ import { Stroke, StrokeLieType } from '../db/GolfDatabaseTypes';
 import * as Haptics from 'expo-haptics';
 import { LiePicker } from '@/components/LiePicker';
 import { LieCircleButton } from '@/components/LieCircleButton';
+import Slider from '@react-native-community/slider';
+
 
 
 
@@ -65,6 +67,8 @@ export default function HomeScreen() {
   const setSelectedCourse = globalStateVar((state) => state.setSelectedCourse);
   const [currentClub, setCurrentClub] = useState<object>(clubs[0]);
   const [currentLie, setCurrentLie] = useState<StrokeLieType>(StrokeLieType.tee);
+  const [manualDistance, setManualDistance] = useState<number | null>(null);
+
 
 
 
@@ -258,82 +262,100 @@ useEffect(() => {
   };
 
   const addStroke = (lastStroke = false) => {
-
     if (location) {
-
-      const { latitude, longitude } = lastStroke ? courseObject.holes[currentHole].greenMiddle : location;
+      const { latitude, longitude } = lastStroke
+        ? courseObject.holes[currentHole].greenMiddle
+        : location;
+  
       const previousStrokes = mapStrokes[currentHole];
-      const previousStroke: Stroke = previousStrokes?.length > 0 ? previousStrokes[previousStrokes.length - 1] : null;
+      const previousStroke: Stroke =
+        previousStrokes?.length > 0
+          ? previousStrokes[previousStrokes.length - 1]
+          : null;
+  
       let thisStroke: Stroke = {
         holeId: currentHole,
         roundId: roundId || 0,
         strokeNr: currentStroke,
         startLatitude: latitude,
         startLongitude: longitude,
-        distance: 0, // Placeholder, calculate if needed
+        distance: 0, 
         distanceLeft: distanceLeft || -1,
-        golfClubId: currentClub.id, // Placeholder, update with actual golf club ID
+        golfClubId: currentClub.id,
         playerId: 999,
-        lie: currentLie, // lie = 1 means fairway, should be chosen at a later point and not hardcoded.
-        strokesGained: 0
+        lie: currentLie,
+        strokesGained: 0,
       };
-      console.log('This stroke: ', thisStroke)
-      const distanceToFlag = Math.round(calculateDistance(thisStroke.startLatitude, thisStroke.startLongitude, holeCoords.latitude, holeCoords.longitude));
-
-      // Calculate distance if there's a previous stroke
+  
+      const distanceToFlag = Math.round(
+        calculateDistance(
+          thisStroke.startLatitude,
+          thisStroke.startLongitude,
+          holeCoords.latitude,
+          holeCoords.longitude
+        )
+      );
+  
       if (previousStroke) {
-        //console.log('=======================================');
-        //console.log('Previous stroke: ', previousStroke);
-        const distance = previousStroke ? Math.round(calculateDistance(previousStroke.startLatitude, previousStroke.startLongitude, latitude, longitude)): 0;
-
-        //console.log('Distance: ', distance);
-        //console.log('Lie: ', previousStroke.lie);
-        previousStroke.distance = distance;
-        //console.log('bait');
-        if (lastStroke){
-            previousStroke.strokesGained = calculateRawSG(previousStroke, holeCoords.latitude,holeCoords.longitude) -1;
-            }
-        else{
-            previousStroke.strokesGained = calculateStrokesGained(previousStroke, thisStroke, holeCoords.latitude,holeCoords.longitude)
+        let distance = 0;
+  
+        if (previousStroke.lie === StrokeLieType.green && manualDistance !== null) {
+          distance = Math.round(manualDistance);
+        } else {
+          distance = Math.round(
+            calculateDistance(
+              previousStroke.startLatitude,
+              previousStroke.startLongitude,
+              latitude,
+              longitude
+            )
+          );
         }
-
-        //previousStroke.strokesGained = calculateStrokesGained(previousStroke, thisStroke, holeCoords.latitude,holeCoords.longitude)
-        //console.log('=======================================');
-        //console.log('Updated previous stroke: ', previousStroke);
-        db.createStroke(previousStroke); // Save the previous stroke to the database
-        ////console.log('Saved previous stroke to database',);
-
-
+  
+        previousStroke.distance = distance;
+  
+        if (lastStroke) {
+          previousStroke.strokesGained =
+            calculateRawSG(previousStroke, holeCoords.latitude, holeCoords.longitude) - 1;
+        } else {
+          previousStroke.strokesGained = calculateStrokesGained(
+            previousStroke,
+            thisStroke,
+            holeCoords.latitude,
+            holeCoords.longitude
+          );
+        }
+  
+        db.createStroke(previousStroke);
       }
-
+  
       const updatedMapStrokes = [...mapStrokes];
-        //console.log(updatedMapStrokes);
-        //console.log('current hole: ',currentHole);
-        if (updatedMapStrokes[currentHole])
-            updatedMapStrokes[currentHole] = [...updatedMapStrokes[currentHole], thisStroke];
-        else
-            updatedMapStrokes[currentHole] = [thisStroke];
-
+      if (updatedMapStrokes[currentHole]) {
+        updatedMapStrokes[currentHole] = [...updatedMapStrokes[currentHole], thisStroke];
+      } else {
+        updatedMapStrokes[currentHole] = [thisStroke];
+      }
+  
       setMapStrokes(updatedMapStrokes);
-
-      const newArr = [...strokeCoordinates, { latitude, longitude }];
-      //console.log('newArr', newArr);
-      setStrokeCoordinates(newArr);
-
-      
-
-      if(lastStroke) return;
+      setStrokeCoordinates([...strokeCoordinates, { latitude, longitude }]);
+  
+      if (lastStroke) {
+        setManualDistance(null);
+        return;
+      }
+  
       setCurrentStroke(currentStroke + 1);
-
-
+  
       const currentScore = strokes[currentHole] || 0;
       setStroke(currentHole, currentScore + 1);
+      setManualDistance(null);
+  
       if (test) updateTestLocation();
-
     } else {
       Alert.alert('Error: No location data');
     }
   };
+  
 
   const removeStroke = () => {
     const current = strokes[currentHole] || 0;
@@ -757,13 +779,33 @@ onPress={() => {
 
 
 <ClubPicker onClubChoose={(item) => {setCurrentClub(item); sheetAnim.setValue(collapsedY);}} />
+
+
 <LiePicker onLieChoose={(item) => {console.log(item); setCurrentLie(item); sheetAnim.setValue(collapsedY);}} />
 
 </Animated.View>
 
+{currentLie === StrokeLieType.green && (
+  <View style={styles.greenSliderContainer}>
+    <ThemedText style={styles.greenSliderLabel}>Distance (m)</ThemedText>
+    <Slider
+      style={styles.verticalSlider}
+      minimumValue={0}
+      maximumValue={30}
+      step={1}
+      value={manualDistance ?? 0}
+      onValueChange={(value) => setManualDistance(value)}
+    />
+    <ThemedText style={styles.greenSliderValue}>{manualDistance?.toFixed(1)} m</ThemedText>
+  </View>
+)}
+
+
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   floatingButtonContainer: {
@@ -844,4 +886,43 @@ const styles = StyleSheet.create({
     color: 'black',
     marginTop: 4,
   },
+  greenSliderContainer: {
+    position: 'absolute',
+    right: 10,
+    top: '25%',
+    height: 250, // taller container
+    width: 60,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 12,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    zIndex: 1000,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 6,
+  },
+  
+  verticalSlider: {
+    transform: [{ rotate: '-90deg' }],
+    width: 200, 
+    height: 40,
+  },
+  
+  greenSliderLabel: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    marginBottom: 4,
+    color: '#333',
+  },
+  
+  greenSliderValue: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginTop: 6,
+    color: '#333',
+  },
+  
 });
