@@ -23,7 +23,7 @@ import { LocationObject } from 'expo-location';
 import { CoursePicker } from '@/components/CoursePicker';
 import { ClubPicker } from '@/components/ClubPicker';
 import courses from '@/constants/courses';
-import {calculateBearing, calculateDistance} from '@/utils';
+import {calculateBearing, calculateDistance, getPoints} from '@/utils';
 import {calculateStrokesGained,calculateRawSG} from '@/utils';
 import db from '../db/db';
 import { globalStateVar } from '../state/globalStateVar';
@@ -536,6 +536,12 @@ useEffect(() => {
     );
   }, [currentHole]);
 
+  useEffect(() => {
+    console.log('strokeCoordinates', strokeCoordinates);
+  }, [strokeCoordinates]);
+
+  
+
   // Bottom sheet animation
   const screenHeight = Dimensions.get('window').height;
   let handleHeight;
@@ -634,20 +640,26 @@ useEffect(() => {
             <MaterialIcons name="golf-course" size={28} color="red" />
           </Marker>
         
-          {strokeCoordinates && strokeCoordinates.length > 0 && (
+          {strokeCoordinates && strokeCoordinates.length > 1 && (
+
+            <>
           <Polyline
-            coordinates={strokeCoordinates}
-            strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+            coordinates={getPoints(strokeCoordinates, 0.5)}
+            strokeColor="#ed7845" // fallback for when `strokeColors` is not supported by the map-provider
             strokeColors={[
-              '#7F0000',
+              '#ed7845',
               // '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
-              '#B24112',
-              '#E5845C',
-              '#238C23',
               '#7F0000',
             ]}
             strokeWidth={3}
           />
+          <Polyline
+            coordinates={getPoints(strokeCoordinates, 0.2)}
+            strokeColor='rgba(0,0,0,0.2)' // fallback for when `strokeColors` is not supported by the map-provider
+            fillColor='rgba(0,0,0,0.2)'
+            strokeWidth={3}
+            />
+        </>
         )}
 
         {test && location && courseChosen &&
