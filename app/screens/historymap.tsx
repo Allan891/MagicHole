@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Easing,
 } from 'react-native';
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapView, { LatLng, Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 
@@ -153,6 +153,7 @@ export default function HistoryMap() {
       {/* Map */}
       <MapView
         mapType="satellite"
+        provider={PROVIDER_GOOGLE}
         style={{ flex: 1 }}
         initialRegion={initialRegion}
         camera={{
