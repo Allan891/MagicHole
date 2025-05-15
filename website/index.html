@@ -262,16 +262,18 @@
             
         }
         .story-container {
-            display: inline-block; 
-            text-align: center;
-            min-width: 1500px;
-            min-width: 1500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             width: 100%;
-            min-height: 250px;
-            height: 800px;
+            max-width: 100%;
+            height: auto;
             aspect-ratio: 16/10;
-
+            overflow: hidden;
+            padding: 1rem;
+            box-sizing: border-box;
         }
+
         .story-pic-1 {
             background-image: url('sprintgoal1.png');
             background-size: cover;
@@ -471,7 +473,7 @@
         </div>
         <div class="container">
         <h1> Sprint goals!</h1>
-        <h2> The project was divide into 3 sprints</h2>
+        <h2> The project was divided into 3 sprints</h2>
       </div>
             <div class="story-container"> 
                 <div class="story-pic-1"></div>
