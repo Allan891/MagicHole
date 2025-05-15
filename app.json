@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.anonymous.MagicHole",
       "config": {
         "googleMapsApiKey": "AIzaSyBxKzp5Ts7nnKHl6hLoK2pKK-WUX1_s5mA"
