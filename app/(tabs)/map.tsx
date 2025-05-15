@@ -1,4 +1,4 @@
-// This is the latest map.tsx
+
 
 import {
   View,
@@ -159,8 +159,7 @@ useEffect(() => {
     });
   }
 
-  //console.log('Map rerender!');
-
+  
   const handleCourseChosen = async (id) => {
 
     resetScore();
@@ -173,7 +172,7 @@ useEffect(() => {
     };
     const newRoundId = await db.createRound(newRound);
     setRoundId(newRoundId);
-    //console.log("New round id: ", newRoundId);
+    
     const thisCourse = courses.find(a => a.id === id);
     const newRegion = {
       latitude: thisCourse.holes[0].teeBack.latitude,
@@ -185,7 +184,7 @@ useEffect(() => {
     setCourseObject(thisCourse);
     setSelectedCourse(thisCourse);
     setCourseChosen(true);
-    //console.log('thisCourse', thisCourse);
+    
     if (thisCourse){
       setBearing(  //set bearing for hole 0, since we dont switch holes here it doesnt happen automatically.
         calculateBearing(
@@ -218,7 +217,7 @@ useEffect(() => {
       }
   
       const location = await Location.getCurrentPositionAsync({});
-      //console.log(location);
+     
     })();
   }, []);
 
@@ -255,7 +254,7 @@ useEffect(() => {
       setAltitudeLevel(0.016);
     }
     else {
-      //console.log('else zoom')
+     
       setZoomLevel(17);
       setAltitudeLevel(0.007);
     }
@@ -432,7 +431,7 @@ useEffect(() => {
 
   const updateTestLocation = (forcedLocation = {}, nextHole = {}) => {
 
-    //console.log('Updating test location');
+
 
     let updatedLatitude;
     let updatedLongitude;
@@ -456,7 +455,7 @@ useEffect(() => {
 
     }
 
-    //console.log('Update to: ', updatedLatitude, updatedLongitude);
+
 
     const testLocation: LocationObject = {
 
@@ -498,10 +497,10 @@ useEffect(() => {
 
   const updateLocation = (event) => {
     const { coordinate } = event?.nativeEvent;
-    //console.log('CTRLF HÄR',coordinate);
+
     const asdf: Location = {latitude: coordinate.latitude, longitude: coordinate.longitude};
     setLocationGlobal(coordinate)
-    //console.log('ffffff',asdf)
+
     if (test) return;
 
     
@@ -523,22 +522,6 @@ useEffect(() => {
     }
   };
 
-    // // Update stroke lines on map
-    // useEffect(() => {
-    //   if (!mapStrokes[currentHole]) return; // Ensure the array exists
-
-    //   console.log('Strokes for this hole:', mapStrokes[currentHole])
-
-    //   const newStrokeCoordinates = mapStrokes[currentHole].map((stroke) => ({
-    //     latitude: stroke.startLatitude,
-    //     longitude: stroke.startLongitude,
-    //   }));
-
-    //   console.log('newStrokeCoordinates', newStrokeCoordinates); // Debugging output
-    //   setStrokeCoordinates(newStrokeCoordinates);
-    // }, [mapStrokes, currentHole]);
-
-  // Update bearing when hole changes
 
   useEffect(() => {
     if(!courseChosen) return;
@@ -739,39 +722,6 @@ onPress={() => {
 
 </View>
 
-{/* 
-<View style={[styles.buttonRow, {flexDirection: 'column'}]}>
-{  location && currentStroke > 0 &&
-         <ThemedText>Previous shot length:
-          {' ' + Math.round(calculateDistance(
-             location.latitude,
-             location.longitude,
-             mapStrokes[currentHole][currentStroke-1].startLatitude,
-             mapStrokes[currentHole][currentStroke-1].startLongitude
-         ))}m</ThemedText>
-
-
-         }</View>
-
-<View style={styles.buttonRow}>
-  {
-    currentHole + 1 >= courseObject.holes.length ? (
-    <View style={{ alignItems: 'center' }}>
-      <TouchableOpacity onPress={finishRound}>
-        <MaterialIcons name="check-circle-outline" size={30} color="black" />
-      </TouchableOpacity>
-      <ThemedText style={styles.holeOutText}>Finish Round</ThemedText>
-    </View>
-  ) : (
-  <View style={{ alignItems: 'center' }}>
-      <TouchableOpacity onPress={nextHole}>
-        <MaterialIcons name="golf-course" size={30} color="black" />
-      </TouchableOpacity>
-      <ThemedText style={styles.holeOutText}>Next Hole</ThemedText>
-    </View>)
-  }
-   */}
-{/* </View>  */}
 
 <View style={styles.buttonRow}>
   <ThemedText type="subtitle">{courseObject?.name}</ThemedText>
@@ -823,7 +773,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    height: 300, //  Dimensions.get('window').height,
+    height: 300, 
     backgroundColor: 'white',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
@@ -862,8 +812,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 12,
-    // marginTop: 12,
-    // marginBottom: 44,
+    
   },
   strokeAdjusterRow: {
     flexDirection: 'row',
