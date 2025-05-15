@@ -9,6 +9,7 @@ import { Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { StrokeLieType } from '@/app/db/GolfDatabaseTypes';
+import golfClubs from '../../../constants/golfClubs';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -112,24 +113,25 @@ const handleTouch = (event) => {
   );
 
   const averageStrokeGainedByClub = Object.entries(graphData).map(
-    ([golfClubId, strokeGainedArr]) => ({
-      topLabelComponent: () => (
-        
-        <Text
-          style={{
-            color: Stats_theme.CHART_TEXT_COLOR,
-            fontSize: 13,
-            fontFamily: 'PoppinsMedium',
-          }}>
-          {Math.round((strokeGainedArr.reduce((sum, val) => sum + val, 0) / strokeGainedArr.length) * 100)/100}
-        </Text>
-      ),
-      frontColor: Stats_theme.BAR_COLOR,
-      label: 'Club: '+golfClubId,
-      value:
-        strokeGainedArr.reduce((sum, val) => sum + val, 0) / strokeGainedArr.length,
-    })
- );
+    ([golfClubId, strokeGainedArr]) => {
+      const club = golfClubs.find(c => c.id == golfClubId);
+      return {
+        topLabelComponent: () => (
+          <Text
+            style={{
+              color: Stats_theme.CHART_TEXT_COLOR,
+              fontSize: 13,
+              fontFamily: 'PoppinsMedium',
+            }}>
+            {Math.round((strokeGainedArr.reduce((sum, val) => sum + val, 0) / strokeGainedArr.length) * 100) / 100}
+          </Text>
+        ),
+        frontColor: Stats_theme.BAR_COLOR,
+        label: club ? club.name : `Club: ${golfClubId}`,
+        value: strokeGainedArr.reduce((sum, val) => sum + val, 0) / strokeGainedArr.length,
+      };
+    }
+  );
 averageStrokeGainedByClub.forEach(item => {
   item.value =  Math.round(item.value * 100) / 100;
 });
