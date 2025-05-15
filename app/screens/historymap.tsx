@@ -12,7 +12,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 
 import { ThemedText } from '@/components/ThemedText';
-import { calculateBearing, calculateDistance } from '@/utils';
+import { calculateBearing, calculateDistance, getPoints } from '@/utils';
 import { getCourse } from '@/utils';
 import { useLocalSearchParams } from 'expo-router';
 import { LieIcon } from '@/components/LieIcon';
@@ -186,12 +186,27 @@ export default function HistoryMap() {
           </Marker>
         ))}
 
-        <Polyline
-          coordinates={strokeCoordinates}
-          strokeColor="#000"
-          strokeColors={['#7F0000', '#B24112', '#E5845C', '#238C23', '#7F0000']}
-          strokeWidth={3}
-        />
+        {strokeCoordinates && strokeCoordinates.length > 1 && (
+
+            <>
+          <Polyline
+            coordinates={getPoints(strokeCoordinates, 0.5)}
+            strokeColor="#ed7845" // fallback for when `strokeColors` is not supported by the map-provider
+            strokeColors={[
+              '#ed7845',
+              // '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
+              '#7F0000',
+            ]}
+            strokeWidth={3}
+          />
+          <Polyline
+            coordinates={getPoints(strokeCoordinates, 0.2)}
+            strokeColor='rgba(0,0,0,0.2)' // fallback for when `strokeColors` is not supported by the map-provider
+            fillColor='rgba(0,0,0,0.2)'
+            strokeWidth={3}
+            />
+        </>
+        )}
       </MapView>
     </View>
   );
