@@ -117,10 +117,13 @@ export function CoursePicker({ onChooseCourse }) {
             {
               backgroundColor: '#fff',
               image: (
+                <View style={{ marginBottom: '-100%' }}> // adjust this value
+
                 <Image
                   source={require('../assets/images/s1.png')}
                   style={{ height: '70%', resizeMode: 'contain' }}
                 />
+                </View>
               ),
               title: 'Choose the course',
               subtitle: 'Select course by distance or name.',
@@ -128,10 +131,12 @@ export function CoursePicker({ onChooseCourse }) {
             {
               backgroundColor: '#fff',
               image: (
+                <View style={{ marginBottom: '-100%' }}> // adjust this value
                 <Image
                   source={require('../assets/images/mapview.png')}
                   style={{ height: '70%', resizeMode: 'contain' }}
                 />
+                </View>
               ),
               title: 'Register your strokes',
               subtitle: 'Don\'t forget to select club and lie!',
@@ -139,10 +144,12 @@ export function CoursePicker({ onChooseCourse }) {
             {
               backgroundColor: '#fff',
               image: (
+                <View style={{ marginBottom: '-100%' }}> // adjust this value
                 <Image
                   source={require('../assets/images/scorecard.png')}
                   style={{ height: '70%', resizeMode: 'contain' }}
                 />
+                </View>
               ),
               title: 'Check your score',
               subtitle: 'MagicHole features a fully functional score card!',
@@ -150,10 +157,12 @@ export function CoursePicker({ onChooseCourse }) {
             {
               backgroundColor: '#fff',
               image: (
+                <View style={{ marginBottom: '-100%' }}> // adjust this value
                 <Image
                   source={require('../assets/images/s3.png')}
                   style={{ height: '70%', resizeMode: 'contain' }}
                 />
+                </View>
               ),
               title: 'Check your history',
               subtitle: 'Review past rounds, scores, and course performance.',
@@ -161,10 +170,12 @@ export function CoursePicker({ onChooseCourse }) {
             {
               backgroundColor: '#fff',
               image: (
+                <View style={{ marginBottom: '-100%' }}> // adjust this value
                 <Image
                   source={require('../assets/images/s5.png')}
                   style={{ height: '70%', resizeMode: 'contain' }}
-                />
+                  />
+                  </View>
                ),
               title: 'Tracking your improvement',
               subtitle: 'Track strokes gained, fairways hit, and putts.',
@@ -172,10 +183,12 @@ export function CoursePicker({ onChooseCourse }) {
             {
               backgroundColor: '#fff',
               image: (
+                <View style={{ marginBottom: '-100%' }}> // adjust this value
                 <Image
                   source={require('../assets/images/clubstats.png')}
                   style={{ height: '70%', resizeMode: 'contain' }}
                 />
+                </View>
               ),
               title: 'Find your best club',
               subtitle: 'Get stats on individual clubs.',
