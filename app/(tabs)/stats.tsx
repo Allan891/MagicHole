@@ -56,7 +56,7 @@ export const Stats = () => {
       return (
         <View style={{ flex: 1, backgroundColor: '#fff' }}>
           <PagerView style={styles.container} initialPage={0} onPageSelected={(e) => setCurrentPage(e.nativeEvent.position)}>
-            <View style={styles.page} key="1">
+            <View style={[styles.page, {padding: 20, marginTop: '10%'}]} key="1">
               <View style={styles.container}>
 
                   <View style={styles.stats}>
