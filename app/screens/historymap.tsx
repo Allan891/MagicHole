@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Easing,
 } from 'react-native';
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapView, { LatLng, Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 
@@ -15,6 +15,9 @@ import { ThemedText } from '@/components/ThemedText';
 import { calculateBearing, calculateDistance } from '@/utils';
 import { getCourse } from '@/utils';
 import { useLocalSearchParams } from 'expo-router';
+import { LieIcon } from '@/components/LieIcon';
+import { ClubIcon } from '@/components/ClubIcon';
+import golfClubs from '@/constants/golfClubs';
 
 export default function HistoryMap() {
   const { holeData, courseId, holeIndex } = useLocalSearchParams();
@@ -27,6 +30,8 @@ export default function HistoryMap() {
 
   const courseObject = getCourse(courseId);
   const strokes = parsedHoleData?.userStrokes.sort((a, b) => a.strokeNr - b.strokeNr);
+
+  console.log('muhstrokes', strokes);
   
 
   const strokeCoordinates = strokes.map((stroke) => ({
@@ -109,8 +114,14 @@ export default function HistoryMap() {
             );
             return (
               <View key={`list-${index}`} style={styles.strokeListItem}>
+                <View style={{flexDirection: 'row'}}>
                 <ThemedText style={styles.strokeListText}>Stroke {index + 1}</ThemedText>
                 <ThemedText style={styles.strokeListDistance}>{length} m</ThemedText>
+                </View>
+                <View style={{flexDirection: 'row', gap: 10, marginLeft: -5, transform: 'scale(0.8)'}}>
+                <LieIcon item={stroke.lie} label={false} />
+                <ClubIcon item={golfClubs.find(a => stroke.golfClubId === a.id)} label={false} />
+                </View>
               </View>
             );
           })}
@@ -142,6 +153,7 @@ export default function HistoryMap() {
       {/* Map */}
       <MapView
         mapType="satellite"
+        provider={PROVIDER_GOOGLE}
         style={{ flex: 1 }}
         initialRegion={initialRegion}
         camera={{
@@ -158,14 +170,19 @@ export default function HistoryMap() {
 
         {strokeCoordinates.slice(0, -1).map((coord, index) => (
           <Marker key={`stroke-${index}`} coordinate={coord}>
+            <View>
+
             <MaterialIcons
               name="sports-golf"
               size={24}
               color={index === 0 ? 'white' : 'yellow'}
-            />
-            <ThemedText style={{ color: 'white', fontSize: 10 }}>
-              {'Stroke ' + (index + 1)}
+              />
+
+            <ThemedText style={{ position: 'absolute', top: 8, right: 0, color: 'white', fontSize: 10 }}>
+              {(index + 1)}
             </ThemedText>
+
+            </View>
           </Marker>
         ))}
 
@@ -217,6 +234,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   strokeListDistance: {
+    marginLeft: 8,
     fontSize: 12,
     color: '#666',
   },

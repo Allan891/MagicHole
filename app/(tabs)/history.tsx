@@ -114,19 +114,51 @@ export default function History() {
 
     );
 
-  return (
-
-    <ThemedView style={styles.container}>
-      <FlatList
-              data={rounds}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={renderRound}
-            />
-    </ThemedView>
-  );
+    return (
+      <ThemedView style={styles.container}>
+        {rounds.length === 0 ? (
+          <View style={styles.placeholderContainer}>
+            <ThemedText style={styles.placeholderIcon}>⛳</ThemedText>
+            <ThemedText style={styles.placeholderTitle}>No rounds yet</ThemedText>
+            <ThemedText style={styles.placeholderText}>
+              Your past games will appear here once you’ve completed a round.
+            </ThemedText>
+          </View>
+        ) : (
+          <FlatList
+            data={rounds}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={renderRound}
+          />
+        )}
+      </ThemedView>
+    );
 }
 
 const styles = StyleSheet.create({
+  placeholderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  placeholderIcon: {
+    height: 48,
+    fontSize: 48,
+    marginBottom: 10,
+    lineHeight: 48,
+    textAlignVertical: 'bottom'
+  },
+  placeholderTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 6,
+  },
+  placeholderText: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: '#888',
+  },
   container: {
     flex:1,
     padding: 20,
