@@ -112674,7 +112674,7 @@ const courses = [
         "id": 1303,
         "name": "KTH Kista GC",
         "par": [
-            4
+            4 ,3,3,1
         ],
         "holes": [
             {
@@ -112685,6 +112685,36 @@ const courses = [
                 "teeBack": {
                     "latitude": 59.40479227979287,
                     "longitude": 17.951730172641504
+                }
+            },//2
+            {
+                "greenMiddle": { 
+                    "latitude": 59.40584866794171,
+                    "longitude": 17.948314149680527
+                },
+                "teeBack": {
+                    "latitude": 59.405244492027556, 
+                    "longitude": 17.949007715297725
+                }
+            },
+            {
+                "greenMiddle": {
+                    "latitude": 59.405244492027556, 
+                    "longitude": 17.949007715297725
+                },
+                "teeBack": {
+                    "latitude": 59.40584866794171,
+                    "longitude": 17.948314149680527
+                }
+            },
+            {
+                "greenMiddle": {
+                    "latitude": 59.40522761387108, 
+                    "longitude": 17.949395181511985
+                },
+                "teeBack": {
+                    "latitude": 59.40524260849353, 
+                    "longitude": 17.94944379238955
                 }
             }
         ]
