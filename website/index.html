@@ -1,36 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MagicHole - Golf App</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #6aa84f;
             background-color: #6aa84f;
             color: #222;
             text-align: center;
             margin: 0;
             padding: 0;
         }
+
         h1 {
             font-size: 3.5rem;
             /* color: #6aa84f; */
             color: black;
             margin-top: 50px;
             font-weight: 600;
-            text-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+            text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
         }
+
         h2 {
             font-size: 1.5rem;
             /* color: #6aa84f; */
             color: black;
             margin-top: 10px;
             font-weight: 600;
-            text-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+            text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
         }
+
         .container {
             display: flex;
             flex-direction: column;
@@ -38,6 +43,7 @@
             justify-content: center;
             padding: 20px;
         }
+
         .content {
             display: flex;
             flex-wrap: wrap;
@@ -48,6 +54,7 @@
             width: 100%;
             margin-top: 20px;
         }
+
         .features {
             display: flex;
             flex-direction: column;
@@ -55,6 +62,7 @@
             flex: 1;
             min-width: 280px;
         }
+
         .feature-card {
             background: white;
             padding: 20px;
@@ -62,25 +70,30 @@
             box-shadow: 0 4px 10px rgba(67, 160, 71, 0.2);
             transition: transform 0.2s;
         }
+
         .feature-card:hover {
             transform: translateY(-5px);
         }
+
         .feature-title {
             font-size: 1.2rem;
             font-weight: 600;
             color: #6aa84f;
         }
+
         .divider {
             height: 1px;
-            display: block; 
+            display: block;
             background: #6aa84f;
             margin: 10px 0;
             opacity: 0.5;
         }
+
         .feature-text {
             font-size: 0.9rem;
             color: #555;
         }
+
         .image-container {
             position: relative;
             flex: 1;
@@ -97,9 +110,11 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%; /* optional: scale to fit */
+            width: 100%;
+            /* optional: scale to fit */
             height: auto;
         }
+
         .image-screenshot {
             transform: rotate(0deg);
         }
@@ -115,152 +130,34 @@
             top: 0;
             left: -100px;
         }
-        /*
-        .image-screenshot {
-            background-image: url('screenshot.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            flex: 1;
-            min-width: 300px;
-            width: 100%;
+
+        .gimg {
+            width: 80%;
             max-width: 400px;
-            aspect-ratio: 1032 / 1816;
-            border-radius: 15px;
+            height: auto;
+
         }
-        .image-screenshot-right {
-            background-image: url('screenshot.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            transform: rotate(20deg);
-            transform-origin: center; 
-            flex: 1;
-            min-width: 300px;
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 1032 / 1816;
-            border-radius: 15px;
+
+        .profile-container img.rounded-circle {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 50%;
+            background: #f0f0f0;
         }
-        .image-screenshot-left {
-            transform: rotate(-20deg);
-            transform-origin: center; 
-            background-image: url('screenshot.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            flex: 1;
-            min-width: 300px;
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 1032 / 1816;
-            border-radius: 15px;
-        } */
-        .profile-pic-fredrik {
-            background-image: url('fredrik.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            flex: 1;
-            min-width: 250px;
-            width: 100%;
-            max-width: 300px;
-            aspect-ratio: 800 / 800;
-            border-radius: 150px;
-        }
-        .profile-pic-samuel {
-            background-image: url('samuel.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            flex: 1;
-            min-width: 250px;
-            width: 100%;
-            max-width: 300px;
-            aspect-ratio: 800 / 800;
-            border-radius: 150px;
-        }
-        .profile-pic-mateusz {
-            background-image: url('mateusz.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            flex: 1;
-            min-width: 250px;
-            width: 100%;
-            max-width: 300px;
-            aspect-ratio: 800 / 800;
-            border-radius: 150px;
-        }
-        .profile-pic-nippun {
-            background-image: url('nippun.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            flex: 1;
-            min-width: 250px;
-            width: 100%;
-            max-width: 300px;
-            aspect-ratio: 800 / 800;
-            border-radius: 150px;
-        }
-        .profile-pic-andreas {
-            background-image: url('andreas.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            flex: 1;
-            min-width: 250px;
-            width: 100%;
-            max-width: 300px;
-            aspect-ratio: 800 / 800;
-            border-radius: 150px;
-        }
-        .profile-pic-naser {
-            background-image: url('naser.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            flex: 1;
-            min-width: 250px;
-            width: 100%;
-            max-width: 300px;
-            aspect-ratio: 800 / 800;
-            border-radius: 150px;
-        }
-        .profile-pic-allan {
-            background-image: url('allan.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            flex: 1;
-            min-width: 250px;
-            width: 100%;
-            max-width: 300px;
-            aspect-ratio: 800 / 800;
-            border-radius: 150px;
-        }
-        .profile-pic-harry {
-            background-image: url('harry.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            flex: 1;
-            min-width: 250px;
-            width: 100%;
-            max-width: 300px;
-            aspect-ratio: 800 / 800;
-            border-radius: 150px;
-        }
+
         .profile-name {
             font-size: 16px;
             font-weight: bold;
         }
+
         .profile-container {
-            display: inline-block; 
+            display: inline-block;
             text-align: center;
-            
+
         }
+
         .story-container {
             display: flex;
             justify-content: center;
@@ -283,6 +180,7 @@
             height: 100%;
             flex: 1;
         }
+
         .story-pic-2 {
             background-image: url('sprintgoal2.png');
             background-size: cover;
@@ -292,6 +190,7 @@
             height: 100%;
             flex: 1;
         }
+
         .story-pic-3 {
             background-image: url('sprintgoal3.png');
             background-size: cover;
@@ -306,24 +205,29 @@
             margin-top: 40px;
             font-size: 1.2rem;
         }
+
         .github-link a {
             color: #921773;
             text-decoration: none;
             font-weight: 600;
-            text-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+            text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
         }
+
         .github-link a:hover {
             text-decoration: underline;
         }
+
         .contact-email {
             font-size: 14px;
             margin-top: 10px;
         }
 
         .contact-email a {
-            color: #ffffe6; /* Change as desired */
+            color: #ffffe6;
+            /* Change as desired */
             text-decoration: none;
         }
+
         .qr-section {
             display: flex;
             align-items: center;
@@ -342,18 +246,25 @@
         .contact-email a:hover {
             text-decoration: underline;
         }
+
         @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
+            h1 {
+                font-size: 2.5rem;
+            }
+
             .content {
                 flex-direction: column;
             }
+
             .responsive {
                 color: white;
             }
+
             .github-link a {
                 color: white !important;
             }
         }
+
         #golf {
             position: absolute;
             width: 1000px;
@@ -364,140 +275,228 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <img id="golf" src="golf.svg" />
-        <h1 class="responsive">MagicHole</h1>
+        <h1 class="responsive" style="font-size: 70px; font-weight: 1000;">MagicHole</h1>
         <h2 class="responsive">Elevate Your Golf Game</h2>
-        <div class="content">
-            <div class="features">
-                <div class="feature-card">
-                    <div class="feature-title">⛳ Precision Tracking</div>
-                    <!-- <div class="divider"></div> -->
-                    <div class="feature-text">Analyze every shot with pinpoint accuracy.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-title">📊 Smart Analytics</div>
-                    <!-- <div class="divider"></div> -->
-                    <div class="feature-text">Gain insights into your performance trends.</div>
-                </div>
-            </div>
-            <div class="image-container">
-                <img src="screenshot.png" alt="Rotated Right" class="image-screenshot-right">
-                <img src="screenshot.png" alt="Rotated Left" class="image-screenshot-left">
-                <img src="screenshot.png" alt="Rotated Center" class="image-screenshot">
-            </div>
+        <div class="content container d-flex">
 
-            <div class="features">
-                <div class="feature-card">
-                    <div class="feature-title">📍 GPS Course Mapping</div>
-                    <!-- <div class="divider"></div> -->
-                    <div class="feature-text">Navigate the course like a pro.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-title">📈 Improve your game</div>
-                    <!-- <div class="divider"></div> -->
-                    <div class="feature-text">Track your improvement with our smart strokes gained functionality.</div>
-                </div>
-            </div>
-            <div class="golf-app-guide">
-                
-                <h2>🏌️‍♂️📱⛳ How to Use the Golf App 🎉</h2>
-                
-                <div class="qr-section">
-                    <img src="qr-code.png" alt="QR Code to start">    
-                </div>
-                <h3>🚀 Scan the QR Code to Start🚀</h3>
-                <p>📷➡️🟢 Just <strong>scan the QR code</strong> at the course or in the app to begin your round!</p>
-                
-                <h3>📖 Step-by-Step Guide 🏌️‍♀️</h3>
-                
-                  <p>📍 <strong>Select Your Course</strong> – Choose from over <strong>400+ golf courses</strong> 🌍 across the globe.</p>
-                  <p>🏌️ <strong>Take Your Shot</strong> – Swing with style and power! 💪🔥</p>
-                  <p>📲 <strong>Record Your Shot</strong> – Tap the <strong>record button</strong> to log your stroke. 🔧 Optionally change your club 🏌️‍♂️.</p>
-                  <p>🚶 <strong>Walk to Your Ball</strong> – Update your <strong>club</strong> and <strong>lie</strong> 🌱⛰️ as needed.</p>
-                  <p>🔄 <strong>Record Next Shot</strong> – Press record again to track your next stroke ⛳.</p>
-                  <p>🏁 <strong>Finish the Hole</strong> – Tap “Finish Hole” to move to the next one ➡️.</p>
-                  <p>🔁 <strong>Repeat for All Holes</strong> – Continue the process for every hole on the course 🕳️.</p>
-                  <p>🏆 <strong>Finish Your Round</strong> – Tap “Finish Round” to save your <strong>scorecard</strong> 🗂️.</p>
-                  <p>📊 <strong>View Stats & Analysis</strong> – Go to the <strong>Stats</strong> section to see your performance 📈.</p>
-                  <p>😄 <strong>Happy Golfing!</strong> – Enjoy your game and keep improving! ⛳🌞🍀</p>
-                
-            </div>
-              <div class="container">
-              <h1> About us!</h1>
-              <h2> We are a team from KTH doing a course project </h2>
-            </div>
-            <div class="profile">            
-                <div class="profile-container">
-                    <div class="profile-pic-fredrik"></div>
-                    <div class="profile-name">Fredrik Bjälå Ursäter</div>
-                    <div class="profile-name">Scrum master</div>
-                </div>
-                <div class="profile-container">
-                    <div class="profile-pic-samuel"></div>
-                    <div class="profile-name">Samuel Engbom</div>
-                    <div class="profile-name">Developer</div>
-                </div>
-                <div class="profile-container">
-                    <div class="profile-pic-mateusz"></div>
-                    <div class="profile-name">Mateusz Kaszyk</div>
-                    <div class="profile-name">Developer</div>
-                </div>
-                <div class="profile-container">
-                    <div class="profile-pic-nippun"></div>
-                    <div class="profile-name">Nippun Thianwan</div>
-                    <div class="profile-name">Developer</div>
-                </div>
-                <div class="profile-container">
-                    <div class="profile-pic-allan"></div>
-                    <div class="profile-name">Allan Al Saleh</div>
-                    <div class="profile-name">Developer</div>
-                </div>
-                <div class="profile-container">
-                    <div class="profile-pic-andreas"></div>
-                    <div class="profile-name">Andreas Modahl</div>
-                    <div class="profile-name">Product owner</div>
-                </div>
-                <div class="profile-container">
-                    <div class="profile-pic-andreas"></div>
-                    <div class="profile-name">Naser Alchadaideh</div>
-                    <div class="profile-name">Developer</div>
-                </div>
-                <div class="profile-container">
-                    <div class="profile-pic-harry"></div>
-                    <div class="profile-name">Harry Eriksson</div>
-                    <div class="profile-name">Developer</div>
+            <div class="justify-content-center align-items-center p-2 d-flex w-50" style="gap: 20px;">
+                <a href="https://apps.apple.com/se/app/magichole-b58511/id6745866070?l=en-GB" target="_blank">
+                    <img src="./appstore.png" class="gimg" style="width: 250px;">
+                </a>
+                <div style="position: relative; width: 250px; height: 500px;">
+                    <img src="../assets/images/clubstats.png" class="gimg"
+                        style="position: absolute; top: 0; left: 50; width: 250px; height: 500px; z-index: 1; filter: brightness(0.95);">
+                    <img src="../assets/images/mapview.png" class="gimg"
+                        style="position: absolute; top: 0; left: 0; width: 250px; height: 500px; z-index: 2;">
                 </div>
             </div>
         </div>
+
+        <div class="features" style="display: flex; flex-direction: row; gap: 20px;">
+            <div class="feature-card" style="flex: 1;">
+                <div class="feature-title">📍 GPS Course Mapping</div>
+                <div class="feature-text">Navigate the course like a pro.</div>
+            </div>
+            <div class="feature-card" style="flex: 1;">
+                <div class="feature-title">📈 Improve your game</div>
+                <div class="feature-text">Track your improvement with our smart strokes gained functionality.</div>
+            </div>
+            <div class="feature-card" style="flex: 1;">
+                <div class="feature-title">⛳ Precision Tracking</div>
+                <div class="feature-text">Analyze every shot with pinpoint accuracy.</div>
+            </div>
+            <div class="feature-card" style="flex: 1;">
+                <div class="feature-title">📊 Smart Analytics</div>
+                <div class="feature-text">Gain insights into your performance trends.</div>
+            </div>
+        </div>
+
+
+        <div class="golf-app-guide mt-5">
+            <div class="mt-5" style="text-align: left;">
+                <h3>📖 Step-by-Step Guide</h3>
+                <p>📍 <strong>Select Your Course</strong> – Choose from over <strong>400+ golf courses</strong>
+                    across the globe.</p>
+                <p>🏌️ <strong>Take Your Shot</strong> – Swing with style and power!</p>
+                <p>📲 <strong>Record Your Shot</strong> – Tap the <strong>record button</strong> to log your stroke.
+                    Optionally change your club.</p>
+                <p>🚶 <strong>Walk to Your Ball</strong> – Update your <strong>club</strong> and
+                    <strong>lie</strong> as needed.
+                </p>
+                <p>🔄 <strong>Record Next Shot</strong> – Press record again to track your next stroke.</p>
+                <p>🏁 <strong>Finish the Hole</strong> – Tap “Finish Hole” to move to the next one.</p>
+                <p>🔁 <strong>Repeat for All Holes</strong> – Continue the process for every hole on the course.</p>
+                <p>🏆 <strong>Finish Your Round</strong> – Tap “Finish Round” to save your
+                    <strong>scorecard</strong>.
+                </p>
+                <p>📊 <strong>View Stats & Analysis</strong> – Go to the <strong>Stats</strong> section to see your
+                    performance.</p>
+                <p>😄 <strong>Happy Golfing!</strong> – Enjoy your game and keep improving!</p>
+            </div>
+        </div>
+
+
         <div class="container">
-        <h1> Sprint goals!</h1>
-        <h2> The project was divided into 3 sprints</h2>
-      </div>
-            <div class="story-container"> 
-                <div class="story-pic-1"></div>
+            <h1> About us!</h1>
+            <h2> We are a team from KTH doing a course project </h2>
+        </div>
+
+        <div class="profile">
+            <div class="d-flex flex-wrap justify-content-center align-items-center gap-4">
+                <div class="profile-container">
+                    <img src="./fredrik.png" class="rounded-circle mb-3" alt="fredrik" />
+                    <h5 class="mb-2"><strong>Fredrik Bjälå Ursäter</strong></h5>
+                    <p class="text-muted">Scrum master</p>
+                </div>
+                <div class="profile-container">
+                    <img src="./samuel.png" class="rounded-circle mb-3" alt="samuel" />
+                    <h5 class="mb-2"><strong>Samuel Engbom</strong></h5>
+                    <p class="text-muted">Developer</p>
+                </div>
+                <div class="profile-container">
+                    <img src="./Mateusz.png" class="rounded-circle mb-3" alt="mateusz" />
+                    <h5 class="mb-2"><strong>Mateusz Kaszyk</strong></h5>
+                    <p class="text-muted">Developer</p>
+                </div>
+                <div class="profile-container">
+                    <img src="./nippun.png" class="rounded-circle mb-3" alt="nipun" />
+                    <h5 class="mb-2"><strong>Nipun Thianwan</strong></h5>
+                    <p class="text-muted">Developer</p>
+                </div>
             </div>
-            <div class="story-container"> 
-                <div class="story-pic-2"></div>
+            <div class="d-flex flex-wrap justify-content-center align-items-center gap-4">
+                <div class="profile-container">
+                    <img src="./allan.png" class="rounded-circle mb-3" alt="allan" />
+                    <div class="profile-name">Allan Al Saleh</div>
+                    <h5 class="mb-2"><strong></strong></h5>
+                    <p class="text-muted">Developer</p>
+                </div>
+                <div class="profile-container">
+                    <img src="./gray-circles-texture_1214-11.png" class="rounded-circle mb-3" alt="andreas" />
+                    <h5 class="mb-2"><strong>Andreas Modahl</strong></h5>
+                    <p class="text-muted">Product Owner</p>
+                </div>
+                <div class="profile-container">
+                    <img src="./gray-circles-texture_1214-11.png" class="rounded-circle mb-3" alt="naser" />
+                    <h5 class="mb-2"><strong>Naser Alchadaideh</strong></h5>
+                    <p class="text-muted">Developer</p>
+                </div>
+                <div class="profile-container">
+                    <img src="./harry.png" class="rounded-circle mb-3" alt="harry" />
+                    <h5 class="mb-2"><strong>Harry Eriksson</strong></h5>
+                    <p class="text-muted">Developer</p>
+                </div>
             </div>
-            <div class="story-container"> 
-                <div class="story-pic-3"></div>
-            </div>
         </div>
-        <div class="github-link responsive">
-            <a href="https://kth-se.zoom.us/j/69921753097" target="_blank">Join us on Zoom during the Expo</a>
-        </div>
-        <div class="github-link responsive">
-            <a href="https://github.com/f-r00t/MagicHole" target="_blank">View on GitHub</a>
-        </div>
-        <div class="contact-email">
-            Contact us: <a href="mailto:info@magichole.se">info@magichole.se</a>
-        </div>
-        <div class="contact-email">
-            Join us on <a href="https://kth-se.zoom.us/s/69921753097" target="_blank">Zoom! </a> Expo May 16th 
-        </div>
-        
     </div>
+
+    <div class="container">
+        <h1> Sprint Goals!</h1>
+        <h2> The project was divided into 3 sprints</h2>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="d-flex flex-wrap justify-content-center align-items-stretch gap-4">
+
+                <div class="card h-100 d-flex flex-column" style="width: 18rem;">
+                    <img src="./gray-circles-texture_1214-11.png" class="card-img-top" alt="..."
+                        style="height: 100px; object-fit: cover;">
+                    <div class="card-body flex-grow-1 d-flex flex-column">
+                        <h5 class="card-title"><strong>Sprint 1</strong></h5>
+                        <p class="card-text">The goal from this sprint was to have a basic app with a working GPS
+                            and
+                            functionality to gather golf stroke data.</p>
+                    </div>
+                    <ul class="list-group list-group-flush text-start">
+                        <li class="list-group-item"><strong>Basic app</strong>: React Native / Expo</li>
+                        <li class="list-group-item"><strong>Map view</strong>: Focus map on gold courses.
+                            Display hole and user position.
+                            Show strokes.
+                            Cycle through holes.</li>
+                        <li class="list-group-item"><strong>Golf course DB</strong>: collect a library of golf
+                            courses.</li>
+                        <li class="list-group-item"><strong>Scorecard</strong>: register score and display.
+                            Calculate summary.</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="width: 18rem;">
+                    <img src="./gray-circles-texture_1214-11.png" class="card-img-top" alt="..."
+                        style="height: 100px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title"><strong>Sprint 2</strong></h5>
+                        <p class="card-text">In this sprint we needed to extend the app to include more functions
+                            and
+                            visuals for the user</p>
+                    </div>
+                    <ul class="list-group list-group-flush text-start">
+                        <li class="list-group-item"><strong>Course search</strong>: smart search for avaliable
+                            courses based on
+                            distance from
+                            your location.</li>
+                        <li class="list-group-item"><strong>History view</strong>: display completed rounds with all
+                            details.Display
+                            distances and strokes gained for each shot made.</li>
+                        <li class="list-group-item"><strong>Settings tab</strong>: adjustable settings.</li>
+                        <li class="list-group-item"><strong>Statistics</strong>: calculate important statistics for
+                            a given round
+                            such as
+                            tee, approach, chip, putt.</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="width: 18rem;">
+                    <img src="./gray-circles-texture_1214-11.png" class="card-img-top" alt="..."
+                        style="height: 100px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title"><strong>Sprint 3</strong></h5>
+                        <p class="card-text">More details and fancy stuff for golf players.</p>
+                    </div>
+                    <ul class="list-group list-group-flush text-start">
+                        <li class="list-group-item"><strong>Club selection</strong>: tailored club selection for
+                            each give shot.
+                            Update your
+                            personal bag with your favourite selection of clubs.</li>
+                        <li class="list-group-item"><strong>Lie selection</strong>: record your shots' lie and get
+                            statistics based
+                            on your
+                            performance.</li>
+                        <li class="list-group-item"><strong>Detailed statistics</strong>: show detailed statistics
+                            in a new neat
+                            graph
+                            format, and added new statistics page for each golf club</li>
+                        <li class="list-group-item"><strong>Onboarding</strong>: informative slides to get you
+                            started fast!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <div class="github-link responsive">
+        <a href="https://kth-se.zoom.us/j/69921753097" target="_blank">Join us on Zoom during the Expo</a>
+    </div>
+    <div class="github-link responsive">
+        <a href="https://github.com/f-r00t/MagicHole" target="_blank">View on GitHub</a>
+    </div>
+    <div class="contact-email">
+        Contact us: <a href="mailto:info@magichole.se">info@magichole.se</a>
+    </div>
+    <div class="contact-email">
+        Join us on <a href="https://kth-se.zoom.us/s/69921753097" target="_blank">Zoom! </a> Expo May 16th
+    </div>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+        crossorigin="anonymous"></script>
+
 </body>
+
 </html>
