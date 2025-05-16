@@ -45,7 +45,8 @@
     "expo-splash-screen",
     {
       "resizeMode": "contain",
-      "backgroundColor": "#6932a8"
+      "backgroundColor": "#6932a8",
+      "image": "./assets/adaptive-icon.png"
     }
   ],
   "expo-sqlite"
